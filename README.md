@@ -272,5 +272,4 @@ Internal APIs are one of the most valuable assets in a modern digital enterprise
 This approach empowers developers, improves platform ROI, and reduces long-term complexity. The organizations that adopt it now will be positioned to innovate faster as the next wave of automation, AI-driven development, and platform engineering accelerates.
 
 ---
-
-See an example [technical design](technical-design.md).
+[Technical Appendix: API Governance and Platform Model](technical-design.md)
