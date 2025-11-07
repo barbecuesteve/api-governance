@@ -203,11 +203,11 @@ sequenceDiagram
     REG-->>PT: Automated feedback (if issues found)
     
     PT->>REG: Submit for formal review
-    REG->>ARP: Assign to rotating panel member
+    REG->>ARP: Assign to rotating panel members
     ARP->>ARP: Review for architecture, security,<br/>usability, scalability
-    ARP-->>PT: Collaborative feedback & guidance
     
     alt Changes Required
+        ARP-->>PT: Collaborative feedback & guidance
         PT->>REG: Apply revisions
         REG->>ARP: Re-review (expedited)
     end
