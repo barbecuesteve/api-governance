@@ -1,6 +1,9 @@
 
 ## **Scalable API Governance for Modern Engineering Organizations**
 
+Steve Sparks
+<br>November 2025
+
 ### **Overview**
 
 Internal APIs now power nearly every business capability in modern digital enterprises. But while external APIs are treated as products with roadmaps, documentation, and customer experience in mind, internal APIs are often created as implementation details — poorly documented, inconsistently designed, and rarely governed. This paper proposes a modern, product-centric approach to internal API governance that improves developer experience, accelerates delivery, and reduces duplicative effort. It describes a lightweight, scalable model suitable for organizations with hundreds or thousands of internal microservices.
