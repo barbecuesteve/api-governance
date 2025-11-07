@@ -47,6 +47,8 @@ flowchart LR
     Admin -->|uses| Auditor
     Auditor -->|watches| Gateway
 
+    style Platform fill:#D0EED0
+
 ```
 
 ### Component Purposes
