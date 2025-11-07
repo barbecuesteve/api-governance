@@ -235,6 +235,7 @@ sequenceDiagram
     participant CT as Consumer Team
     participant REG as API Registry
     participant PT as Producer Team
+    participant ARB as API Review Board
     participant GW as API Gateway
 
     CT->>REG: Search for API
@@ -248,16 +249,16 @@ sequenceDiagram
     GW-->>CT: Responses + telemetry collected
 
     CT->>REG: Request Subscription (Prod)
-    REG->>PT: Approve Prod subscription
-    PT-->>REG: Approval
+    REG->>ARB: Approve Prod Subscription
+    ARB-->>REG: Approval
     REG->>GW: Enable Prod routing
     CT->>GW: Begin Prod usage (audited)
 ```
 
 **Principles:**
-- Producers always approve consumers (Dev + Prod)
+- Producers approve consumers to dev, ARB approves consumers to prod
 - Gateway enforces subscription validity
-- No “drive-by” API usage; every consumer is known
+- No “drive-by” API usage; every consumer is known and uniquely identified
 
 ---
 
