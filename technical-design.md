@@ -126,7 +126,6 @@ classDiagram
         +subscription_id
         +request_body
         +response_code
-        +
         +response_body
     }
 
@@ -206,7 +205,7 @@ sequenceDiagram
     REG->>ARP: Assign to rotating panel members
     ARP->>ARP: Review for architecture, security,<br/>usability, scalability
     
-    alt Changes Required
+    alt API Team has Feedback
         ARP-->>PT: Collaborative feedback & guidance
         PT->>REG: Apply revisions
         REG->>ARP: Re-review (expedited)
