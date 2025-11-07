@@ -292,8 +292,64 @@ flowchart LR
 ```
 
 **Policy Recommendations:**
-- Limit concurrent Major versions (e.g., only 2 active at once)
-- Require deprecation plan when publishing a new Major
+
+**Limit Concurrent Major Versions**
+- Allow only 2-3 active major versions simultaneously (e.g., v2.x, v3.x, and v4.x)
+- This constraint forces disciplined deprecation and prevents unbounded version sprawl
+- Rationale: Each major version requires ongoing support, security patches, infrastructure, and documentation maintenance
+- When publishing a new major version that would exceed the limit, one older version must be deprecated
+- Exemptions possible for high-criticality APIs with extensive consumer bases, but require Governance Group approval
+- Version limits tracked automatically by Registry; attempts to publish beyond limit trigger warnings and review
+
+**Require Deprecation Plan When Publishing New Major Version**
+- Before a breaking change (new major version) is approved, producers must document:
+  - **Timeline:** When will the previous major version be deprecated? When retired?
+  - **Consumer Impact:** How many active subscriptions exist on the old version? Which teams?
+  - **Migration Complexity:** What changes do consumers need to make? (Simple config change vs. major refactor)
+  - **Support Commitment:** How long will both versions run in parallel to allow migration time?
+- Deprecation plan reviewed by API Review Panel as part of approval process
+- Minimum parallel support window: typically 6-12 months depending on consumer count and migration complexity
+- High-impact APIs (many consumers, critical business processes) require longer support windows
+
+**Producer Obligation: Document the Upgrade Path**
+- When the upgrade from one major version to the next is **straightforward**, the producing team has a responsibility to map out that path explicitly for consumers
+- "Straightforward" means:
+  - Field renames or restructuring without semantic changes
+  - New required fields that can be populated with sensible defaults
+  - Endpoint consolidation or URL changes without logic changes
+  - Authentication mechanism updates (e.g., API key → OAuth2) with clear migration steps
+- **Required upgrade documentation:**
+  - **What Changed:** Side-by-side comparison of old vs. new data models, endpoints, authentication
+  - **Step-by-Step Migration Guide:** Specific code changes consumers need to make, with before/after examples
+  - **Tooling Support:** Migration scripts, schema transformers, or automated converters where feasible
+  - **Testing Guidance:** How consumers can validate their migration in dev/test environments before production
+  - **Compatibility Matrix:** Which old version features map to which new version features
+  - **Breaking Change Inventory:** Exhaustive list of every breaking change with mitigation for each
+- This documentation becomes part of the API's official docs in the Developer Portal
+- Quality of upgrade path documentation reviewed by API Review Panel; inadequate guidance blocks approval
+- Example: If moving from `customer_name` to `customer.full_name`, provide:
+  - Clear mapping: `customer_name` → `customer.full_name`
+  - Code sample showing the change in consumer code
+  - Note about any validation differences or field length changes
+
+**Producer Support During Migration**
+- Office hours or dedicated support channel for migration questions during parallel support window
+- Early access to new major version for key consumers to test migration and provide feedback
+- Migration telemetry: Auditor tracks which consumers have upgraded, which are still on old version
+- Proactive outreach to consumers who haven't started migration as deprecation deadline approaches
+- Escalation path for consumers encountering migration blockers that need producer assistance
+
+**Consumer Self-Service Migration Tools**
+- For particularly complex migrations, consider providing:
+  - Request/response translators that convert between old and new formats
+  - Dual-write capabilities during transition period (consumer sends old format, Gateway translates)
+  - Feature flags allowing gradual rollout of new version usage
+  - Automated test suites consumers can run to validate compatibility
+
+**Consequences of Non-Compliance**
+- APIs published without adequate deprecation plans or upgrade documentation may be rejected by Review Panel
+- Producers who abandon major versions prematurely (without honoring support commitments) face escalation to Governance Group
+- Repeat offenders may lose fast-track approval privileges and require enhanced review for future changes
 
 ---
 
@@ -307,7 +363,7 @@ APIs should sunset safely with full visibility of consumer impact.
 flowchart LR
     A[Active] --> B[Deprecated]
     B -->|90 days minimum| C[Eligible for Retirement]
-    C -->|Zero traffic 30 days| D[Retired]
+    C -->|Zero traffic for 30 days| D[Retired]
     D --> E[Archived for reporting]
 ```
 
