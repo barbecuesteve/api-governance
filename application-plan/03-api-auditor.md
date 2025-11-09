@@ -4,6 +4,104 @@ The Auditor is the analytics and observability layer of the platform, providing 
 
 ## 3.1 Core Auditor Components
 
+```mermaid
+graph TD
+    Gateway[API Gateway<br/>Log Source]
+    Registry[API Registry<br/>Metadata]
+    Producers[API Producers]
+    Consumers[API Consumers]
+    Governance[Governance Team]
+    SIEM[SIEM System<br/>Splunk/QRadar]
+    BI[BI Tools<br/>Tableau/Looker]
+    Finance[Finance System]
+    
+    subgraph Auditor["API Auditor"]
+        LogIngestion[Log Ingestion &<br/>Processing Pipeline]
+        Metrics[Metrics Collection &<br/>Aggregation Engine]
+        Analytics[Analytics &<br/>Reporting Engine]
+        Compliance[Compliance &<br/>Audit Monitoring]
+        Billing[Usage-Based<br/>Billing & Chargeback]
+        SLAMonitor[API Health &<br/>SLA Monitoring]
+        AuditorAPI[Auditor API &<br/>Query Service]
+    end
+    
+    Kafka[Kafka<br/>Log Streaming]
+    Elasticsearch[(Elasticsearch<br/>Recent Logs)]
+    S3[(S3/GCS<br/>Cold Storage)]
+    TimeSeriesDB[(Time-Series DB<br/>Prometheus/InfluxDB)]
+    DataWarehouse[(Data Warehouse<br/>Snowflake/BigQuery)]
+    GeoIP[GeoIP Database<br/>Location Lookup]
+    AlertSystem[Alerting<br/>PagerDuty/Opsgenie]
+    
+    Gateway -->|Stream Logs| Kafka
+    Kafka -->|Consume| LogIngestion
+    
+    LogIngestion <-->|Enrich with Metadata| Registry
+    LogIngestion <-->|GeoIP Lookup| GeoIP
+    LogIngestion -->|Store Recent| Elasticsearch
+    LogIngestion -->|Archive| S3
+    LogIngestion -->|Extract Metrics| Metrics
+    
+    Metrics -->|Aggregate| TimeSeriesDB
+    Metrics -->|Calculate| SLAMonitor
+    Metrics -->|Count Usage| Billing
+    Metrics <-->|Business Context| Registry
+    
+    SLAMonitor -->|SLA Violations| AlertSystem
+    SLAMonitor -->|Health Scores| Analytics
+    SLAMonitor <-->|SLA Definitions| Registry
+    
+    Compliance -->|Security Events| SIEM
+    Compliance -->|Monitor Access| LogIngestion
+    Compliance -->|Policy Checks| Registry
+    Compliance -->|Audit Logs| S3
+    Compliance -->|Alerts| AlertSystem
+    
+    Billing -->|Calculate Costs| Metrics
+    Billing <-->|Pricing Config| Registry
+    Billing -->|Invoices| Finance
+    Billing -->|Budget Alerts| Consumers
+    
+    Analytics <-->|Query Logs| Elasticsearch
+    Analytics <-->|Query Metrics| TimeSeriesDB
+    Analytics <-->|Historical Data| DataWarehouse
+    Analytics <-->|Metadata| Registry
+    Analytics -->|Dashboards| Producers
+    Analytics -->|Dashboards| Consumers
+    Analytics -->|Reports| Governance
+    
+    LogIngestion -->|ETL Pipeline| DataWarehouse
+    Metrics -->|Historical Metrics| DataWarehouse
+    DataWarehouse <-->|BI Queries| BI
+    
+    AuditorAPI <-->|Serve Data| Elasticsearch
+    AuditorAPI <-->|Serve Data| TimeSeriesDB
+    AuditorAPI <-->|Serve Data| DataWarehouse
+    AuditorAPI -->|API Access| Producers
+    AuditorAPI -->|API Access| Consumers
+    AuditorAPI -->|Integration| BI
+    
+    AlertSystem -->|Notify| Producers
+    AlertSystem -->|Notify| Governance
+    
+    style Auditor fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style Producers fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
+    style Consumers fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
+    style Governance fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style SIEM fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    style BI fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style Finance fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    style Kafka fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style Elasticsearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style S3 fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style TimeSeriesDB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style DataWarehouse fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style GeoIP fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style AlertSystem fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+```
+
 ### Log Ingestion & Processing Pipeline
 **Purpose:** Collects, processes, and enriches logs from Gateway instances for analysis and long-term storage.
 

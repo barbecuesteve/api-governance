@@ -4,6 +4,97 @@ The Registry is the system of record for all API metadata, serving as the centra
 
 ## 2.1 Core Registry Components
 
+```mermaid
+graph TD
+    Producer[API Producer Teams]
+    Consumer[API Consumers]
+    DevPortal[Developer Portal]
+    Gateway[API Gateway]
+    Auditor[API Auditor]
+    CICD[CI/CD Pipeline]
+    
+    subgraph Registry["API Registry"]
+        Catalog[API Catalog &<br/>Metadata Management]
+        Subscription[Subscription<br/>Management System]
+        Schema[Schema Registry &<br/>Compatibility Checker]
+        Policy[Policy &<br/>Governance Engine]
+        ServiceDiscovery[Service Discovery &<br/>Routing Configuration]
+        RegistryAPI[Registry API<br/>Public/Internal/Admin]
+        Notification[Notification &<br/>Event Service]
+
+        DB[(PostgreSQL<br/>Primary Database)]
+        ElasticSearch[(Elasticsearch<br/>Full-Text Search)]
+        Redis[(Redis Cache<br/>Frequently Accessed Data)]
+        Kafka[Kafka Event Bus<br/>Change Events]
+        Vault[HashiCorp Vault<br/>Secrets Manager]
+        K8s[Kubernetes/<br/>Service Discovery]
+        Git[Git Repository<br/>Version Control]
+
+    end
+    
+    
+    Producer -->|Register APIs| RegistryAPI
+    Producer -->|Upload Specs| Catalog
+    Consumer -->|Request Subscription| RegistryAPI
+    DevPortal <-->|Query Catalog| RegistryAPI
+    CICD -->|Validate Specs| RegistryAPI
+    
+    RegistryAPI --> Catalog
+    RegistryAPI --> Subscription
+    RegistryAPI --> Schema
+    RegistryAPI --> Policy
+    RegistryAPI --> ServiceDiscovery
+    
+    Catalog -->|Store Metadata| DB
+    Catalog <-->|Index for Search| ElasticSearch
+    Catalog <-->|Sync Specs| Git
+    Catalog -->|Publish Changes| Kafka
+    
+    Subscription -->|Store Subscriptions| DB
+    Subscription <-->|Cache Active Subs| Redis
+    Subscription <-->|Store Credentials| Vault
+    Subscription -->|Subscription Events| Kafka
+    
+    Schema -->|Validate Compatibility| Catalog
+    Schema -->|Store Schema Versions| DB
+    Schema -->|Block Breaking Changes| Policy
+    
+    Policy -->|Evaluate Against| Catalog
+    Policy -->|Check Compliance| Subscription
+    Policy -->|Store Policies| DB
+    Policy -->|Policy Violations| Kafka
+    
+    ServiceDiscovery <-->|Query Services| K8s
+    ServiceDiscovery -->|Store Backend Mappings| DB
+    ServiceDiscovery -->|Push Routing Config| Gateway
+    ServiceDiscovery <-->|Cache Config| Redis
+    
+    Kafka -->|Consume Events| Notification
+    Notification -->|Email/Slack/Webhooks| Producer
+    Notification -->|Email/Slack/Webhooks| Consumer
+    
+    Gateway <-->|Query Subscriptions| RegistryAPI
+    Gateway <-->|Get Routing Config| ServiceDiscovery
+    Gateway -->|Usage Metrics| Auditor
+    
+    Auditor <-->|Query Metadata| RegistryAPI
+    
+    style Registry fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    style Producer fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
+    style Consumer fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
+    style DevPortal fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style Auditor fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style CICD fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style DB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style ElasticSearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style Redis fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style Kafka fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    style Vault fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style K8s fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style Git fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+```
+
 ### API Catalog & Metadata Management
 **Purpose:** Stores and manages comprehensive metadata about all APIs in the organization.
 

@@ -4,6 +4,84 @@ The Gateway is the runtime enforcement point for all API traffic, providing secu
 
 ## 1.1 Core Gateway Components
 
+```mermaid
+graph TD
+    Client[API Consumer]
+    
+    subgraph Gateway["API Gateway"]
+        ReverseProxy[Reverse Proxy /<br/>Request Router]
+        Auth[Authentication<br/>Module]
+        Authz[Authorization<br/>Module]
+        RateLimit[Rate Limiting &<br/>Throttling Module]
+        Transform[Request/Response<br/>Transformation Module]
+        Security[Data Security &<br/>Privacy Module]
+        Logging[Logging &<br/>Audit Module]
+        Metrics[Metrics &<br/>Telemetry Module]
+        Circuit[Circuit Breaker,<br/>Resilience & Canary<br/>Deployment Module]
+        Cache[Cache Module]
+    end
+    
+    Backend[Backend API Services]
+    Registry[(API Registry)]
+    IDP[Identity Provider<br/>OAuth/OIDC]
+    RedisCache[(Redis/<br/>Memcached)]
+    LogSystem[Logging Infrastructure<br/>Splunk/Elasticsearch]
+    MetricsSystem[Monitoring Platform<br/>Prometheus/Datadog]
+    
+    Client -->|1. Request| ReverseProxy
+    ReverseProxy -->|2. Validate Identity| Auth
+    Auth <-->|Public Keys/API Keys| IDP
+    Auth <-->|API Key Lookup| Registry
+    Auth -->|3. Identity| Authz
+    Authz <-->|Subscription/Policies| Registry
+    Authz -->|4. Check Quota| RateLimit
+    RateLimit <-->|Rate Counters| RedisCache
+    RateLimit -->|5. Check Cache| Cache
+    Cache <-->|Distributed Cache| RedisCache
+    Cache -->|6. Transform Request| Transform
+    Transform <-->|Transformation Rules| Registry
+    Transform -->|7. Apply Security| Security
+    Security <-->|Encryption Keys| Registry
+    Security -->|8. Route with Resilience| Circuit
+    Circuit <-->|Health Status| Backend
+    Circuit <-->|Routing Config| Registry
+    Circuit -->|9. Forward Request| Backend
+    Backend -->|10. Response| Circuit
+    Circuit --> Security
+    Security --> Transform
+    Transform --> Cache
+    Cache --> ReverseProxy
+    ReverseProxy -->|11. Final Response| Client
+    
+    ReverseProxy -.->|Log Events| Logging
+    Auth -.->|Log Events| Logging
+    Authz -.->|Log Events| Logging
+    RateLimit -.->|Log Events| Logging
+    Transform -.->|Log Events| Logging
+    Security -.->|Log Events| Logging
+    Circuit -.->|Log Events| Logging
+    Logging -->|Audit Trail| LogSystem
+    
+    ReverseProxy -.->|Emit Metrics| Metrics
+    Auth -.->|Emit Metrics| Metrics
+    Authz -.->|Emit Metrics| Metrics
+    RateLimit -.->|Emit Metrics| Metrics
+    Transform -.->|Emit Metrics| Metrics
+    Security -.->|Emit Metrics| Metrics
+    Circuit -.->|Emit Metrics| Metrics
+    Cache -.->|Emit Metrics| Metrics
+    Metrics -->|Telemetry| MetricsSystem
+    
+    style Gateway fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    style Client fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
+    style Backend fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
+    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style IDP fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style RedisCache fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style LogSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style MetricsSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+```
+
 ### Reverse Proxy / Request Router
 **Purpose:** Routes incoming requests to appropriate backend services based on API version, endpoint, and routing rules.
 

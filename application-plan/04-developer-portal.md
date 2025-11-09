@@ -4,6 +4,104 @@ The Developer Portal is the primary interface for API producers and consumers, p
 
 ## 4.1 Core Portal Components
 
+```mermaid
+graph TD
+    Developer[Developers<br/>API Consumers]
+    Producers[API Producers]
+    Registry[API Registry]
+    Auditor[API Auditor]
+    Gateway[API Gateway]
+    
+    subgraph Portal["Developer Portal"]
+        Catalog[API Catalog &<br/>Discovery]
+        Documentation[Interactive API<br/>Documentation]
+        Subscription[Subscription<br/>Management &<br/>Onboarding]
+        Dashboard[Developer<br/>Dashboard &<br/>Analytics]
+        Testing[API Testing &<br/>Sandbox Environment]
+        Community[Community &<br/>Support Features]
+        PortalAPI[Portal Backend API<br/>BFF Layer]
+    end
+    
+    subgraph Supporting["Portal Supporting Services"]
+        Auth[Authentication &<br/>User Management]
+        CMS[Content<br/>Management System]
+        Search[Search &<br/>Recommendation Engine]
+        PortalAnalytics[Portal Analytics &<br/>Telemetry]
+        ElasticSearch[(Elasticsearch<br/>Search Index)]
+        Redis[(Redis<br/>Session & Cache)]
+        PortalDB[(Portal Database<br/>Users/Teams/Prefs)]
+        IDP[Identity Provider<br/>SSO/OAuth]
+        Ticketing[Support Ticketing<br/>Jira/ServiceNow]
+        CDN[CDN<br/>Static Assets]
+    end
+        
+    Developer -->|Browse/Search| Catalog
+    Developer -->|Read Docs| Documentation
+    Developer -->|Request Access| Subscription
+    Developer -->|View Usage| Dashboard
+    Developer -->|Test APIs| Testing
+    Developer -->|Get Support| Community
+    
+    Producers -->|Answer Questions| Community
+    Producers -->|Update Content| CMS
+    
+    Catalog <-->|Query APIs| PortalAPI
+    Documentation <-->|Get Specs| PortalAPI
+    Subscription <-->|Create/Manage| PortalAPI
+    Dashboard <-->|Get Metrics| PortalAPI
+    Testing <-->|Execute Calls| Gateway
+    Community <-->|Submit Tickets| Ticketing
+    
+    PortalAPI <-->|API Metadata| Registry
+    PortalAPI <-->|Usage Metrics| Auditor
+    PortalAPI <-->|Health Status| Gateway
+    PortalAPI -->|Index Content| Search
+    
+    Auth <-->|Authenticate| IDP
+    Auth <-->|Store Sessions| Redis
+    Auth <-->|Store Users| PortalDB
+    
+    Catalog -->|Search APIs| Search
+    Documentation -->|Search Docs| Search
+    Community -->|Search Forums| Search
+    Search <-->|Query Index| ElasticSearch
+    Search -->|Recommendations| Developer
+    
+    CMS -->|Static Content| CDN
+    CMS -->|Tutorials/Guides| Documentation
+    CMS -->|Knowledge Base| Community
+    CMS <-->|Store Content| PortalDB
+    
+    PortalAnalytics -->|Track Usage| Developer
+    PortalAnalytics -->|Track Usage| Catalog
+    PortalAnalytics -->|Track Usage| Documentation
+    PortalAnalytics -->|Track Usage| Subscription
+    PortalAnalytics -->|Track Usage| Dashboard
+    PortalAnalytics -->|Metrics| Producers
+    
+    Developer -->|Login| Auth
+    Auth -->|Session| Catalog
+    Auth -->|Session| Documentation
+    Auth -->|Session| Subscription
+    Auth -->|Session| Dashboard
+    Auth -->|Session| Testing
+    Auth -->|Session| Community
+    
+    style Portal fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    style Supporting fill:#e8f4ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 5 5
+    style Developer fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
+    style Producers fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
+    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style Auditor fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
+    style IDP fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    style Ticketing fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    style ElasticSearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style Redis fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style PortalDB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    style CDN fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+```
+
 ### API Catalog & Discovery
 **Purpose:** Enables developers to find and explore available APIs across the organization.
 
