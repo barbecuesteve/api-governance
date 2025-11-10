@@ -108,7 +108,6 @@ These pillars form a healthy internal API ecosystem.
 
 The following conceptual model shows how a registry, gateway, and lifecycle work together to support API-as-product.
 <pre class="mermaid">
-```mermaid
 flowchart LR
 A[API Producer Team] --> B[API Registry<br/>Design + Version + Docs]
 B --> C[API Gateway<br/>Policy + Access + Routing]
@@ -116,7 +115,6 @@ C --> D[Consumers<br/>Internal Applications]
 D --> C
 C --> E[API Auditor<br/>Usage + Quality + Cost + Health]
 E --> B
-```
 </pre>
 * **Registry**: Source of truth for APIs, their versions, documentation, ownership, and consumers
   * **API Catalog & Metadata** — Maintains comprehensive information about every API including its business purpose, technical specifications (OpenAPI/GraphQL schemas), and current lifecycle state. This central repository eliminates the "where do I find that API?" problem by providing a single, authoritative place to discover what exists across the entire organization.
@@ -149,14 +147,12 @@ E --> B
 A well-governed API follows an intentional lifecycle aligned to product thinking:
 
 <pre class="mermaid">
-```mermaid
 flowchart LR
 Idea --> Design --> Review --> Publish
 Publish --> Adopt
 Adopt --> Evolve
 Evolve --> Deprecate
 Deprecate --> Retire
-```
 </pre>
 * **Idea → Design:** The API is defined early in the registry, with purpose and intended users — Before any code is written, teams register their API concept in the registry, documenting what business problem it solves, what capabilities it provides, and who the anticipated consumers will be. This early registration creates visibility across the organization, allowing other teams to discover the planned API and potentially influence its design or avoid duplicate efforts. The design phase includes creating the API specification (OpenAPI, GraphQL schema, etc.), defining the data models, establishing error handling patterns, and documenting authentication requirements. By making APIs visible in the design stage, organizations shift from "build in secret, announce when done" to "design in the open, get feedback early."
 
