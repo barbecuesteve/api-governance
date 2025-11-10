@@ -1,3 +1,10 @@
+<script type="module">
+	import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+	mermaid.initialize({
+		startOnLoad: true,
+		theme: 'dark'
+	});
+</script>
 # API Auditor
 
 The Auditor is the analytics and observability layer of the platform, providing insights into API usage, performance, compliance, and business value. It processes logs and metrics from the Gateway, correlates them with Registry metadata, and surfaces actionable intelligence for producers, consumers, and governance teams.

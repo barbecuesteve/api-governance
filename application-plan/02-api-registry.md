@@ -1,3 +1,10 @@
+<script type="module">
+	import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+	mermaid.initialize({
+		startOnLoad: true,
+		theme: 'dark'
+	});
+</script>
 # API Registry
 
 The Registry is the system of record for all API metadata, serving as the central source of truth for API specifications, versions, subscriptions, and governance policies. It provides both human-facing interfaces and machine-readable APIs for the entire platform.

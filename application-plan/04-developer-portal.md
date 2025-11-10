@@ -1,3 +1,10 @@
+<script type="module">
+	import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+	mermaid.initialize({
+		startOnLoad: true,
+		theme: 'dark'
+	});
+</script>
 # Developer Portal
 
 The Developer Portal is the primary interface for API producers and consumers, providing self-service capabilities for discovery, documentation, subscription management, testing, and support. It serves as the "front door" to the API platform, delivering an exceptional developer experience.
