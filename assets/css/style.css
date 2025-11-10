@@ -3,24 +3,44 @@
 
 @import "{{ site.theme }}";
 
-/* Target the outer wrapper */
+/* Target the outer wrapper to be 75% of viewport */
 .outer {
   max-width: 75% !important;
 }
 
-/* Target the inner content */
+#main_content_wrap.outer {
+  max-width: 75% !important;
+}
+
+#header_wrap.outer {
+  max-width: 75% !important;
+}
+
+/* Target the inner content to fill its parent */
 .inner {
   max-width: 100% !important;
   width: 100% !important;
 }
 
-#main_content {
+#main_content.inner {
   max-width: 100% !important;
   width: 100% !important;
   padding-top: 40px !important;
 }
 
-/* Also ensure the main content wrapper specifically allows full width */
-#main_content_wrap {
-  max-width: 75% !important;
+/* Override media queries specifically */
+@media screen {
+  .outer {
+    max-width: 75% !important;
+  }
+  
+  .inner {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  #main_content {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
 }
