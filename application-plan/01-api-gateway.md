@@ -11,82 +11,132 @@ The Gateway is the runtime enforcement point for all API traffic, providing secu
 
 ## 1.1 Core Gateway Components
 
+### High-Level Architecture
 <pre class="mermaid">
-graph TD
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart LR
     Client[API Consumer]
     
     subgraph Gateway["API Gateway"]
-        ReverseProxy[Reverse Proxy / Request Router]
-        Auth[Authentication Module]
-        Authz[Authorization Module]
-        RateLimit[Rate Limiting & Throttling Module]
-        Transform[Request/Response Transformation Module]
-        Security[Data Security & Privacy Module]
-        Logging[Logging & Audit Module]
-        Metrics[Metrics & Telemetry Module]
-        Circuit[Circuit Breaker, Resilience & Canary Deployment Module]
-        Cache[Cache Module]
+        RequestPipeline[Request Pipeline]
+        ResponsePipeline[Response Pipeline]
     end
     
-    Backend[Backend API Services]
-    Registry[(API Registry)]
-    IDP[Identity Provider OAuth/OIDC]
-    RedisCache[(Redis/ Memcached)]
-    LogSystem[Logging Infrastructure Splunk/Elasticsearch]
-    MetricsSystem[Monitoring Platform Prometheus/Datadog]
+    Backend[Backend APIs]
     
-    Client -->|1. Request| ReverseProxy
-    ReverseProxy -->|2. Validate Identity| Auth
-    Auth <-->|Public Keys/API Keys| IDP
-    Auth <-->|API Key Lookup| Registry
-    Auth -->|3. Identity| Authz
-    Authz <-->|Subscription/Policies| Registry
-    Authz -->|4. Check Quota| RateLimit
-    RateLimit <-->|Rate Counters| RedisCache
-    RateLimit -->|5. Check Cache| Cache
-    Cache <-->|Distributed Cache| RedisCache
-    Cache -->|6. Transform Request| Transform
-    Transform <-->|Transformation Rules| Registry
-    Transform -->|7. Apply Security| Security
-    Security <-->|Encryption Keys| Registry
-    Security -->|8. Route with Resilience| Circuit
-    Circuit <-->|Health Status| Backend
-    Circuit <-->|Routing Config| Registry
-    Circuit -->|9. Forward Request| Backend
-    Backend -->|10. Response| Circuit
-    Circuit --> Security
-    Security --> Transform
-    Transform --> Cache
-    Cache --> ReverseProxy
-    ReverseProxy -->|11. Final Response| Client
+    Client --> RequestPipeline
+    RequestPipeline --> Backend
+    Backend --> ResponsePipeline
+    ResponsePipeline --> Client
+</pre>
+
+### Request Processing Pipeline
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart TB
+    Request[Incoming<br/>Request]
     
-    ReverseProxy -.->|Log Events| Logging
-    Auth -.->|Log Events| Logging
-    Authz -.->|Log Events| Logging
-    RateLimit -.->|Log Events| Logging
-    Transform -.->|Log Events| Logging
-    Security -.->|Log Events| Logging
-    Circuit -.->|Log Events| Logging
-    Logging -->|Audit Trail| LogSystem
+    subgraph Security["Security Layer"]
+        Auth[Authentication]
+        Authz[Authorization]
+    end
     
-    ReverseProxy -.->|Emit Metrics| Metrics
-    Auth -.->|Emit Metrics| Metrics
-    Authz -.->|Emit Metrics| Metrics
-    RateLimit -.->|Emit Metrics| Metrics
-    Transform -.->|Emit Metrics| Metrics
-    Security -.->|Emit Metrics| Metrics
-    Circuit -.->|Emit Metrics| Metrics
-    Cache -.->|Emit Metrics| Metrics
-    Metrics -->|Telemetry| MetricsSystem
+    subgraph Traffic["Traffic Management"]
+        RateLimit[Rate Limiting]
+        Cache[Cache Check]
+    end
     
-    style Gateway fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
-    style Client fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
-    style Backend fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
-    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style IDP fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style RedisCache fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style LogSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style MetricsSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
+    subgraph Processing["Request Processing"]
+        Transform[Transformation]
+        SecurityFilter[Security Filter]
+        Circuit[Circuit Breaker]
+    end
+    
+    Backend[Backend<br/>API]
+    
+    Request --> Auth
+    Auth --> Authz
+    Authz --> RateLimit
+    RateLimit --> Cache
+    Cache --> Transform
+    Transform --> SecurityFilter
+    SecurityFilter --> Circuit
+    Circuit --> Backend
+</pre>
+
+### Response Processing Pipeline
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart TB
+    Backend[Backend<br/>Response]
+    
+    subgraph Processing["Response Processing"]
+        Circuit[Circuit Breaker]
+        SecurityFilter[Security Filter]
+        Transform[Transformation]
+    end
+    
+    subgraph Caching["Caching"]
+        CacheStore[Cache Store]
+    end
+    
+    subgraph Observability["Observability"]
+        Logging[Logging]
+        Metrics[Metrics]
+    end
+    
+    Client[Response to<br/>Consumer]
+    
+    Backend --> Circuit
+    Circuit --> SecurityFilter
+    SecurityFilter --> Transform
+    Transform --> CacheStore
+    CacheStore --> Client
+    
+    Circuit -.-> Logging
+    SecurityFilter -.-> Logging
+    Transform -.-> Logging
+    
+    Circuit -.-> Metrics
+    SecurityFilter -.-> Metrics
+    Transform -.-> Metrics
+    CacheStore -.-> Metrics
+</pre>
+
+### Gateway Supporting Infrastructure
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart LR
+    subgraph Core["Gateway Core Modules"]
+        Router[Reverse Proxy &<br/>Router]
+        Auth[Authentication]
+        RateLimit[Rate Limiting]
+        Transform[Transformation]
+    end
+    
+    subgraph Observability["Observability"]
+        Logging[Logging &<br/>Audit]
+        Metrics[Metrics &<br/>Telemetry]
+    end
+    
+    subgraph Data["Data Layer"]
+        Redis[Redis<br/>Cache & Counters]
+        Registry[API Registry<br/>Config]
+    end
+    
+    subgraph External["External Systems"]
+        IDP[Identity Provider<br/>OAuth/OIDC]
+        LogInfra[Log Infrastructure<br/>Splunk/ELK]
+        MonitoringPlatform[Monitoring Platform<br/>Prometheus/Datadog]
+    end
+    
+    Core --> Redis
+    Core <--> Registry
+    Auth <--> IDP
+    Logging --> LogInfra
+    Metrics --> MonitoringPlatform
+    Core -.-> Logging
+    Core -.-> Metrics
 </pre>
 
 ### Reverse Proxy / Request Router
