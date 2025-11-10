@@ -4,7 +4,7 @@ The Registry is the system of record for all API metadata, serving as the centra
 
 ## 2.1 Core Registry Components
 
-```mermaid
+<pre class="mermaid">
 graph TD
     Producer[API Producer Teams]
     Consumer[API Consumers]
@@ -93,7 +93,7 @@ graph TD
     style Vault fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style K8s fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style Git fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-```
+</pre>
 
 ### API Catalog & Metadata Management
 **Purpose:** Stores and manages comprehensive metadata about all APIs in the organization.

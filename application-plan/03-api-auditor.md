@@ -4,7 +4,7 @@ The Auditor is the analytics and observability layer of the platform, providing 
 
 ## 3.1 Core Auditor Components
 
-```mermaid
+<pre class="mermaid">
 graph TD
     Gateway[API Gateway<br/>Log Source]
     Registry[API Registry<br/>Metadata]
@@ -100,7 +100,7 @@ graph TD
     style DataWarehouse fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style GeoIP fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style AlertSystem fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-```
+</pre>
 
 ### Log Ingestion & Processing Pipeline
 **Purpose:** Collects, processes, and enriches logs from Gateway instances for analysis and long-term storage.

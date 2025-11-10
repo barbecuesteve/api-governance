@@ -109,7 +109,7 @@ The Integration & Automation layer connects the API governance platform with exi
 
 The API governance platform consists of four core services (Gateway, Registry, Auditor, Portal) built on shared infrastructure, with extensive integrations to enterprise tools and automation throughout the API lifecycle.
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
     subgraph Teams
         TeamP[Producer App Team]
@@ -141,7 +141,7 @@ flowchart LR
 
     style Platform fill:#D0EED0
 
-```
+</pre>
 
 ### Key Features
 

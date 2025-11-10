@@ -4,7 +4,7 @@ The Gateway is the runtime enforcement point for all API traffic, providing secu
 
 ## 1.1 Core Gateway Components
 
-```mermaid
+<pre class="mermaid">
 graph TD
     Client[API Consumer]
     
@@ -80,7 +80,7 @@ graph TD
     style RedisCache fill:#fff4e1,stroke:#ff9900,stroke-width:2px
     style LogSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
     style MetricsSystem fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-```
+</pre>
 
 ### Reverse Proxy / Request Router
 **Purpose:** Routes incoming requests to appropriate backend services based on API version, endpoint, and routing rules.

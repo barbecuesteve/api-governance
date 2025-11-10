@@ -4,7 +4,7 @@ The Developer Portal is the primary interface for API producers and consumers, p
 
 ## 4.1 Core Portal Components
 
-```mermaid
+<pre class="mermaid">
 graph TD
     Developer[Developers<br/>API Consumers]
     Producers[API Producers]
@@ -100,7 +100,7 @@ graph TD
     style Redis fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style PortalDB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
     style CDN fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-```
+</pre>
 
 ### API Catalog & Discovery
 **Purpose:** Enables developers to find and explore available APIs across the organization.
