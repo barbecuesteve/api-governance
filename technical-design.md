@@ -54,6 +54,8 @@ flowchart LR
     Auditor -->|watches| Gateway
 
     style Platform fill:#D0EED0
+    style Teams fill:#D0D0EE  
+    style Implementations fill:#E0ED0E0
 </pre>
 ### Component Purposes
 
@@ -72,6 +74,7 @@ This architecture ensures APIs are intentionally designed, discoverable, governe
 The following entities form the foundation for API tracking, lifecycle management, and usage relationships.
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','secondaryColor':'#f0f0f0','tertiaryColor':'#fff','edgeLabelBackground':'#ffffff','fontSize':'14px'}}}%%
 classDiagram
     class Application {
         +id
@@ -578,6 +581,7 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
 
 ### 10.2 Maturity Stages
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'edgeLabelBackground':'#ffffff'}}}%%
 graph TB
     L1["<b>Level 1: Chaos</b><br/>Ad hoc APIs<br/>Unknown consumers<br/>No lifecycle"]
     L2["<b>Level 2: Cataloging</b><br/>Registry exists<br/>Ownership visible"]
@@ -590,11 +594,11 @@ graph TB
     L3 -->|Product thinking| L4
     L4 -->|Continuous optimization| L5
     
-    style L1 fill:#ffcccc
-    style L2 fill:#ffe6cc
-    style L3 fill:#fff4cc
-    style L4 fill:#d4edda
-    style L5 fill:#c3e6cb
+    style L1 fill:#ffcccc,stroke:#333,stroke-width:2px,color:#000
+    style L2 fill:#ffe6cc,stroke:#333,stroke-width:2px,color:#000
+    style L3 fill:#fff4cc,stroke:#333,stroke-width:2px,color:#000
+    style L4 fill:#d4edda,stroke:#333,stroke-width:2px,color:#000
+    style L5 fill:#c3e6cb,stroke:#333,stroke-width:2px,color:#000
     
     classDef default font-size:11pt
 </pre>

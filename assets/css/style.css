@@ -3,7 +3,7 @@
 
 @import "{{ site.theme }}";
 
-.main_content_wrap {
-  width: 500px;
+#main_content {
+  width: 600px;
 }
 
