@@ -6,7 +6,6 @@
 	});
 </script>
 
-## **Scalable API Governance for Modern Engineering Organizations**
 
 Steve Sparks
 <br>November 2025
@@ -115,6 +114,7 @@ These pillars form a healthy internal API ecosystem.
 
 The following conceptual model shows how a registry, gateway, and lifecycle work together to support API-as-product.
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
 A[API Producer Team] --> B[API Registry<br/>Design + Version + Docs]
 B --> C[API Gateway<br/>Policy + Access + Routing]
@@ -154,6 +154,7 @@ E --> B
 A well-governed API follows an intentional lifecycle aligned to product thinking:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
 Idea --> Design --> Review --> Publish
 Publish --> Adopt
