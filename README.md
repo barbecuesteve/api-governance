@@ -6,7 +6,8 @@ Steve Sparks
 
 ---
 
-### **Strategic Overview: Why This Matters**
+
+#### **Why This Matters**
 
 For technology executives navigating the complexities of modern software organizations, API governance represents a critical but often overlooked leverage point for transforming engineering effectiveness. While it may seem like a technical concern best left to architecture teams, the business impact of how your organization manages its internal APIs directly affects four key executive priorities: **reuse, velocity, auditability, and cost**.
 
@@ -35,6 +36,7 @@ These four dimensions reinforce each other. Better reuse accelerates velocity by
 The good news: establishing effective API governance doesn't require a disruptive transformation or massive technology investment. It requires commitment to treating internal APIs as products deserving the same care as customer-facing services, implementing lightweight processes that guide without obstructing, and building a unified platform that makes governance feel like enablement rather than bureaucracy. The organizations making this shift now are seeing 20-30% improvements in engineering productivity, 40-50% reductions in duplicative efforts, and measurably better incident response times. More importantly, they're building the foundation for sustained innovation velocity as their architectures continue to grow and evolve. This isn't a technical initiative — it's a strategic investment in your organization's ability to deliver value efficiently and adapt quickly to changing business needs.
 
 ---
+![confused](confused.png)
 
 --- 
 
