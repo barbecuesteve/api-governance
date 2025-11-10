@@ -796,3 +796,9 @@ The infrastructure layer provides the foundational services, networking, securit
 - Comprehensive monitoring and alerting
 - Runbooks and documentation
 - Regular chaos engineering exercises
+
+---
+
+**Next:** [Integration & Automation](06-integration-automation.md)
+
+[← Back to Overview](../README.md)

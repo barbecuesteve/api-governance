@@ -671,3 +671,10 @@ flowchart LR
 - Secrets management for API keys, certificates, encryption keys
 - Regular security patching and vulnerability scanning
 - Network isolation (private subnets for backend communication)
+
+---
+
+**Next:** [API Registry](02-api-registry.md)
+
+[← Back to Overview](../README.md)
+

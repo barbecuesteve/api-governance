@@ -577,3 +577,9 @@ flowchart LR
 - Data encryption: At rest and in transit
 - Audit logging: Who queried what data (meta-audit trail)
 - Compliance: GDPR right to erasure, data retention enforcement
+
+---
+
+**Next:** [Developer Portal](04-developer-portal.md)
+
+[← Back to Overview](../README.md)

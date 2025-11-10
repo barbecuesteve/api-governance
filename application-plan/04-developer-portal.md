@@ -633,3 +633,9 @@ flowchart LR
 - Semantic HTML and structured data (schema.org)
 - Sitemap generation for API catalog
 - Meta tags and Open Graph for social sharing
+
+---
+
+**Next:** [Platform Infrastructure](05-platform-infrastructure.md)
+
+[← Back to Overview](../README.md)

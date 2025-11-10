@@ -545,3 +545,9 @@ flowchart TB
 - Secrets management for database credentials, API keys
 - Regular database security patches and vulnerability scans
 - Access control: RBAC for Registry admin functions
+
+---
+
+**Next:** [API Auditor](03-api-auditor.md)
+
+[← Back to Overview](../README.md)
