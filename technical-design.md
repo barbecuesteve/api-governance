@@ -73,7 +73,7 @@ This architecture ensures APIs are intentionally designed, discoverable, governe
 
 The following entities form the foundation for API tracking, lifecycle management, and usage relationships.
 
-```mermaid
+<pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','secondaryColor':'#f0f0f0','tertiaryColor':'#fff','edgeLabelBackground':'#ffffff','fontSize':'14px'}}}%%
 erDiagram
     Application ||--o{ Subscription : "consumes"
@@ -142,7 +142,7 @@ erDiagram
         int response_code
         string response_body
     }
-```
+</pre>
 
 ### Entity Descriptions
 
@@ -171,6 +171,7 @@ Detailed error records captured for failed API calls, providing diagnostic infor
 The lifecycle supports producer workflow, consumer onboarding, iteration, and responsible deprecation.
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
     A[Design] --> B[Review]
     B --> C[Publish]
@@ -191,6 +192,7 @@ This section expands lifecycle stages into actionable workflows for both API pro
 ### 5.1 Producer Workflow (API Creation → Publication)
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 sequenceDiagram
     participant PT as Producer Team
     participant DA as Departmental API Advisor
@@ -238,6 +240,7 @@ sequenceDiagram
 
 ### 5.2 Consumer Workflow (Discovery → Permissioned Use)
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 sequenceDiagram
     participant CT as Consumer Team
     participant REG as API Registry
@@ -290,6 +293,7 @@ Semantic Versioning (SemVer) applies to API evolution:
 ### 6.1 Version Evolution Flow
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TD
     A[Published v1.0] --> B[Minor Update v1.1]
     B --> C[Minor Update v1.2]
@@ -366,6 +370,7 @@ APIs should sunset safely with full visibility of consumer impact.
 ### 7.1 Deprecation to Retirement Flow
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TD
     A[Active] --> B[Deprecated]
     B -->|90 days minimum| C[Eligible for Retirement]
@@ -716,6 +721,7 @@ While automation handles routine governance tasks, **human expertise is critical
 The roles work together in a defined flow that balances speed with quality:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TD
     REG -->|Early draft| DA([Departmental Advisors])
     PT([Producer Team]) -->|Improved spec| REG[Registry Submission]
