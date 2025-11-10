@@ -27,20 +27,3 @@
   width: 100% !important;
   padding-top: 40px !important;
 }
-
-/* Override media queries specifically */
-@media screen {
-  .outer {
-    max-width: 75% !important;
-  }
-  
-  .inner {
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-  
-  #main_content {
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-}
