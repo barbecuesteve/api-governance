@@ -16,8 +16,7 @@ It is intended for:
 ## 2. Reference Architecture Overview
 
 The architecture below shows the core platform components that enable discoverability, controlled consumption, and measurable API product quality.
-
-```mermaid
+<pre class="mermaid">
 flowchart LR
     subgraph Teams
         TeamP[Producer App Team]
@@ -48,9 +47,7 @@ flowchart LR
     Auditor -->|watches| Gateway
 
     style Platform fill:#D0EED0
-
-```
-
+</pre>
 ### Component Purposes
 
 | Component | Responsibilities |
@@ -67,7 +64,7 @@ This architecture ensures APIs are intentionally designed, discoverable, governe
 
 The following entities form the foundation for API tracking, lifecycle management, and usage relationships.
 
-```mermaid
+<pre class="mermaid">
 classDiagram
     class Application {
         +id
@@ -135,7 +132,7 @@ classDiagram
     Environment "1" --> "*" Subscription 
     Metrics "1" --> "*" Subscription : measures
     Errors "1" --> "*" Subscription : diagnoses
-```
+</pre>
 
 ### Entity Descriptions
 
@@ -163,7 +160,7 @@ Detailed error records captured for failed API calls, providing diagnostic infor
 
 The lifecycle supports producer workflow, consumer onboarding, iteration, and responsible deprecation.
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
     A[Design] --> B[Review]
     B --> C[Publish]
@@ -171,7 +168,7 @@ flowchart LR
     D --> E[Evolve]
     E --> F[Deprecate]
     F --> G[Retire]
-```
+</pre>
 
 Lifecycle states map directly to governance and policy enforcement points.
 
@@ -183,7 +180,7 @@ This section expands lifecycle stages into actionable workflows for both API pro
 
 ### 5.1 Producer Workflow (API Creation → Publication)
 
-```mermaid
+<pre class="mermaid">
 sequenceDiagram
     participant PT as Producer Team
     participant DA as Departmental API Advisor
@@ -217,7 +214,7 @@ sequenceDiagram
     REG->>GW: Register configuration for routing/policies
     REG-->>PT: Mark v1.0 as Published
     REG->>PT: API now discoverable & supported
-```
+</pre>
 
 **Key Concepts:**
 - **Departmental Advisors** provide early, informal guidance before formal review
@@ -230,8 +227,7 @@ sequenceDiagram
 ---
 
 ### 5.2 Consumer Workflow (Discovery → Permissioned Use)
-
-```mermaid
+<pre class="mermaid">
 sequenceDiagram
     participant CT as Consumer Team
     participant REG as API Registry
@@ -254,8 +250,7 @@ sequenceDiagram
     ARB-->>REG: Approval
     REG->>GW: Enable Prod routing
     CT->>GW: Begin Prod usage (audited)
-```
-
+</pre>
 **Principles:**
 - Producers approve consumers to dev, ARB approves consumers to prod
 - Gateway enforces subscription validity
@@ -284,13 +279,13 @@ Semantic Versioning (SemVer) applies to API evolution:
 
 ### 6.1 Version Evolution Flow
 
-```mermaid
+<pre class="mermaid">
 flowchart TD
     A[Published v1.0] --> B[Minor Update v1.1]
     B --> C[Minor Update v1.2]
     A --> D[Major Update v2.0]
     D --> E[Minor Updates v2.1, v2.2]
-```
+</pre>
 
 **Policy Recommendations:**
 
@@ -360,14 +355,13 @@ APIs should sunset safely with full visibility of consumer impact.
 
 ### 7.1 Deprecation to Retirement Flow
 
-```mermaid
+<pre class="mermaid">
 flowchart TD
     A[Active] --> B[Deprecated]
     B -->|90 days minimum| C[Eligible for Retirement]
     C -->|Zero traffic for 30 days| D[Retired]
     D --> E[Archived for reporting]
-```
-
+</pre>
 **Definition of Stages:**
 
 | Stage | Rules |
@@ -576,8 +570,7 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
 | **Sunset Discipline** | Avg. time from deprecation → retirement | Predictable, < policy max |
 
 ### 10.2 Maturity Stages
-
-```mermaid
+<pre class="mermaid">
 graph TB
     L1["<b>Level 1: Chaos</b><br/>Ad hoc APIs<br/>Unknown consumers<br/>No lifecycle"]
     L2["<b>Level 2: Cataloging</b><br/>Registry exists<br/>Ownership visible"]
@@ -597,8 +590,7 @@ graph TB
     style L5 fill:#c3e6cb
     
     classDef default font-size:11pt
-```
-
+</pre>
 Most large orgs sit between **2 and 3** when they realize change is needed.
 
 ---
@@ -712,7 +704,7 @@ While automation handles routine governance tasks, **human expertise is critical
 
 The roles work together in a defined flow that balances speed with quality:
 
-```mermaid
+<pre class="mermaid">
 flowchart TD
     REG -->|Early draft| DA([Departmental Advisors])
     PT([Producer Team]) -->|Improved spec| REG[Registry Submission]
@@ -725,8 +717,7 @@ flowchart TD
 
     GG([Governance Group]) -.->|Standards & policies| DA
     ARP -.->|Exceptions| GG
-```
-
+</pre>
 **Key Workflow Principles:**
 - **API Review Panel is made of Advisors** - Obviously the advisor who helped author this API cannot be on its panel, but generally, this is part of the job.
 - **Advisors are optional but recommended** — Teams can skip straight to formal review, but advisor guidance improves success rates
