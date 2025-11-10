@@ -361,7 +361,7 @@ APIs should sunset safely with full visibility of consumer impact.
 ### 7.1 Deprecation to Retirement Flow
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Active] --> B[Deprecated]
     B -->|90 days minimum| C[Eligible for Retirement]
     C -->|Zero traffic for 30 days| D[Retired]
@@ -577,13 +577,29 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
 
 ### 10.2 Maturity Stages
 
-| Stage | Characteristics |
-|--------|------------------|
-| **Level 1 – Chaos** | Ad hoc APIs, unknown consumers, no lifecycle |
-| **Level 2 – Cataloging** | Registry exists; ownership visible |
-| **Level 3 – Governed** | Reviews + standards; gateway enforcement |
-| **Level 4 – Product Mindset** | APIs treated as products with roadmap + feedback |
-| **Level 5 – Optimized Ecosystem** | Automated policy, data-driven evolution, high reuse |
+```mermaid
+graph TB
+    L1["<b>Level 1: Chaos</b><br/>Ad hoc APIs<br/>Unknown consumers<br/>No lifecycle"]
+    L2["<b>Level 2: Cataloging</b><br/>Registry exists<br/>Ownership visible"]
+    L3["<b>Level 3: Governed</b><br/>Reviews + standards<br/>Gateway enforcement"]
+    L4["<b>Level 4: Product Mindset</b><br/>APIs as products<br/>Roadmap + feedback"]
+    L5["<b>Level 5: Optimized Ecosystem</b><br/>Automated policy<br/>Data-driven evolution<br/>High reuse"]
+    
+    L1 -->|Establish visibility| L2
+    L2 -->|Add guardrails| L3
+    L3 -->|Product thinking| L4
+    L4 -->|Continuous optimization| L5
+    
+    style L1 fill:#ffcccc
+    style L2 fill:#ffe6cc
+    style L3 fill:#fff4cc
+    style L4 fill:#d4edda
+    style L5 fill:#c3e6cb
+    
+    classDef default font-size:11pt
+```
+
+
 
 Most large orgs sit between **2 and 3** when they realize change is needed.
 
