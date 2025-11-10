@@ -55,7 +55,7 @@ flowchart LR
 
     style Platform fill:#D0EED0
     style Teams fill:#D0D0EE  
-    style Implementations fill:#E0ED0E0
+    style Implementations fill:#E0D0E0
 </pre>
 ### Component Purposes
 
@@ -73,76 +73,76 @@ This architecture ensures APIs are intentionally designed, discoverable, governe
 
 The following entities form the foundation for API tracking, lifecycle management, and usage relationships.
 
-<pre class="mermaid">
+```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','secondaryColor':'#f0f0f0','tertiaryColor':'#fff','edgeLabelBackground':'#ffffff','fontSize':'14px'}}}%%
-classDiagram
-    class Application {
-        +id
-        +name
-        +owning_team
-        +contact
-        keywords
-        description
-        tags
+erDiagram
+    Application ||--o{ Subscription : "consumes"
+    APIVersion ||--o{ Subscription : "allows"
+    Application ||--o{ APIVersion : "publishes"
+    Environment ||--o{ Subscription : "scopes"
+    Subscription ||--o{ Metrics : "measures"
+    Subscription ||--o{ Errors : "diagnoses"
+
+    Application {
+        string id PK
+        string name
+        string owning_team
+        string contact
+        string keywords
+        string description
+        string tags
     }
 
-    class APIVersion {
-        +id
-        +api_name
-        +version
-        +status
-        +semver_major
-        +semver_minor
-        +release_date
-        description
-        tags
+    APIVersion {
+        string id PK
+        string api_name
+        string version
+        string status
+        int semver_major
+        int semver_minor
+        date release_date
+        string description
+        string tags
     }
 
-    class Environment {
-        +name
-        +type(dev/test/prod)
-        attributes
-        description
-        tags
+    Environment {
+        string name PK
+        string type
+        json attributes
+        string description
+        string tags
     }
 
-    class Subscription {
-        +id
-        +application_id
-        +api_version_id
-        +environment
-        +status
-        +approval_date
-        usage_description
-        estimated_txns_per_sec
+    Subscription {
+        string id PK
+        string application_id FK
+        string api_version_id FK
+        string environment FK
+        string status
+        date approval_date
+        string usage_description
+        int estimated_txns_per_sec
     }
 
-    class Metrics {
-        +date
-        +subscription_id
-        txns_per_sec
-        latency_avg
-        latency_90pct
-        latency_99pct
-        errors_4xx
-        errors_5xx
+    Metrics {
+        date date PK
+        string subscription_id FK
+        float txns_per_sec
+        float latency_avg
+        float latency_90pct
+        float latency_99pct
+        int errors_4xx
+        int errors_5xx
     }
 
-    class Errors {
-        +timestamp
-        +subscription_id
-        +request_body
-        +response_code
-        +response_body
+    Errors {
+        timestamp timestamp PK
+        string subscription_id FK
+        string request_body
+        int response_code
+        string response_body
     }
-
-    Application "1" --> "*" Subscription : consumes
-    APIVersion "1" --> "*" Subscription : allows
-    Application "1" --> "*" APIVersion : publishes
-    Environment "1" --> "*" Subscription 
-    Metrics "1" --> "*" Subscription : measures
-    Errors "1" --> "*" Subscription : diagnoses
-</pre>
+```
 
 ### Entity Descriptions
 
