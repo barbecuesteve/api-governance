@@ -112,15 +112,15 @@ These pillars form a healthy internal API ecosystem.
 
 ### **A High-Level View of the Platform**
 
-The following conceptual model shows how a registry, gateway, and lifecycle work together to support API-as-product.
+The following conceptual model shows how a registry, gateway, and auditor work together to support API-as-product.
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
-A[API Producer Team] --> B[API Registry<br/>Design + Version + Docs]
-B --> C[API Gateway<br/>Policy + Access + Routing]
-C --> D[Consumers<br/>Internal Applications]
+A[API Producer Team] --> B[API Registry: Design/Version/Docs]
+B --> C[API Gateway: Policy/Access/Routing]
+C --> D[Consumers: Internal Applications]
 D --> C
-C --> E[API Auditor<br/>Usage + Quality + Cost + Health]
+C --> E[API Auditor: Usage/Quality/Cost/Health]
 E --> B
 </pre>
 * **Registry**: Source of truth for APIs, their versions, documentation, ownership, and consumers
