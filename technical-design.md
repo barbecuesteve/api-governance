@@ -24,6 +24,7 @@ It is intended for:
 
 The architecture below shows the core platform components that enable discoverability, controlled consumption, and measurable API product quality.
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
     subgraph Teams
         TeamP[Producer App Team]
