@@ -4,102 +4,117 @@ The Developer Portal is the primary interface for API producers and consumers, p
 
 ## 4.1 Core Portal Components
 
+### High-Level Architecture
 <pre class="mermaid">
-graph TD
-    Developer[Developers<br/>API Consumers]
-    Producers[API Producers]
-    Registry[API Registry]
-    Auditor[API Auditor]
-    Gateway[API Gateway]
-    
-    subgraph Portal["Developer Portal"]
-        Catalog[API Catalog &<br/>Discovery]
-        Documentation[Interactive API<br/>Documentation]
-        Subscription[Subscription<br/>Management &<br/>Onboarding]
-        Dashboard[Developer<br/>Dashboard &<br/>Analytics]
-        Testing[API Testing &<br/>Sandbox Environment]
-        Community[Community &<br/>Support Features]
-        PortalAPI[Portal Backend API<br/>BFF Layer]
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart TB
+    subgraph Users["Users"]
+        Developers[Developers]
+        Producers[API Producers]
     end
     
-    subgraph Supporting["Portal Supporting Services"]
-        Auth[Authentication &<br/>User Management]
-        CMS[Content<br/>Management System]
-        Search[Search &<br/>Recommendation Engine]
-        PortalAnalytics[Portal Analytics &<br/>Telemetry]
-        ElasticSearch[(Elasticsearch<br/>Search Index)]
-        Redis[(Redis<br/>Session & Cache)]
-        PortalDB[(Portal Database<br/>Users/Teams/Prefs)]
-        IDP[Identity Provider<br/>SSO/OAuth]
-        Ticketing[Support Ticketing<br/>Jira/ServiceNow]
-        CDN[CDN<br/>Static Assets]
+    subgraph Portal["Developer Portal Frontend"]
+        Catalog[API Catalog]
+        Docs[Documentation]
+        Subscription[Subscriptions]
+        Dashboard[Dashboard]
+        Testing[Testing]
+        Community[Community]
     end
-        
-    Developer -->|Browse/Search| Catalog
-    Developer -->|Read Docs| Documentation
-    Developer -->|Request Access| Subscription
-    Developer -->|View Usage| Dashboard
-    Developer -->|Test APIs| Testing
-    Developer -->|Get Support| Community
     
-    Producers -->|Answer Questions| Community
-    Producers -->|Update Content| CMS
+    subgraph Backend["Portal Backend BFF"]
+        PortalAPI[Portal API Layer]
+    end
     
-    Catalog <-->|Query APIs| PortalAPI
-    Documentation <-->|Get Specs| PortalAPI
-    Subscription <-->|Create/Manage| PortalAPI
-    Dashboard <-->|Get Metrics| PortalAPI
-    Testing <-->|Execute Calls| Gateway
-    Community <-->|Submit Tickets| Ticketing
+    subgraph Platform["Platform Services"]
+        Registry[API Registry]
+        Auditor[API Auditor]
+        Gateway[API Gateway]
+    end
     
-    PortalAPI <-->|API Metadata| Registry
-    PortalAPI <-->|Usage Metrics| Auditor
-    PortalAPI <-->|Health Status| Gateway
-    PortalAPI -->|Index Content| Search
+    Developers --> Portal
+    Producers --> Portal
+    Portal --> PortalAPI
+    PortalAPI <--> Registry
+    PortalAPI <--> Auditor
+    PortalAPI <--> Gateway
+</pre>
+
+### Portal User Experience Layer
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart TB
+    subgraph Discovery["Discovery & Learning"]
+        Catalog[API Catalog & Discovery]
+        Docs[Interactive API Documentation]
+    end
     
-    Auth <-->|Authenticate| IDP
-    Auth <-->|Store Sessions| Redis
-    Auth <-->|Store Users| PortalDB
+    subgraph Access["Access & Testing"]
+        Subscription[Subscription Management]
+        Testing[API Testing & Sandbox]
+    end
     
-    Catalog -->|Search APIs| Search
-    Documentation -->|Search Docs| Search
-    Community -->|Search Forums| Search
-    Search <-->|Query Index| ElasticSearch
-    Search -->|Recommendations| Developer
+    subgraph Monitoring["Monitoring & Support"]
+        Dashboard[Developer Dashboard]
+        Community[Community & Support]
+    end
     
-    CMS -->|Static Content| CDN
-    CMS -->|Tutorials/Guides| Documentation
-    CMS -->|Knowledge Base| Community
-    CMS <-->|Store Content| PortalDB
+    subgraph Core["Portal Core"]
+        Auth[Authentication]
+        PortalAPI[Portal Backend API]
+    end
     
-    PortalAnalytics -->|Track Usage| Developer
-    PortalAnalytics -->|Track Usage| Catalog
-    PortalAnalytics -->|Track Usage| Documentation
-    PortalAnalytics -->|Track Usage| Subscription
-    PortalAnalytics -->|Track Usage| Dashboard
-    PortalAnalytics -->|Metrics| Producers
+    Catalog --> Docs
+    Docs --> Subscription
+    Subscription --> Testing
+    Testing --> Dashboard
+    Dashboard --> Community
+    Auth --> Catalog
+    Auth --> Subscription
+    Auth --> Dashboard
+    PortalAPI --> Discovery
+    PortalAPI --> Access
+    PortalAPI --> Monitoring
+</pre>
+
+### Portal Infrastructure & Supporting Services
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart LR
+    subgraph Frontend["Portal Frontend"]
+        UI[Web Application React/Vue]
+    end
     
-    Developer -->|Login| Auth
-    Auth -->|Session| Catalog
-    Auth -->|Session| Documentation
-    Auth -->|Session| Subscription
-    Auth -->|Session| Dashboard
-    Auth -->|Session| Testing
-    Auth -->|Session| Community
+    subgraph Services["Portal Services"]
+        Auth[Authentication & User Management]
+        Search[Search & Recommendations]
+        CMS[Content Management]
+        Analytics[Portal Analytics]
+    end
     
-    style Portal fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
-    style Supporting fill:#e8f4ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 5 5
-    style Developer fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
-    style Producers fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
-    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style Auditor fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style IDP fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style Ticketing fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-    style ElasticSearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style Redis fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style PortalDB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style CDN fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    subgraph Storage["Data Storage"]
+        PortalDB[(Portal DB Users/Teams)]
+        Redis[(Redis Cache/Sessions)]
+        Elasticsearch[(Elasticsearch Search Index)]
+    end
+    
+    subgraph External["External Systems"]
+        IDP[Identity Provider SSO]
+        CDN[CDN Static Assets]
+        Ticketing[Support Ticketing]
+    end
+    
+    UI --> Auth
+    UI --> Search
+    UI --> CMS
+    Auth <--> IDP
+    Auth --> Redis
+    Auth --> PortalDB
+    Search <--> Elasticsearch
+    CMS --> CDN
+    CMS --> PortalDB
+    Analytics --> PortalDB
+    UI --> Ticketing
 </pre>
 
 ### API Catalog & Discovery

@@ -4,102 +4,131 @@ The Auditor is the analytics and observability layer of the platform, providing 
 
 ## 3.1 Core Auditor Components
 
+### High-Level Architecture
 <pre class="mermaid">
-graph TD
-    Gateway[API Gateway<br/>Log Source]
-    Registry[API Registry<br/>Metadata]
-    Producers[API Producers]
-    Consumers[API Consumers]
-    Governance[Governance Team]
-    SIEM[SIEM System<br/>Splunk/QRadar]
-    BI[BI Tools<br/>Tableau/Looker]
-    Finance[Finance System]
-    
-    subgraph Auditor["API Auditor"]
-        LogIngestion[Log Ingestion &<br/>Processing Pipeline]
-        Metrics[Metrics Collection &<br/>Aggregation Engine]
-        Analytics[Analytics &<br/>Reporting Engine]
-        Compliance[Compliance &<br/>Audit Monitoring]
-        Billing[Usage-Based<br/>Billing & Chargeback]
-        SLAMonitor[API Health &<br/>SLA Monitoring]
-        AuditorAPI[Auditor API &<br/>Query Service]
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart LR
+    subgraph External["External Systems"]
+        Gateway[API Gateway]
+        Registry[API Registry]
+        Producers[API Producers]
+        Consumers[API Consumers]
+        Governance[Governance Team]
     end
     
-    Kafka[Kafka<br/>Log Streaming]
-    Elasticsearch[(Elasticsearch<br/>Recent Logs)]
-    S3[(S3/GCS<br/>Cold Storage)]
-    TimeSeriesDB[(Time-Series DB<br/>Prometheus/InfluxDB)]
-    DataWarehouse[(Data Warehouse<br/>Snowflake/BigQuery)]
-    GeoIP[GeoIP Database<br/>Location Lookup]
-    AlertSystem[Alerting<br/>PagerDuty/Opsgenie]
+    subgraph Auditor["API Auditor Core"]
+        LogIngestion[Log Ingestion Pipeline]
+        Metrics[Metrics Engine]
+        Analytics[Analytics Engine]
+        Compliance[Compliance Monitor]
+        Billing[Billing Engine]
+        SLAMonitor[SLA Monitor]
+        AuditorAPI[Auditor API]
+    end
     
-    Gateway -->|Stream Logs| Kafka
-    Kafka -->|Consume| LogIngestion
+    subgraph Integration["Integration Systems"]
+        SIEM[SIEM]
+        BI[BI Tools]
+        Finance[Finance]
+        Alerts[Alerting]
+    end
     
-    LogIngestion <-->|Enrich with Metadata| Registry
-    LogIngestion <-->|GeoIP Lookup| GeoIP
-    LogIngestion -->|Store Recent| Elasticsearch
-    LogIngestion -->|Archive| S3
-    LogIngestion -->|Extract Metrics| Metrics
+    Gateway -->|Logs| LogIngestion
+    Registry <-->|Metadata| LogIngestion
+    LogIngestion --> Metrics
+    Metrics --> Analytics
+    Metrics --> SLAMonitor
+    Metrics --> Billing
+    Analytics --> AuditorAPI
+    Compliance --> SIEM
+    Compliance --> Alerts
+    SLAMonitor --> Alerts
+    Billing --> Finance
+    Billing --> Consumers
+    AuditorAPI --> Producers
+    AuditorAPI --> Consumers
+    AuditorAPI --> BI
+    Analytics --> Governance
+    Alerts --> Producers
+</pre>
+
+### Auditor Internal Components
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart TB
+    subgraph Ingestion["Data Ingestion Layer"]
+        LogPipeline[Log Ingestion & Processing Pipeline]
+        Enrichment[Log Enrichment]
+    end
     
-    Metrics -->|Aggregate| TimeSeriesDB
-    Metrics -->|Calculate| SLAMonitor
-    Metrics -->|Count Usage| Billing
-    Metrics <-->|Business Context| Registry
+    subgraph Processing["Processing Layer"]
+        MetricsEngine[Metrics Collection & Aggregation Engine]
+        ComplianceEngine[Compliance & Audit Monitoring]
+        SLAEngine[API Health & SLA Monitoring]
+        BillingEngine[Usage-Based Billing & Chargeback]
+    end
     
-    SLAMonitor -->|SLA Violations| AlertSystem
-    SLAMonitor -->|Health Scores| Analytics
-    SLAMonitor <-->|SLA Definitions| Registry
+    subgraph Analysis["Analysis Layer"]
+        AnalyticsEngine[Analytics & Reporting Engine]
+        AnomalyDetection[Anomaly Detection]
+        QueryAPI[Auditor API & Query Service]
+    end
     
-    Compliance -->|Security Events| SIEM
-    Compliance -->|Monitor Access| LogIngestion
-    Compliance -->|Policy Checks| Registry
-    Compliance -->|Audit Logs| S3
-    Compliance -->|Alerts| AlertSystem
+    LogPipeline --> Enrichment
+    Enrichment --> MetricsEngine
+    MetricsEngine --> SLAEngine
+    MetricsEngine --> BillingEngine
+    MetricsEngine --> AnalyticsEngine
+    Enrichment --> ComplianceEngine
+    ComplianceEngine --> AnalyticsEngine
+    SLAEngine --> AnalyticsEngine
+    BillingEngine --> AnalyticsEngine
+    AnalyticsEngine --> AnomalyDetection
+    AnalyticsEngine --> QueryAPI
+</pre>
+
+### Data Storage & Integration Layer
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+flowchart LR
+    subgraph Services["Auditor Services"]
+        LogIngestion[Log Ingestion]
+        Metrics[Metrics Engine]
+        Analytics[Analytics Engine]
+        Compliance[Compliance Monitor]
+        AuditorAPI[Auditor API]
+    end
     
-    Billing -->|Calculate Costs| Metrics
-    Billing <-->|Pricing Config| Registry
-    Billing -->|Invoices| Finance
-    Billing -->|Budget Alerts| Consumers
+    subgraph Storage["Storage Systems"]
+        Kafka[Kafka Log Streaming]
+        Elasticsearch[Elasticsearch Recent Logs]
+        S3[S3/GCS Cold Storage]
+        TimeSeriesDB[Time-Series DB Prometheus/InfluxDB]
+        DataWarehouse[Data Warehouse Snowflake/BigQuery]
+    end
     
-    Analytics <-->|Query Logs| Elasticsearch
-    Analytics <-->|Query Metrics| TimeSeriesDB
-    Analytics <-->|Historical Data| DataWarehouse
-    Analytics <-->|Metadata| Registry
-    Analytics -->|Dashboards| Producers
-    Analytics -->|Dashboards| Consumers
-    Analytics -->|Reports| Governance
+    subgraph Support["Support Services"]
+        GeoIP[GeoIP Database]
+        AlertSystem[Alerting System PagerDuty/Opsgenie]
+        Registry[API Registry Metadata]
+    end
     
-    LogIngestion -->|ETL Pipeline| DataWarehouse
-    Metrics -->|Historical Metrics| DataWarehouse
-    DataWarehouse <-->|BI Queries| BI
-    
-    AuditorAPI <-->|Serve Data| Elasticsearch
-    AuditorAPI <-->|Serve Data| TimeSeriesDB
-    AuditorAPI <-->|Serve Data| DataWarehouse
-    AuditorAPI -->|API Access| Producers
-    AuditorAPI -->|API Access| Consumers
-    AuditorAPI -->|Integration| BI
-    
-    AlertSystem -->|Notify| Producers
-    AlertSystem -->|Notify| Governance
-    
-    style Auditor fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
-    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style Registry fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style Producers fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
-    style Consumers fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
-    style Governance fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style SIEM fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-    style BI fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style Finance fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-    style Kafka fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style Elasticsearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style S3 fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style TimeSeriesDB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style DataWarehouse fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style GeoIP fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style AlertSystem fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
+    LogIngestion -->|Stream| Kafka
+    Kafka --> Elasticsearch
+    LogIngestion --> S3
+    LogIngestion <--> GeoIP
+    LogIngestion <--> Registry
+    Metrics --> TimeSeriesDB
+    Metrics --> DataWarehouse
+    Analytics <--> Elasticsearch
+    Analytics <--> TimeSeriesDB
+    Analytics <--> DataWarehouse
+    Analytics <--> Registry
+    Compliance --> S3
+    Compliance --> AlertSystem
+    AuditorAPI <--> Elasticsearch
+    AuditorAPI <--> TimeSeriesDB
+    AuditorAPI <--> DataWarehouse
 </pre>
 
 ### Log Ingestion & Processing Pipeline

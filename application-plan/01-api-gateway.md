@@ -9,24 +9,24 @@ graph TD
     Client[API Consumer]
     
     subgraph Gateway["API Gateway"]
-        ReverseProxy[Reverse Proxy /<br/>Request Router]
-        Auth[Authentication<br/>Module]
-        Authz[Authorization<br/>Module]
-        RateLimit[Rate Limiting &<br/>Throttling Module]
-        Transform[Request/Response<br/>Transformation Module]
-        Security[Data Security &<br/>Privacy Module]
-        Logging[Logging &<br/>Audit Module]
-        Metrics[Metrics &<br/>Telemetry Module]
-        Circuit[Circuit Breaker,<br/>Resilience & Canary<br/>Deployment Module]
+        ReverseProxy[Reverse Proxy / Request Router]
+        Auth[Authentication Module]
+        Authz[Authorization Module]
+        RateLimit[Rate Limiting & Throttling Module]
+        Transform[Request/Response Transformation Module]
+        Security[Data Security & Privacy Module]
+        Logging[Logging & Audit Module]
+        Metrics[Metrics & Telemetry Module]
+        Circuit[Circuit Breaker, Resilience & Canary Deployment Module]
         Cache[Cache Module]
     end
     
     Backend[Backend API Services]
     Registry[(API Registry)]
-    IDP[Identity Provider<br/>OAuth/OIDC]
-    RedisCache[(Redis/<br/>Memcached)]
-    LogSystem[Logging Infrastructure<br/>Splunk/Elasticsearch]
-    MetricsSystem[Monitoring Platform<br/>Prometheus/Datadog]
+    IDP[Identity Provider OAuth/OIDC]
+    RedisCache[(Redis/ Memcached)]
+    LogSystem[Logging Infrastructure Splunk/Elasticsearch]
+    MetricsSystem[Monitoring Platform Prometheus/Datadog]
     
     Client -->|1. Request| ReverseProxy
     ReverseProxy -->|2. Validate Identity| Auth

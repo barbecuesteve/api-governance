@@ -4,95 +4,131 @@ The Registry is the system of record for all API metadata, serving as the centra
 
 ## 2.1 Core Registry Components
 
+### High-Level Architecture
+
 <pre class="mermaid">
-graph TD
-    Producer[API Producer Teams]
-    Consumer[API Consumers]
-    DevPortal[Developer Portal]
-    Gateway[API Gateway]
-    Auditor[API Auditor]
-    CICD[CI/CD Pipeline]
-    
-    subgraph Registry["API Registry"]
-        Catalog[API Catalog &<br/>Metadata Management]
-        Subscription[Subscription<br/>Management System]
-        Schema[Schema Registry &<br/>Compatibility Checker]
-        Policy[Policy &<br/>Governance Engine]
-        ServiceDiscovery[Service Discovery &<br/>Routing Configuration]
-        RegistryAPI[Registry API<br/>Public/Internal/Admin]
-        Notification[Notification &<br/>Event Service]
-
-        DB[(PostgreSQL<br/>Primary Database)]
-        ElasticSearch[(Elasticsearch<br/>Full-Text Search)]
-        Redis[(Redis Cache<br/>Frequently Accessed Data)]
-        Kafka[Kafka Event Bus<br/>Change Events]
-        Vault[HashiCorp Vault<br/>Secrets Manager]
-        K8s[Kubernetes/<br/>Service Discovery]
-        Git[Git Repository<br/>Version Control]
-
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#FFF','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#333','edgeLabelBackground':'#ffffff','fontSize':'14px'}}}%%
+flowchart TB
+    subgraph External["External Systems"]
+        Producer[API Producer Teams]
+        Consumer[API Consumers]
+        DevPortal[Developer Portal]
+        CICD[CI/CD Pipeline]
     end
     
+    subgraph Registry["API Registry Core"]
+        RegistryAPI[Registry API Layer]
+        Catalog[API Catalog]
+        Subscription[Subscription Mgmt]
+        Schema[Schema Registry]
+        Policy[Policy Engine]
+        Discovery[Service Discovery]
+    end
     
-    Producer -->|Register APIs| RegistryAPI
-    Producer -->|Upload Specs| Catalog
-    Consumer -->|Request Subscription| RegistryAPI
-    DevPortal <-->|Query Catalog| RegistryAPI
-    CICD -->|Validate Specs| RegistryAPI
+    subgraph Platform["Platform Services"]
+        Gateway[API Gateway]
+        Auditor[API Auditor]
+    end
+    
+    Producer --> RegistryAPI
+    Consumer --> RegistryAPI
+    DevPortal <--> RegistryAPI
+    CICD --> RegistryAPI
     
     RegistryAPI --> Catalog
     RegistryAPI --> Subscription
     RegistryAPI --> Schema
     RegistryAPI --> Policy
-    RegistryAPI --> ServiceDiscovery
+    RegistryAPI --> Discovery
     
-    Catalog -->|Store Metadata| DB
-    Catalog <-->|Index for Search| ElasticSearch
-    Catalog <-->|Sync Specs| Git
-    Catalog -->|Publish Changes| Kafka
+    Gateway <--> RegistryAPI
+    Auditor <--> RegistryAPI
+    Discovery --> Gateway
     
-    Subscription -->|Store Subscriptions| DB
-    Subscription <-->|Cache Active Subs| Redis
-    Subscription <-->|Store Credentials| Vault
-    Subscription -->|Subscription Events| Kafka
+    style Registry fill:#e8f4f8,stroke:#2c5aa0,stroke-width:3px
+    style External fill:#f0f0f0,stroke:#666,stroke-width:2px
+    style Platform fill:#fff4e6,stroke:#ff9900,stroke-width:2px
+</pre>
+
+### Registry Internal Components
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#FFF','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#333','edgeLabelBackground':'#ffffff','fontSize':'13px'}}}%%
+flowchart LR
+    subgraph Core["Core Services"]
+        Catalog[API Catalog & Metadata]
+        Subscription[Subscription Management]
+        Schema[Schema Registry & Compatibility]
+        Policy[Policy & Governance]
+        Discovery[Service Discovery & Routing]
+    end
     
-    Schema -->|Validate Compatibility| Catalog
-    Schema -->|Store Schema Versions| DB
-    Schema -->|Block Breaking Changes| Policy
+    subgraph Support["Support Services"]
+        API[Registry API]
+        Notify[Notifications & Events]
+    end
     
-    Policy -->|Evaluate Against| Catalog
-    Policy -->|Check Compliance| Subscription
-    Policy -->|Store Policies| DB
-    Policy -->|Policy Violations| Kafka
+    API --> Catalog
+    API --> Subscription
+    API --> Schema
+    API --> Policy
+    API --> Discovery
     
-    ServiceDiscovery <-->|Query Services| K8s
-    ServiceDiscovery -->|Store Backend Mappings| DB
-    ServiceDiscovery -->|Push Routing Config| Gateway
-    ServiceDiscovery <-->|Cache Config| Redis
+    Catalog -.-> Notify
+    Subscription -.-> Notify
+    Policy -.-> Notify
     
-    Kafka -->|Consume Events| Notification
-    Notification -->|Email/Slack/Webhooks| Producer
-    Notification -->|Email/Slack/Webhooks| Consumer
+    style Core fill:#e8f4f8,stroke:#2c5aa0,stroke-width:2px
+    style Support fill:#f0f9ff,stroke:#0066cc,stroke-width:2px
+</pre>
+
+### Data Storage Layer
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#FFF','primaryTextColor':'#000','primaryBorderColor':'#cc9900','lineColor':'#333','edgeLabelBackground':'#ffffff','fontSize':'13px'}}}%%
+flowchart TB
+    subgraph Services["Registry Services"]
+        Catalog[API Catalog]
+        Subscription[Subscriptions]
+        Schema[Schema Registry]
+        Policy[Policy Engine]
+        Discovery[Service Discovery]
+    end
     
-    Gateway <-->|Query Subscriptions| RegistryAPI
-    Gateway <-->|Get Routing Config| ServiceDiscovery
-    Gateway -->|Usage Metrics| Auditor
+    subgraph Storage["Data Storage"]
+        DB[(PostgreSQL Primary DB)]
+        ES[(Elasticsearch Search Index)]
+        Redis[(Redis Cache)]
+        Git[Git Repo Version Control]
+    end
     
-    Auditor <-->|Query Metadata| RegistryAPI
+    subgraph Integration["External Integration"]
+        Kafka[Kafka Event Bus]
+        Vault[HashiCorp Vault Secrets]
+        K8s[Kubernetes Service Discovery]
+    end
     
-    style Registry fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
-    style Producer fill:#e1ffe1,stroke:#00cc00,stroke-width:2px
-    style Consumer fill:#ffe1e1,stroke:#cc0000,stroke-width:2px
-    style DevPortal fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style Gateway fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style Auditor fill:#fff4e1,stroke:#ff9900,stroke-width:2px
-    style CICD fill:#f0e1ff,stroke:#9900cc,stroke-width:2px
-    style DB fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style ElasticSearch fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style Redis fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style Kafka fill:#ffe6f0,stroke:#cc0066,stroke-width:2px
-    style Vault fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style K8s fill:#ffffcc,stroke:#cccc00,stroke-width:2px
-    style Git fill:#ffffcc,stroke:#cccc00,stroke-width:2px
+    Catalog --> DB
+    Catalog --> ES
+    Catalog --> Git
+    Catalog --> Kafka
+    
+    Subscription --> DB
+    Subscription --> Redis
+    Subscription --> Vault
+    Subscription --> Kafka
+    
+    Schema --> DB
+    Policy --> DB
+    Policy --> Kafka
+    
+    Discovery --> DB
+    Discovery --> Redis
+    Discovery <--> K8s
+    
+    style Services fill:#e8f4f8,stroke:#2c5aa0,stroke-width:2px
+    style Storage fill:#fff9e6,stroke:#cc9900,stroke-width:2px
+    style Integration fill:#f0e6ff,stroke:#9900cc,stroke-width:2px
 </pre>
 
 ### API Catalog & Metadata Management

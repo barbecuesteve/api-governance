@@ -207,15 +207,15 @@ sequenceDiagram
 
     PT->>DA: Request early design guidance
     DA-->>PT: Review draft spec, suggest improvements
-    Note over PT,DA: Iterate on naming, domain boundaries,<br/>integration patterns
+    Note over PT,DA: Iterate on naming, domain boundaries, integration patterns
     
     PT->>REG: Upload design + schema/docs
-    REG->>REG: Run automated linters<br/>(schema, naming, security)
+    REG->>REG: Run automated linters (schema, naming, security)
     REG-->>PT: Automated feedback (if issues found)
     
     PT->>REG: Submit for formal review
     REG->>ARP: Assign to rotating panel members
-    ARP->>ARP: Review for architecture, security,<br/>usability, scalability
+    ARP->>ARP: Review for architecture, security, usability, scalability
     
     alt API Team has Feedback
         ARP-->>PT: Collaborative feedback & guidance
@@ -589,11 +589,11 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'edgeLabelBackground':'#ffffff'}}}%%
 graph TB
-    L1["<b>Level 1: Chaos</b><br/>Ad hoc APIs<br/>Unknown consumers<br/>No lifecycle"]
-    L2["<b>Level 2: Cataloging</b><br/>Registry exists<br/>Ownership visible"]
-    L3["<b>Level 3: Governed</b><br/>Reviews + standards<br/>Gateway enforcement"]
-    L4["<b>Level 4: Product Mindset</b><br/>APIs as products<br/>Roadmap + feedback"]
-    L5["<b>Level 5: Optimized Ecosystem</b><br/>Automated policy<br/>Data-driven evolution<br/>High reuse"]
+    L1["<b>Level 1: Chaos</b> Ad hoc APIs Unknown consumers No lifecycle"]
+    L2["<b>Level 2: Cataloging</b> Registry exists Ownership visible"]
+    L3["<b>Level 3: Governed</b> Reviews + standards Gateway enforcement"]
+    L4["<b>Level 4: Product Mindset</b> APIs as products Roadmap + feedback"]
+    L5["<b>Level 5: Optimized Ecosystem</b> Automated policy Data-driven evolution High reuse"]
     
     L1 -->|Establish visibility| L2
     L2 -->|Add guardrails| L3
