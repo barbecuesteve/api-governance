@@ -175,6 +175,8 @@ flowchart LR
 
 Lifecycle states map directly to governance and policy enforcement points.
 
+---
+
 ## 5. Producer & Consumer Lifecycle in Detail
 
 This section expands lifecycle stages into actionable workflows for both API producers and consumers.
@@ -378,7 +380,7 @@ flowchart LR
 - Identify all consumers + traffic volume
 - Verify no non-human/system scripts are still calling the API
 
-### 7.2. E2E Consumer Impact Visibility
+### 7.2 E2E Consumer Impact Visibility
 
 To responsibly deprecate, producers need clear consumer insight:
 
@@ -390,7 +392,7 @@ To responsibly deprecate, producers need clear consumer insight:
 
 The **Auditor** provides this automatically, enabling confident sunsets.
 
-
+---
 
 ## 8. Governance Policies & Standards
 
