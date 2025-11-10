@@ -1,3 +1,7 @@
-theme: jekyll-theme-minimal
 title: API Governance
 description: Musings on building scalable API governance frameworks for modern engineering organizations.
+remote_theme: pages-themes/slate@v0.2.0
+plugins:
+- jekyll-remote-theme
+
+
