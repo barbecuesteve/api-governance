@@ -3,17 +3,23 @@
 
 @import "{{ site.theme }}";
 
-/* Target the outer wrapper to be 75% of viewport */
+/* Target the outer wrapper to be 75% of viewport and center it */
 .outer {
   max-width: 75% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 #main_content_wrap.outer {
   max-width: 75% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 #header_wrap.outer {
   max-width: 75% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Target the inner content to fill its parent */
