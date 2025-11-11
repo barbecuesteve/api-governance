@@ -1010,7 +1010,9 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 
 ---
 
-### 12.5 Compliance Framework Example: Payment Processing (PCI-DSS)
+### 12.5 Compliance Framework Examples
+
+#### Payment Processing (PCI-DSS)
 
 For a detailed example of how this API governance platform supports compliance in highly regulated industries, see the [PCI-DSS Compliance Framework Example](compliance-example-pci-dss.md).
 
@@ -1019,6 +1021,18 @@ This example covers:
 - **GDPR Compliance** through API governance (data access, erasure, minimization, portability, breach notification)
 - **SOC 2 Type II** trust service criteria (security, availability, processing integrity, confidentiality, privacy)
 - **Regional Financial Regulations** (Open Banking/PSD2, AML/KYC, CCPA)
+
+#### Healthcare (HIPAA & HL7 FHIR)
+
+For a comprehensive example of how this API governance platform supports healthcare compliance and interoperability, see the [Healthcare Compliance Framework Example](compliance-example-hipaa-healthcare.md).
+
+This example covers:
+- **HIPAA Security Rule** (Administrative, Physical, and Technical Safeguards with complete implementation details)
+- **HITECH Act** (Breach Notification Rule, Meaningful Use, interoperability requirements)
+- **HL7 FHIR Integration** (SMART on FHIR, US Core, automated conformance testing, patient-mediated data exchange)
+- **FDA 21 CFR Part 11** (Electronic records/signatures for clinical trials and medical devices)
+- **State Healthcare Privacy Laws** (CMIA, SHIELD Act, BIPA, 42 CFR Part 2 for substance abuse records)
+- **Patient Rights & Consumer Access** (21st Century Cures Act, No Information Blocking, patient API ecosystems)
 
 ---
 
