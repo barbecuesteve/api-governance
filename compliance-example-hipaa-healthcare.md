@@ -33,16 +33,16 @@ The following healthcare-specific capabilities are **outside the platform's scop
 - **Master Patient Index (MPI)** - Does not perform patient identity matching or resolve patient identities across systems
 - **Electronic Health Records (EHR)** - Does not store clinical data, patient charts, lab results, or medical histories
 - **Clinical Decision Support** - Does not interpret clinical data or enforce treatment protocols
-- **HL7 Message Processing** - Does not parse or transform HL7 v2 messages or C-CDA documents (though it can govern APIs that do)
+- **HL7 Message Processing** - Does not parse or transform HL7 v2 messages or C-CDA documents (but can govern APIs that do)
 
 **External Integrations:**
-- **Health Information Exchange (HIE)** - Does not directly participate in Carequality, CommonWell, or Direct messaging networks (but governs APIs that connect to them)
+- **Health Information Exchange (HIE)** - Does not directly participate in Carequality, CommonWell, or Direct messaging networks (but can govern APIs that connect to them)
 - **Payer/Claims Systems** - Does not process insurance claims, eligibility checks, or payment transactions
-- **Public Health Reporting** - Does not generate or submit case reports to health authorities (but tracks that reporting APIs were called)
+- **Public Health Reporting** - Does not generate or submit case reports to health authorities (but can track that reporting APIs were called)
 
 **Compliance Interpretation:**
 - **Legal/Privacy Review** - Platform provides technical controls and audit evidence, but does not interpret HIPAA regulations, state privacy laws, or provide legal guidance
-- **Business Associate Agreements** - Does not create, negotiate, or manage BAAs (but tracks which vendors have agreements on file)
+- **Business Associate Agreements** - Does not create, negotiate, or manage BAAs (but can track which vendors have agreements on file)
 
 ### Integration Model
 
@@ -583,7 +583,9 @@ This platform provides the **security enforcement, access control, and audit inf
 
 ---
 
-**Summary:** Healthcare organizations face a complex compliance landscape (HIPAA, HITECH, 21 CFR Part 11, state laws, interoperability mandates). The API governance platform provides **enforcement and audit infrastructure** that supports compliance efforts. By centralizing security enforcement, comprehensive audit logging, and access control validation, organizations gain the technical controls and audit evidence needed to demonstrate compliance while enabling secure health data sharing and innovation.
+THAT'S A LOT!
+
+In summary, healthcare organizations face a complex compliance landscape (HIPAA, HITECH, 21 CFR Part 11, state laws, interoperability mandates). The API governance platform provides **enforcement and audit infrastructure** that supports compliance efforts. By centralizing security enforcement, comprehensive audit logging, and access control validation, organizations gain the technical controls and audit evidence needed to demonstrate compliance while enabling secure health data sharing and innovation.
 
 ---
 

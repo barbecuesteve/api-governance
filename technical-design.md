@@ -1010,33 +1010,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 
 ---
 
-### 12.5 Compliance Framework Examples
-
-#### Payment Processing (PCI-DSS)
-
-For a detailed example of how this API governance platform supports compliance in highly regulated industries, see the [PCI-DSS Compliance Framework Example](compliance-example-pci-dss.md).
-
-This example covers:
-- **PCI-DSS Requirements 1-12** with specific governance implementations and audit evidence
-- **GDPR Compliance** through API governance (data access, erasure, minimization, portability, breach notification)
-- **SOC 2 Type II** trust service criteria (security, availability, processing integrity, confidentiality, privacy)
-- **Regional Financial Regulations** (Open Banking/PSD2, AML/KYC, CCPA)
-
-#### Healthcare (HIPAA & HL7 FHIR)
-
-For a comprehensive example of how this API governance platform supports healthcare compliance and interoperability, see the [Healthcare Compliance Framework Example](compliance-example-hipaa-healthcare.md).
-
-This example covers:
-- **HIPAA Security Rule** (Administrative, Physical, and Technical Safeguards with complete implementation details)
-- **HITECH Act** (Breach Notification Rule, Meaningful Use, interoperability requirements)
-- **HL7 FHIR Integration** (SMART on FHIR, US Core, automated conformance testing, patient-mediated data exchange)
-- **FDA 21 CFR Part 11** (Electronic records/signatures for clinical trials and medical devices)
-- **State Healthcare Privacy Laws** (CMIA, SHIELD Act, BIPA, 42 CFR Part 2 for substance abuse records)
-- **Patient Rights & Consumer Access** (21st Century Cures Act, No Information Blocking, patient API ecosystems)
-
----
-
-### 12.6 Continuous Compliance Monitoring
+### 12.5 Continuous Compliance Monitoring
 
 **Automated Compliance Dashboards:**
 - Real-time view of compliance posture: which APIs are PCI-compliant, which handle PII, encryption status
@@ -1060,7 +1034,7 @@ This example covers:
 
 ---
 
-### 12.7 Security Best Practices for API Producers
+### 12.6 Security Best Practices for API Producers
 
 **Secure Defaults:**
 - Platform-provided API templates include security best practices by default
@@ -1088,4 +1062,42 @@ This example covers:
 
 ---
 
+## Appendix: Compliance Framework Examples
+
+### A. Payment Processing (PCI-DSS)
+
+For a detailed example of how this API governance platform supports compliance in highly regulated industries, see the [PCI-DSS Compliance Framework Example](compliance-example-pci-dss.md).
+
+This example covers:
+- **PCI-DSS Requirements 1-12** with specific governance implementations and audit evidence
+- **GDPR Compliance** through API governance (data access, erasure, minimization, portability, breach notification)
+- **SOC 2 Type II** trust service criteria (security, availability, processing integrity, confidentiality, privacy)
+- **Regional Financial Regulations** (Open Banking/PSD2, AML/KYC, CCPA)
+
+### B. Healthcare (HIPAA & HL7 FHIR)
+
+For a comprehensive example of how this API governance platform supports healthcare compliance and interoperability, see the [Healthcare Compliance Framework Example](compliance-example-hipaa-healthcare.md).
+
+This example covers:
+- **HIPAA Security Rule** (Administrative, Physical, and Technical Safeguards with complete implementation details)
+- **HITECH Act** (Breach Notification Rule, Meaningful Use, interoperability requirements)
+- **HL7 FHIR Integration** (SMART on FHIR, US Core, automated conformance testing, patient-mediated data exchange)
+- **FDA 21 CFR Part 11** (Electronic records/signatures for clinical trials and medical devices)
+- **State Healthcare Privacy Laws** (CMIA, SHIELD Act, BIPA, 42 CFR Part 2 for substance abuse records)
+- **Patient Rights & Consumer Access** (21st Century Cures Act, No Information Blocking, patient API ecosystems)
+
+### C. Government & Defense (FedRAMP/CMMC)
+
+For a detailed example of how this API governance platform supports government and defense compliance with the most stringent security requirements, see the [Government & Defense Compliance Framework Example](compliance-example-fedramp-government.md).
+
+This example covers:
+- **FedRAMP Authorization** (Low, Moderate, High impact levels with full NIST 800-53 control implementation)
+- **CMMC Level 2** (147 security practices across 17 domains for defense contractors handling CUI)
+- **ITAR Compliance** (Export control enforcement, U.S. person verification, deemed export prevention)
+- **Classification Level Enforcement** (Unclassified, CUI, Secret, Top Secret, TS/SCI with clearance validation)
+- **Zero Trust Architecture** (Never trust/always verify, least privilege, continuous verification)
+- **Continuous Monitoring** (Real-time security posture, CDM, SIEM integration, automated ATO evidence)
+- **Supply Chain Security** (SBOM generation, provenance verification, vulnerability tracking)
+
+---
     
