@@ -357,20 +357,61 @@ Gateway behavior when policy engine is unreachable:
 - Emit structured logs for Auditor
 - Cache authorization decisions with TTL
 
-**Custom Plugin Required:**
+#### URL Structure
 
-Build a Lua plugin (`kong/plugins/registry-auth`) that:
-- Extracts consumer identity from API key or JWT
-- Calls Registry `/subscriptions/check` API
-- Caches responses in Kong's shared memory
-- Handles failure modes (fail-closed by default)
-- Logs policy decision to stdout
+All API requests use path-based versioning with this structure:
 
-**Configuration:**
-- Deploy Kong OSS (open source)
-- Install custom registry-auth plugin
-- Configure per-API routing and plugin settings
-- Set up Prometheus metrics scraping
+```
+https://{environment}-gateway.company.com/{api-slug}/{version}/{resource-path}
+
+Examples:
+GET  https://prod-gateway.company.com/users-api/v2/users/{user_id}
+POST https://prod-gateway.company.com/orders-api/v3/orders
+GET  https://staging-gateway.company.com/products-api/v1/products?category=electronics
+```
+
+**Four-Field Composite Key Extraction:**
+
+1. **Environment**: Derived from gateway cluster hostname (`prod-gateway` → `production`, `staging-gateway` → `staging`)
+2. **API ID**: Mapped from URL slug (`/users-api/`) to Registry UUID via Kong route configuration
+3. **Version**: Explicit in URL path (`/v2/`)
+4. **Consumer App ID**: Extracted from JWT bearer token claims (`app_id` field)
+
+#### Kong Route Configuration
+
+Each API version gets its own Kong service and route with registry metadata:
+
+```yaml
+services:
+  - name: users-api-v2-prod
+    url: http://users-service-v2.internal:8080
+    routes:
+      - name: users-api-v2-route
+        paths:
+          - /users-api/v2
+        strip_path: true
+    plugins:
+      - name: registry-auth
+        config:
+          api_id: "550e8400-e29b-41d4-a716-446655440000"  # Registry UUID for users-api
+          version: "2.0"
+          environment: "production"
+          registry_url: "http://registry-service:8080"
+```
+
+#### Custom Plugin Implementation
+
+Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
+
+1. **Validate JWT**: Verify bearer token signature and extract `app_id` claim
+2. **Build composite key**: Combine `consumer_app_id` (from JWT), `api_id` (from route config), `version` (from route config), `environment` (from route config)
+3. **Check cache**: Look up authorization decision in Kong shared memory using composite key
+4. **Call Registry**: If cache miss, call `POST /subscriptions/check` with request metadata
+5. **Cache response**: Store decision for TTL seconds (returned by Registry)
+6. **Enforce policy**: Allow/deny request based on decision, inject headers for rate limits and subscription ID
+7. **Log decision**: Emit structured log with subscription_id, policy_decision, and request metadata for Auditor
+
+**Failure handling**: Default to fail-closed (deny) if Registry is unreachable, with per-API override for fail-open in non-production environments.
 
 ### 3.3 Backstage Developer Portal (Customize/Extend)
 
