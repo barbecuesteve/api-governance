@@ -41,8 +41,19 @@ These four dimensions reinforce each other. Better reuse accelerates velocity by
 
 The good news: establishing effective API governance doesn't require a disruptive transformation or massive technology investment. It requires commitment to treating internal APIs as products deserving the same care as customer-facing services, implementing lightweight processes that guide without obstructing, and building a unified platform that makes governance feel like enablement rather than bureaucracy. The organizations making this shift now are seeing 20-30% improvements in engineering productivity, 40-50% reductions in duplicative efforts, and measurably better incident response times. More importantly, they're building the foundation for sustained innovation velocity as their architectures continue to grow and evolve. This isn't a technical initiative — it's a strategic investment in your organization's ability to deliver value efficiently and adapt quickly to changing business needs.
 
----
-![confused](confused.png)
+<style>
+.caption {
+  font-family: 'Playfair Display', 'Didot', serif;
+  font-size: 1.2em;
+  font-style: italic;
+  color: #333;
+  text-align: center;
+  margin-top: 0.5em;
+}
+</style>
+<div class="caption">
+<img src="confused.png" width="40%"><br>
+“It’s all very agile, I’m told.”</div>
 
 --- 
 
