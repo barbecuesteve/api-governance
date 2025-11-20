@@ -3,7 +3,7 @@
 
 ## **Executive Summary: API Governance as Strategic Risk Management**
 
-Enterprise technology organizations are experiencing a concerning pattern: engineering costs rising 30-40% faster than output, incident response times stretching from hours to days, compliance audits requiring months of preparation, and competitive velocity declining despite increased headcount. These are not isolated operational issues—they are symptoms of a systemic risk that threatens enterprise value, market position, and operational resilience.
+Enterprise tech organizations are experiencing a concerning pattern: engineering costs rising about a third faster than output, incident response times stretching from hours to days, compliance audits requiring months of preparation, and competitive velocity declining despite increased headcount. These are not isolated  issues but rather symptoms of a systemic risk that threatens enterprise value, market position, and operational excellence.
 
 The root cause is architectural: as organizations have scaled distributed systems to hundreds or thousands of internal services, the lack of governance over how these services connect and communicate has created compounding inefficiencies, blind spots, and exposures. This paper examines API governance not as a technical initiative, but as critical risk mitigation that directly impacts an organization's ability to operate safely, control costs, and compete effectively.
 
@@ -16,9 +16,9 @@ We identify four risk categories where ungoverned internal architectures create 
 ### **1. Financial Risk: Capital Inefficiency and Margin Erosion**
 
 Organizations with 250+ services unknowingly pay engineering teams to solve the same problems multiple times, accumulating 15-20 redundant implementations of core capabilities while competitors operate with leaner cost structures.
-For a 200-engineer organization, 30-40% capacity loss to duplication represents **$6-9M annually in wasted labor** plus $500K-2M in redundant infrastructure spend. This directly erodes competitive margins and starves strategic initiatives of funding.
+For a 200-engineer organization, that capacity loss to duplication represents **$6-9M annually in wasted labor** plus $500K-2M in redundant infrastructure spend. This directly erodes competitive margins and starves strategic initiatives of funding.
 
-Centralized API discovery and reuse enforcement eliminates 30-40% of duplicative work, recapturing substantial engineering capacity for revenue-generating priorities. **Time to benefit: 3-6 months** as teams begin discovering and adopting existing services.
+Centralized API discovery and reuse enforcement eliminates a lot of duplicative work, recapturing substantial engineering capacity for revenue-generating priorities. **Time to benefit: 3-6 months** as teams begin discovering and adopting existing services.
 
 ---
 
@@ -42,12 +42,10 @@ Centralized authentication, authorization, and audit logging provides demonstrab
 
 ### **4. Competitive Risk: Velocity Degradation at Scale**
 
-As architectural complexity grows, development velocity declines 30-40% despite headcount increases. Organizations require 40% more engineers to maintain previous output levels while nimbler competitors ship 2-3x faster, directly threatening market position.
+As architectural complexity grows, development velocity declines significantly despite headcount increases. Organizations require 40% more engineers to maintain previous output levels while nimbler competitors ship 2-3x faster, directly threatening market position.
 Velocity loss compounds quarterly—each percentage point of degradation represents delayed revenue, missed market windows, and competitive share loss. Extended onboarding times (2-4 months delay per new hire) further constrain response capacity during critical growth phases.
 
-Standardized APIs with consistent patterns restore 20-30% of lost productivity and reduce integration cycles by 40-50%. **Time to benefit: 4-6 months** as standards adoption reaches critical mass across teams.
-
----
+Standardized APIs with consistent patterns restore most of the lost productivity and reduce integration cycles by nearly half. **Time to benefit: 4-6 months** as standards adoption reaches critical mass across teams.
 
 ---
 
@@ -72,7 +70,7 @@ Addressing these compounding risks requires disciplined structure, but not disru
 **Why This Is the Least Disruptive Path:** This framework augments existing architectures rather than replacing them. Teams continue using current technologies and deployment patterns. Governance becomes progressively enforceable—existing services adopt standards during natural maintenance cycles while new services comply from day one. Organizations avoid the "big bang" risk of platform migrations while achieving measurable risk reduction within months.
 
 **Investment Required:**
-- Timeline: 8-12 months to full deployment
+- Timeline: 8-12 months for full deployment
 - Resources: Platform infrastructure + 3-4 dedicated engineers
 - Primary costs: Platform development, integration, organizational adoption
 
