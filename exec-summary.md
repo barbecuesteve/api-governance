@@ -1,7 +1,7 @@
 
 [Back to the front](README.md)
 
-#### **Executive Summary: API Governance as Strategic Risk Management**
+## **Executive Summary: API Governance as Strategic Risk Management**
 
 For organizations operating distributed microservices architectures, ungoverned API ecosystems represent a significant and growing source of operational, financial, and competitive risk. This paper examines API governance not as a technical initiative, but as critical risk mitigation that directly impacts an organization's ability to operate safely, control costs, and compete effectively.
 
