@@ -1,5 +1,5 @@
 
-[Back to the front](README.md)
+[Return to main document](README.md)
 
 ## **Executive Summary: API Governance as Strategic Risk Management**
 
@@ -86,7 +86,7 @@ Organizations that treat API governance as strategic infrastructure build sustai
 
 The detailed [technical design and implementation](technical-design.md) guidance provides technology leaders with a concrete decision framework and execution roadmap for establishing effective API governance—protecting enterprise value while enabling sustainable growth.
 
-[Back to the front](README.md)
+[Return to main document](README.md)
 
 <style>
 .caption {
