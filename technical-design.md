@@ -306,62 +306,68 @@ flowchart TD
 <summary><strong>Policy Recommendations</strong></summary>
 
 **1. Limit Concurrent Major Versions**
-    - Allow only 2-3 active major versions simultaneously (e.g., v2.x, v3.x, and v4.x)
-    - This constraint forces disciplined deprecation and prevents unbounded version sprawl
-    - Rationale: Each major version requires ongoing support, security patches, infrastructure, and documentation maintenance
-    - When publishing a new major version that would exceed the limit, one older version must be deprecated
-    - Exemptions possible for high-criticality APIs with extensive consumer bases, but require Governance Group approval
-    - Version limits tracked automatically by Registry; attempts to publish beyond limit trigger warnings and review
 
-2. **Require Deprecation Plan When Publishing New Major Version**
-    - Before a breaking change (new major version) is approved, producers must document:
-        - **Timeline:** When will the previous major version be deprecated? When retired?
-        - **Consumer Impact:** How many active subscriptions exist on the old version? Which teams?
-        - **Migration Complexity:** What changes do consumers need to make? (Simple config change vs. major refactor)
-        - **Support Commitment:** How long will both versions run in parallel to allow migration time?
-    - Deprecation plan reviewed by API Review Panel as part of approval process
-    - Minimum parallel support window: typically 6-12 months depending on consumer count and migration complexity
-    - High-impact APIs (many consumers, critical business processes) require longer support windows
+- Allow only 2-3 active major versions simultaneously (e.g., v2.x, v3.x, and v4.x)
+- This constraint forces disciplined deprecation and prevents unbounded version sprawl
+- Rationale: Each major version requires ongoing support, security patches, infrastructure, and documentation maintenance
+- When publishing a new major version that would exceed the limit, one older version must be deprecated
+- Exemptions possible for high-criticality APIs with extensive consumer bases, but require Governance Group approval
+- Version limits tracked automatically by Registry; attempts to publish beyond limit trigger warnings and review
 
-3. **Producer Obligation: Document the Upgrade Path**
-    - When the upgrade from one major version to the next is **straightforward**, the producing team has a responsibility to map out that path explicitly for consumers
-    - "Straightforward" means:
-      - Field renames or restructuring without semantic changes
-      - New required fields that can be populated with sensible defaults
-      - Endpoint consolidation or URL changes without logic changes
-      - Authentication mechanism updates (e.g., API key → OAuth2) with clear migration steps
-    -  **Required upgrade documentation:**
-        - **What Changed:** Side-by-side comparison of old vs. new data models, endpoints, authentication
-        - **Step-by-Step Migration Guide:** Specific code changes consumers need to make, with before/after examples
-        - **Tooling Support:** Migration scripts, schema transformers, or automated converters where feasible
-        - **Testing Guidance:** How consumers can validate their migration in dev/test environments before production
-        - **Compatibility Matrix:** Which old version features map to which new version features
-        - **Breaking Change Inventory:** Exhaustive list of every breaking change with mitigation for each
-    - This documentation becomes part of the API's official docs in the Developer Portal
-    - Quality of upgrade path documentation reviewed by API Review Panel; inadequate guidance blocks approval
-    - Example: If moving from `customer_name` to `customer.full_name`, provide:
-      - Clear mapping: `customer_name` → `customer.full_name`
-      - Code sample showing the change in consumer code
-      - Note about any validation differences or field length changes
+**2. Require Deprecation Plan When Publishing New Major Version**
 
-4. **Producer Support During Migration**
-    - Office hours or dedicated support channel for migration questions during parallel support window
-    - Early access to new major version for key consumers to test migration and provide feedback
-    - Migration telemetry: Auditor tracks which consumers have upgraded, which are still on old version
-    - Proactive outreach to consumers who haven't started migration as deprecation deadline approaches
-    - Escalation path for consumers encountering migration blockers that need producer assistance
+- Before a breaking change (new major version) is approved, producers must document:
+  - **Timeline:** When will the previous major version be deprecated? When retired?
+  - **Consumer Impact:** How many active subscriptions exist on the old version? Which teams?
+  - **Migration Complexity:** What changes do consumers need to make? (Simple config change vs. major refactor)
+  - **Support Commitment:** How long will both versions run in parallel to allow migration time?
+- Deprecation plan reviewed by API Review Panel as part of approval process
+- Minimum parallel support window: typically 6-12 months depending on consumer count and migration complexity
+- High-impact APIs (many consumers, critical business processes) require longer support windows
 
-5. **Consumer Self-Service Migration Tools**
-    - For particularly complex migrations, consider providing:
-      - Request/response translators that convert between old and new formats
-      - Dual-write capabilities during transition period (consumer sends old format, Gateway translates)
-      - Feature flags allowing gradual rollout of new version usage
-      - Automated test suites consumers can run to validate compatibility
+**3. Producer Obligation: Document the Upgrade Path**
 
-6. **Consequences of Non-Compliance**
-    - APIs published without adequate deprecation plans or upgrade documentation may be rejected by Review Panel
-    - Producers who abandon major versions prematurely (without honoring support commitments) face escalation to Governance Group
-    - Repeat offenders may lose fast-track approval privileges and require enhanced review for future changes
+- When the upgrade from one major version to the next is **straightforward**, the producing team has a responsibility to map out that path explicitly for consumers
+- "Straightforward" means:
+  - Field renames or restructuring without semantic changes
+  - New required fields that can be populated with sensible defaults
+  - Endpoint consolidation or URL changes without logic changes
+  - Authentication mechanism updates (e.g., API key → OAuth2) with clear migration steps
+- **Required upgrade documentation:**
+  - **What Changed:** Side-by-side comparison of old vs. new data models, endpoints, authentication
+  - **Step-by-Step Migration Guide:** Specific code changes consumers need to make, with before/after examples
+  - **Tooling Support:** Migration scripts, schema transformers, or automated converters where feasible
+  - **Testing Guidance:** How consumers can validate their migration in dev/test environments before production
+  - **Compatibility Matrix:** Which old version features map to which new version features
+  - **Breaking Change Inventory:** Exhaustive list of every breaking change with mitigation for each
+- This documentation becomes part of the API's official docs in the Developer Portal
+- Quality of upgrade path documentation reviewed by API Review Panel; inadequate guidance blocks approval
+- Example: If moving from `customer_name` to `customer.full_name`, provide:
+  - Clear mapping: `customer_name` → `customer.full_name`
+  - Code sample showing the change in consumer code
+  - Note about any validation differences or field length changes
+
+**4. Producer Support During Migration**
+
+- Office hours or dedicated support channel for migration questions during parallel support window
+- Early access to new major version for key consumers to test migration and provide feedback
+- Migration telemetry: Auditor tracks which consumers have upgraded, which are still on old version
+- Proactive outreach to consumers who haven't started migration as deprecation deadline approaches
+- Escalation path for consumers encountering migration blockers that need producer assistance
+
+**5. Consumer Self-Service Migration Tools**
+
+- For particularly complex migrations, consider providing:
+  - Request/response translators that convert between old and new formats
+  - Dual-write capabilities during transition period (consumer sends old format, Gateway translates)
+  - Feature flags allowing gradual rollout of new version usage
+  - Automated test suites consumers can run to validate compatibility
+
+**6. Consequences of Non-Compliance**
+
+- APIs published without adequate deprecation plans or upgrade documentation may be rejected by Review Panel
+- Producers who abandon major versions prematurely (without honoring support commitments) face escalation to Governance Group
+- Repeat offenders may lose fast-track approval privileges and require enhanced review for future changes
 
 </details>
 
@@ -459,127 +465,144 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>CI/CD Pipeline Integration</strong> — Auto-publish API metadata, run design linters, update Registry as part of deployment</summary>
 
-- **Automated API Specification Validation**
-  - Pre-commit hooks validate OpenAPI/GraphQL schemas for syntax errors before code reaches CI
-  - CI pipeline runs linters checking naming conventions, required fields, security patterns, versioning rules
-  - Breaking change detection compares new spec against published versions, blocking merges that break compatibility without major version bump
-  - Documentation completeness checks ensure every endpoint has descriptions, examples, and error scenarios
+**Automated API Specification Validation**
 
-- **Registry Synchronization**
-  - Deployment pipelines automatically update the Registry when API specifications change
-  - API metadata (version, endpoints, data models, SLOs) extracted from codebase and pushed to Registry
-  - No manual "remember to update the docs" steps—documentation stays synchronized with implementation
-  - Version publication triggers from deployment success, ensuring Registry always reflects what's actually running
+- Pre-commit hooks validate OpenAPI/GraphQL schemas for syntax errors before code reaches CI
+- CI pipeline runs linters checking naming conventions, required fields, security patterns, versioning rules
+- Breaking change detection compares new spec against published versions, blocking merges that break compatibility without major version bump
+- Documentation completeness checks ensure every endpoint has descriptions, examples, and error scenarios
 
-- **Gateway Configuration as Code**
-  - Routing rules, rate limits, authentication policies defined in version-controlled configuration files
-  - CI validates gateway configs against Registry definitions before deployment
-  - Deployments atomically update both the API service and its gateway configuration, preventing drift
-  - Rollback procedures automatically revert both service and gateway configs together
+**Registry Synchronization**
+
+- Deployment pipelines automatically update the Registry when API specifications change
+- API metadata (version, endpoints, data models, SLOs) extracted from codebase and pushed to Registry
+- No manual "remember to update the docs" steps—documentation stays synchronized with implementation
+- Version publication triggers from deployment success, ensuring Registry always reflects what's actually running
+
+**Gateway Configuration as Code**
+
+- Routing rules, rate limits, authentication policies defined in version-controlled configuration files
+- CI validates gateway configs against Registry definitions before deployment
+- Deployments atomically update both the API service and its gateway configuration, preventing drift
+- Rollback procedures automatically revert both service and gateway configs together
 
 </details>
 
 <details>
 <summary><strong>Git Hooks & Version Control Integration</strong> — Prevent breaking changes from merging without proper major version bumps</summary>
 
-- **Pre-Merge Validation**
-  - Git hooks analyze API specification diffs and detect breaking changes (removed fields, changed types, deleted endpoints)
-  - Automated checks verify that breaking changes correspond to major version increments
-  - Pull requests automatically tagged with version impact labels (major, minor, patch) based on detected changes
-  - Required approvals escalate for breaking changes—major version updates require API Review Panel sign-off
+**Pre-Merge Validation**
 
-- **Semantic Version Enforcement**
-  - Commit messages parsed for version bump indicators following conventional commits (feat, fix, BREAKING CHANGE)
-  - Automated version number generation based on change type, preventing human error in versioning
-  - Version tags automatically created and pushed when APIs are published
-  - Changelog generation from commit history, making it easy for consumers to understand what changed
+- Git hooks analyze API specification diffs and detect breaking changes (removed fields, changed types, deleted endpoints)
+- Automated checks verify that breaking changes correspond to major version increments
+- Pull requests automatically tagged with version impact labels (major, minor, patch) based on detected changes
+- Required approvals escalate for breaking changes—major version updates require API Review Panel sign-off
 
-- **Branch Protection for Published APIs**
-  - Production API specifications locked to protected branches requiring review approvals
-  - Direct commits to published API specs blocked—all changes must go through PR review
-  - Merge queues ensure compatibility testing happens before merges, preventing CI race conditions
+**Semantic Version Enforcement**
+
+- Commit messages parsed for version bump indicators following conventional commits (feat, fix, BREAKING CHANGE)
+- Automated version number generation based on change type, preventing human error in versioning
+- Version tags automatically created and pushed when APIs are published
+- Changelog generation from commit history, making it easy for consumers to understand what changed
+
+**Branch Protection for Published APIs**
+
+- Production API specifications locked to protected branches requiring review approvals
+- Direct commits to published API specs blocked—all changes must go through PR review
+- Merge queues ensure compatibility testing happens before merges, preventing CI race conditions
 
 </details>
 
 <details>
 <summary><strong>Developer Portal Integration</strong> — One-stop shop for search, interactive docs, code samples, self-service onboarding</summary>
 
-- **Unified Discovery Experience**
-  - Single search interface queries across all registered APIs with filtering by domain, capability, data type, lifecycle state
-  - Search results include API descriptions, ownership information, SLO commitments, and adoption statistics
-  - Related APIs and common integration patterns surfaced automatically based on similarity and usage patterns
-  - "Recommended for you" suggestions based on team's existing subscriptions and domain area
+**Unified Discovery Experience**
 
-- **Interactive Documentation**
-  - API specifications automatically rendered as interactive docs (Swagger UI, GraphQL Playground)
-  - "Try it now" functionality allowing developers to test APIs directly from documentation with their credentials
-  - Code generators produce client libraries in multiple languages (Python, JavaScript, Java, Go) from specs
-  - Copy-paste ready code examples showing authentication, error handling, pagination for every endpoint
+- Single search interface queries across all registered APIs with filtering by domain, capability, data type, lifecycle state
+- Search results include API descriptions, ownership information, SLO commitments, and adoption statistics
+- Related APIs and common integration patterns surfaced automatically based on similarity and usage patterns
+- "Recommended for you" suggestions based on team's existing subscriptions and domain area
 
-- **Self-Service Subscription Management**
-  - One-click subscription requests with automatic routing to appropriate approvers
-  - Subscription status dashboard showing pending, approved, and active subscriptions across all environments
-  - API key/credential generation and secure delivery upon subscription approval
-  - Usage dashboards showing each consumer's call volumes, error rates, and quota consumption
+**Interactive Documentation**
 
-- **Learning Resources & Support**
-  - Getting started guides and tutorials auto-generated from API specifications
-  - Common use case cookbook with real-world integration examples
-  - Link to producer team's support channel (Slack, Teams, email) for questions
-  - FAQ section powered by actual consumer questions submitted through feedback channel
+- API specifications automatically rendered as interactive docs (Swagger UI, GraphQL Playground)
+- "Try it now" functionality allowing developers to test APIs directly from documentation with their credentials
+- Code generators produce client libraries in multiple languages (Python, JavaScript, Java, Go) from specs
+- Copy-paste ready code examples showing authentication, error handling, pagination for every endpoint
+
+**Self-Service Subscription Management**
+
+- One-click subscription requests with automatic routing to appropriate approvers
+- Subscription status dashboard showing pending, approved, and active subscriptions across all environments
+- API key/credential generation and secure delivery upon subscription approval
+- Usage dashboards showing each consumer's call volumes, error rates, and quota consumption
+
+**Learning Resources & Support**
+
+- Getting started guides and tutorials auto-generated from API specifications
+- Common use case cookbook with real-world integration examples
+- Link to producer team's support channel (Slack, Teams, email) for questions
+- FAQ section powered by actual consumer questions submitted through feedback channel
 
 </details>
 
 <details>
 <summary><strong>Support & Feedback Loop Integration</strong> — Continuous feedback channel integrated into Registry and Developer Portal</summary>
 
-- **Consumer Feedback Collection**
-  - In-portal feedback widget allowing consumers to report issues, request features, rate documentation quality
-  - Structured feedback forms capturing use case details, business impact, and priority from consumer perspective
-  - Feedback automatically routed to API product owner with consumer context (team, usage volume, subscription date)
-  - Upvoting mechanism allows multiple consumers to signal common feature requests, informing roadmap priorities
+**Consumer Feedback Collection**
 
-- **Issue Tracking Integration**
-  - Feedback automatically creates tickets in producer team's issue tracker (Jira, GitHub Issues, Linear)
-  - Bidirectional sync keeps consumers updated on issue status without requiring them to access separate systems
-  - SLA tracking for producer response times to consumer issues, with escalation for high-priority consumers
-  - Public roadmap visibility showing planned features, in-progress work, and recently shipped capabilities
+- In-portal feedback widget allowing consumers to report issues, request features, rate documentation quality
+- Structured feedback forms capturing use case details, business impact, and priority from consumer perspective
+- Feedback automatically routed to API product owner with consumer context (team, usage volume, subscription date)
+- Upvoting mechanism allows multiple consumers to signal common feature requests, informing roadmap priorities
 
-- **Support Channel Aggregation**
-  - Links to producer team's support channels prominently displayed in API documentation
-  - Slack/Teams integration posts alerts to producer channels when new feedback arrives or SLOs are breached
-  - Support ticket history visible to both producers and consumers for each API, creating transparency
-  - Common questions automatically suggested as FAQ additions based on frequency and themes
+**Issue Tracking Integration**
+
+- Feedback automatically creates tickets in producer team's issue tracker (Jira, GitHub Issues, Linear)
+- Bidirectional sync keeps consumers updated on issue status without requiring them to access separate systems
+- SLA tracking for producer response times to consumer issues, with escalation for high-priority consumers
+- Public roadmap visibility showing planned features, in-progress work, and recently shipped capabilities
+
+**Support Channel Aggregation**
+
+- Links to producer team's support channels prominently displayed in API documentation
+- Slack/Teams integration posts alerts to producer channels when new feedback arrives or SLOs are breached
+- Support ticket history visible to both producers and consumers for each API, creating transparency
+- Common questions automatically suggested as FAQ additions based on frequency and themes
 
 </details>
 
 <details>
 <summary><strong>Alerting & Observability Integration</strong> — Continuous monitoring for atypical usage, error spikes, performance degradation, cost visibility</summary>
 
-- **Proactive Health Monitoring**
-  - Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes
-  - Anomaly detection algorithms identify unusual patterns (traffic spikes, error rate increases, latency degradation)
-  - Automated alerts to producers when SLOs are at risk or have been violated, with consumer impact analysis
-  - Comparative analysis across API versions showing performance differences to validate improvements
+**Proactive Health Monitoring**
 
-- **Consumer-Specific Observability**
-  - Per-subscription dashboards allowing producers to see each consumer's usage patterns individually
-  - Error clustering by consumer reveals which teams are struggling with integrations versus systemic API issues
-  - Rate limit proximity warnings alert consumers before they hit limits, preventing surprise throttling
-  - Cost attribution reports show infrastructure costs per consumer based on request volume and data transfer
+- Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes
+- Anomaly detection algorithms identify unusual patterns (traffic spikes, error rate increases, latency degradation)
+- Automated alerts to producers when SLOs are at risk or have been violated, with consumer impact analysis
+- Comparative analysis across API versions showing performance differences to validate improvements
 
-- **Deprecation Readiness Metrics**
-  - Automated tracking of deprecated API usage, showing which consumers are still active and their traffic volumes
-  - Migration progress dashboards visualizing consumer adoption of new versions over time
-  - Targeted alerts to specific consumers who are still using deprecated versions approaching retirement
-  - "Ready to retire" recommendations when deprecated version usage reaches zero or near-zero thresholds
+**Consumer-Specific Observability**
 
-- **Security & Compliance Monitoring**
-  - Authentication failure rate monitoring detecting potential security issues or misconfigured clients
-  - Data access pattern analysis flagging unusual data retrieval volumes that might indicate data exfiltration
-  - Compliance audit logs capturing who accessed what data, when, for regulated API endpoints
-  - Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations
-  - Automated scans for permissions violations that allow non-gateway API use
+- Per-subscription dashboards allowing producers to see each consumer's usage patterns individually
+- Error clustering by consumer reveals which teams are struggling with integrations versus systemic API issues
+- Rate limit proximity warnings alert consumers before they hit limits, preventing surprise throttling
+- Cost attribution reports show infrastructure costs per consumer based on request volume and data transfer
+
+**Deprecation Readiness Metrics**
+
+- Automated tracking of deprecated API usage, showing which consumers are still active and their traffic volumes
+- Migration progress dashboards visualizing consumer adoption of new versions over time
+- Targeted alerts to specific consumers who are still using deprecated versions approaching retirement
+- "Ready to retire" recommendations when deprecated version usage reaches zero or near-zero thresholds
+
+**Security & Compliance Monitoring**
+
+- Authentication failure rate monitoring detecting potential security issues or misconfigured clients
+- Data access pattern analysis flagging unusual data retrieval volumes that might indicate data exfiltration
+- Compliance audit logs capturing who accessed what data, when, for regulated API endpoints
+- Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations
+- Automated scans for permissions violations that allow non-gateway API use
 
 </details>
 
@@ -676,6 +699,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Purpose:** Local champions who provide early-stage guidance within their product area or department.
 
 **Responsibilities:**
+
 - **Early Design Consultation** — Review draft API specifications before formal submission, providing feedback on naming conventions, domain boundaries, data modeling, and integration patterns
 - **Standards Translation** — Help teams understand and apply organizational API standards in the context of their specific domain and business requirements
 - **Best Practice Sharing** — Answer questions about API design patterns, share examples from successful APIs, and help teams avoid common pitfalls
@@ -683,6 +707,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 - **Mentorship** — Build API design capability within their department by teaching principles and providing ongoing coaching
 
 **Selection Criteria:**
+
 - Experienced engineers (typically Senior+ level) with strong API design skills
 - Deep knowledge of both the local business domain and organizational API standards
 - Strong communication and mentoring abilities
@@ -693,6 +718,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Organizational Structure:** Each product area or major department designates 1-2 advisors. In organizations with 300+ APIs, this typically means 8-15 advisors total.
 
 **Success Metrics:**
+
 - % of APIs reaching formal review with zero critical issues
 - Average time from draft to review-ready submission
 - Producer team satisfaction with guidance received
@@ -707,6 +733,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Purpose:** Organizational-level experts who conduct formal reviews before API publication, ensuring architectural alignment and long-term quality.
 
 **Responsibilities:**
+
 - **Formal API Review** — Evaluate APIs for architectural consistency, security compliance, usability, scalability, and maintainability before publication approval
 - **Collaborative Feedback** — Provide constructive, actionable feedback that improves design quality while mentoring teams
 - **Standards Evolution** — Identify patterns across reviews that should become standardized, and update guidelines based on lessons learned
@@ -714,6 +741,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 - **Risk Assessment** — Flag potential production issues, scaling concerns, or integration challenges based on experience
 
 **Selection Criteria:**
+
 - Principal Engineers, Architects, or Senior Technical Leads with extensive API design experience
 - Cross-domain knowledge spanning multiple areas of the organization
 - Pattern recognition ability from reviewing many APIs
@@ -724,6 +752,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Time Commitment:** 10-20% of role (typically 4-8 hours per week during assigned rotation)
 
 **Review Assignment:** Rotating schedule (weekly or bi-weekly) ensures:
+
 - Distributed workload prevents individual burnout
 - Fresh perspectives on each review
 - Consistency through shared standards and calibration sessions
@@ -732,6 +761,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Review SLA:** Maximum 3 business days from submission to initial feedback (target: 1-2 days)
 
 **Success Metrics:**
+
 - Review turnaround time (meeting SLA %)
 - API quality post-publication (bug rates, consumer satisfaction, need for breaking changes)
 - Review rejection rate (should be low if Departmental Advisors are effective)
@@ -747,13 +777,15 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 **Purpose:** Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
 
 **Responsibilities:**
+
 - **Standards Definition** — Establish and evolve organizational API standards, design patterns, and governance policies
 - **Domain Boundary Resolution** — Resolve conflicts when multiple teams claim ownership of the same capability or domain
 - **Exception Handling** — Review requests to deviate from standard policies, approving justified exceptions while protecting consistency
 - **Metrics & Health Monitoring** — Track ecosystem-wide KPIs, identify systemic issues, and recommend strategic improvements
 - **Escalation Point** — Handle complex cases that can't be resolved at the advisor or review panel level
 
-**Composition:** 
+**Composition:**
+
 - 1-2 representatives from Platform Engineering
 - 1-2 representatives from API Review Panel
 - 1-2 senior technical leaders with cross-org visibility
@@ -787,7 +819,9 @@ flowchart TD
     GG([Governance Group]) -.->|Standards & policies| DA
     ARP -.->|Exceptions| GG
 </pre>
+
 **Key Workflow Principles:**
+
 - **API Review Panel is made of Advisors** - Obviously the advisor who helped author this API cannot be on its panel, but generally, this is part of the job.
 - **Advisors are optional but recommended** — Teams can skip straight to formal review, but advisor guidance improves success rates
 - **Automation runs first** — Linters catch syntax and basic issues before human review, so experts focus on design quality
@@ -803,22 +837,26 @@ flowchart TD
 <summary><strong>11.5 Making This Model Scale</strong> — Sizing guidance for small, medium, and large organizations</summary>
 
 **For Small Organizations (< 100 APIs):**
+
 - **Minimum viable approach:** 2-3 API experts serve dual roles as both advisors and reviewers
 - Skip the departmental advisor layer; experts provide both early guidance and formal review
 - Governance group can be informal (doesn't need regular meetings)
 
 **For Medium Organizations (100-500 APIs):**
+
 - **Implement both tiers:** 5-8 departmental advisors + 5-8 review panel members (with some overlap)
 - Formal governance group meets quarterly
 - Automated tooling becomes critical to prevent expert bottlenecks
 
 **For Large Organizations (500+ APIs):**
+
 - **Fully staffed tiers:** 10-20 departmental advisors + 8-12 review panel members (minimal overlap)
 - Governance group meets monthly with clear charter
 - Investment in AI-assisted review tools to augment human experts
 - Regional or domain-specific advisor networks for global organizations
 
 **Scaling Strategies:**
+
 - **Rotate panel membership** to develop more experts and prevent burnout
 - **Build a knowledge base** of common review feedback that helps teams self-correct
 - **Automate everything possible** so experts focus only on what requires human judgment
@@ -847,18 +885,21 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <summary><strong>Authentication & Authorization</strong></summary>
 
 **Identity Verification:**
+
 - All API requests must present valid credentials (OAuth2 tokens, JWT, mutual TLS certificates, API keys)
 - Gateway validates credentials against the identity provider (Okta, Azure AD, internal IAM)
 - Service-to-service authentication uses short-lived tokens or certificate-based mTLS
 - User-originated requests carry user identity context through the entire call chain
 
 **Authorization Enforcement:**
+
 - Gateway validates that the calling application has an active, approved subscription for the requested API version and environment
 - Subscription status checked in real-time against Registry (cached for performance with short TTL)
 - Scope-based access control: subscriptions can be limited to specific endpoints or operations (read-only, write, admin)
 - Environment isolation strictly enforced—production credentials cannot access dev/test APIs and vice versa
 
 **Policy Examples:**
+
 - `payments-api-v2` in production: only approved merchant-facing services with production subscriptions
 - `customer-data-api` endpoints returning PII: require additional role claims beyond basic subscription
 - Admin operations (DELETE, bulk updates): require elevated privileges and approval workflows
@@ -869,17 +910,20 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <summary><strong>Rate Limiting & Throttling</strong></summary>
 
 **Consumer Protection:**
+
 - Per-subscription rate limits prevent individual consumers from overwhelming producer APIs
 - Limits defined based on estimated_txns_per_sec in subscription request, enforced by Gateway
 - Graduated throttling: soft limits (warnings) at 80%, hard limits (429 responses) at 100%
 - Burst allowances for legitimate traffic spikes using token bucket or sliding window algorithms
 
 **Producer Protection:**
+
 - Global rate limits per API protect producers from aggregate overload across all consumers
 - Circuit breakers detect unhealthy backends and fail fast rather than queuing requests
 - Priority queuing allows critical consumers (payment processing, fraud detection) to bypass throttling during incidents
 
 **Implementation:**
+
 - Distributed rate limiting using Redis or similar shared state
 - Real-time metrics exposed to both producers (who's hitting limits) and consumers (proximity warnings)
 - Automatic alerts when consumers repeatedly hit limits (may indicate bugs or capacity planning needs)
@@ -890,16 +934,19 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <summary><strong>Data Security & Privacy</strong></summary>
 
 **Request/Response Filtering:**
+
 - Gateway can strip sensitive fields from responses based on data classification and consumer authorization
 - PII masking for consumers that don't have explicit PII access approval
 - Redaction of internal-only fields (debug info, internal IDs) from responses to external-facing services
 
 **Encryption in Transit:**
+
 - All API traffic uses TLS 1.3 (minimum TLS 1.2)
 - Gateway terminates TLS, re-encrypts for backend communication
 - Certificate rotation managed centrally, not by individual service teams
 
 **Data Residency:**
+
 - Gateway can route requests to region-specific backends based on data sovereignty requirements
 - Cross-border data transfer policies enforced at routing layer
 - Geographic routing metadata declared in API specifications and enforced automatically
@@ -910,16 +957,19 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <summary><strong>Network Security</strong></summary>
 
 **IP Allowlisting:**
+
 - Subscription-level IP restrictions for services with known source addresses
 - Prevent credential theft impact by binding subscriptions to network locations
 - Particularly important for third-party integrations or vendor access
 
 **DDoS Protection:**
+
 - Gateway sits behind or integrates with DDoS mitigation (Cloudflare, AWS Shield)
 - Anomaly detection identifies unusual traffic patterns (volumetric attacks, application-layer floods)
 - Automatic blocking of malicious sources with escalation to security team
 
 **WAF Integration:**
+
 - Web Application Firewall rules protect against injection attacks, malformed requests
 - OWASP Top 10 protection applied uniformly across all APIs
 - Custom rules for known attack patterns in your domain (e.g., card testing in payments)
@@ -936,6 +986,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <summary><strong>What Gets Logged</strong></summary>
 
 **Request Metadata:**
+
 - Timestamp (microsecond precision), request ID (distributed tracing correlation)
 - Consumer identity: application ID, subscription ID, owning team
 - User identity: end-user ID if request is user-originated (not just service-to-service)
@@ -943,17 +994,20 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 - Request size, content type, IP source address
 
 **Response Metadata:**
+
 - Response status code, response size, content type
 - Latency breakdown: queue time, gateway processing time, backend processing time
 - Cache hit/miss status if caching enabled
 
 **Security Events:**
+
 - Authentication failures with reason codes (expired token, invalid signature, unknown credential)
 - Authorization failures (valid identity but no subscription, insufficient scope)
 - Rate limit violations (which consumer, which limit exceeded)
 - Policy violations (blocked by WAF, suspicious patterns detected)
 
 **Data Access Logging (for sensitive APIs):**
+
 - For APIs handling PII, PHI, financial data, or confidential business information:
   - Which specific records were accessed (customer IDs, account numbers)
   - What fields were returned (especially PII fields)
@@ -966,17 +1020,20 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <summary><strong>Log Storage & Retention</strong></summary>
 
 **Immutable Logging:**
+
 - Logs written to append-only storage (S3 with versioning, immutable buckets, WORM storage)
 - Hash chains or cryptographic signing prevent tampering with historical logs
 - Critical for proving compliance during audits or forensic investigations
 
 **Retention Policies:**
+
 - Standard operational logs: 90 days in hot storage, 1 year in cold storage
 - Security events and auth failures: 2 years minimum
 - PII/PHI access logs: 7 years (varies by regulation—HIPAA, GDPR, SOX, PCI-DSS)
 - Automated archival and deletion based on data classification and regulatory requirements
 
 **Access Controls:**
+
 - Audit logs accessible only to security team, compliance team, designated auditors
 - Read-only access; no ability to modify or delete logs outside retention policies
 - All log access itself is logged (auditing the auditors)
@@ -987,17 +1044,20 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <summary><strong>Real-Time Security Monitoring</strong></summary>
 
 **Anomaly Detection:**
+
 - ML models learn normal access patterns per consumer, per API, per user
 - Alert on deviations: unusual access times, geographic anomalies, volume spikes, new data access patterns
 - Example: a customer service application suddenly accessing payment processing APIs it's never called before
 
 **Threat Detection:**
+
 - Credential stuffing attempts: many auth failures from same source IP across different credentials
 - Account enumeration: scanning for valid user IDs through API responses
 - Data exfiltration: unusually large response payloads, bulk access to customer records
 - Privilege escalation: attempts to access admin endpoints without proper authorization
 
 **Incident Response Integration:**
+
 - Security events automatically create tickets in incident response system (PagerDuty, ServiceNow)
 - High-severity threats trigger automatic credential revocation and service blocking
 - Runbooks integrated with alerts guide responders through investigation and remediation
@@ -1014,18 +1074,21 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <summary><strong>Prevention Mechanisms</strong></summary>
 
 **Network-Level Enforcement:**
+
 - Backend API services bound to private subnets, not accessible from broader corporate network
 - Network policies (Security Groups, Network ACLs, Kubernetes Network Policies) allow inbound only from Gateway IPs
 - Service mesh (Istio, Linkerd) enforces mTLS with Gateway as the only valid caller
 - Firewall rules drop any traffic to API backends that doesn't originate from Gateway
 
 **Application-Level Enforcement:**
+
 - API services validate presence of Gateway-injected headers (X-Gateway-Request-ID, X-Subscription-ID)
 - Shared secrets or signatures in headers prove request transited through Gateway
 - Services reject requests lacking Gateway provenance markers
 - Backends log and alert on any direct access attempts for security team investigation
 
 **Infrastructure as Code:**
+
 - Terraform/CloudFormation templates for API services enforce Gateway-only networking by default
 - CI/CD pipelines reject configurations that expose APIs outside Gateway
 - Platform team provides "blessed" templates; deviations require explicit exception approval
@@ -1036,21 +1099,25 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <summary><strong>Detection Mechanisms</strong></summary>
 
 **Network Traffic Analysis:**
+
 - Flow logs analyzed to detect traffic between services that should be going through Gateway
 - Anomaly detection flags new communication paths not registered in service dependency graph
 - Example: if `customer-service` suddenly makes direct calls to `payment-api` instead of via Gateway
 
 **Service Mesh Observability:**
+
 - Service mesh telemetry shows all service-to-service calls with full path detail
 - Dashboards highlight calls that bypass Gateway based on traffic patterns
 - Distributed tracing reveals calls missing Gateway span in the trace
 
 **Automated Scanning:**
+
 - Periodic security scans attempt direct API calls from test clients
 - Successful direct access triggers alerts (should be blocked by network policies)
 - Penetration testing includes Gateway bypass attempts as standard test case
 
 **Compliance Auditing:**
+
 - Regular audits compare Gateway access logs against backend service logs
 - Discrepancies indicate non-Gateway access (backend handled requests Gateway didn't route)
 - Automated reports flag services with suspicious direct access patterns
@@ -1115,16 +1182,19 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <summary><strong>Policy Enforcement</strong></summary>
 
 **At Design Time:**
+
 - API specifications declare data classification in metadata
 - Review panel validates classification is appropriate for data model
 - Higher classifications trigger additional review requirements (security, privacy, legal)
 
 **At Runtime:**
+
 - Gateway enforces access controls based on data classification
 - Higher classifications require stronger authentication (e.g., hardware tokens, certificate-based)
 - Audit logging depth increases with classification level
 
 **Data Handling Requirements:**
+
 - **Encryption at rest:** Required for Restricted and above
 - **Encryption in transit:** TLS required for all; mTLS required for Highly Restricted
 - **Data masking:** PII must be masked in logs, non-production environments, and to unauthorized consumers
@@ -1138,21 +1208,25 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <summary><strong>12.5 Continuous Compliance Monitoring</strong></summary>
 
 **Automated Compliance Dashboards:**
+
 - Real-time view of compliance posture: which APIs are PCI-compliant, which handle PII, encryption status
 - Red/yellow/green indicators for each compliance control: access controls, logging, encryption, testing
 - Trend analysis: are we improving or degrading compliance over time?
 
 **Attestation Automation:**
+
 - Quarterly compliance reports auto-generated from platform telemetry
 - Evidence packages for auditors: logs, configurations, access reviews, security scan results
 - Reduces audit preparation from weeks to hours
 
 **Policy as Code:**
+
 - Compliance requirements encoded as automated policies (Open Policy Agent, AWS Config Rules)
 - CI/CD pipeline blocks deployments that violate compliance policies
 - Examples: "PCI-compliant APIs must have 7-year log retention," "GDPR-relevant APIs must implement deletion endpoint"
 
 **Third-Party Risk Management:**
+
 - Vendor-provided APIs registered in platform with compliance attestations
 - Subscriptions to third-party APIs track what internal data is shared with vendors
 - Audit reports show data flows to third parties for vendor risk assessments
@@ -1165,21 +1239,25 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <summary><strong>12.6 Security Best Practices for API Producers</strong></summary>
 
 **Secure Defaults:**
+
 - Platform-provided API templates include security best practices by default
 - Authentication, authorization, rate limiting, logging configured out-of-box
 - Producers must explicitly opt-out (with documented justification) rather than opt-in to security
 
 **Security Champions:**
+
 - Each producer team designates a security champion who receives advanced training
 - Champions participate in security reviews, keep team updated on threats and best practices
 - Network of champions shares knowledge across teams
 
 **Threat Modeling:**
+
 - Payment APIs and other high-risk APIs undergo formal threat modeling during design
 - STRIDE or similar framework identifies threats; mitigations documented and implemented
 - Review panel validates threat model completeness before approval
 
 **Dependency Management:**
+
 - Software Bill of Materials (SBOM) generated for all APIs, tracking library dependencies
 - Automated scanning for vulnerable dependencies (Snyk, Dependabot, GitHub Advanced Security)
 - Critical vulnerabilities must be patched within SLA (7 days for critical, 30 days for high)
