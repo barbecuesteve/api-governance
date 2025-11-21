@@ -16,51 +16,13 @@ For an executive summary of why this topic matters, [go here](exec-summary.md).
 
 ### **Overview**
 
-Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight model for organizations with hundreds or thousands of microservices.
+Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
+
+This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
 
 ---
 
-### **The Current Problem**
-
-APIs emerge as byproducts of projects, not as deliberate products. This causes:
-
-* **Reinvented capabilities** — Developers can't find what exists, so they build from scratch. Teams duplicate the same work across the organization.
-
-* **Inconsistent patterns** — Each team invents its own authentication, error handling, pagination, versioning, and data formats. Developers must learn new patterns for every API they use, slowing development.
-
-* **Version sprawl** — Without version discipline, APIs multiply into confusing variants: v1, v2, v1.1, v2-beta, v2-internal. Developers don't know which version to use, which are deprecated, or how to migrate.
-
-* **Unclear ownership** — Without explicit owners, no one answers questions, fixes bugs, or announces changes. Developers hunt through commit logs or Slack. Breaking changes cause production incidents that clear ownership would prevent.
-
-* **Difficult deprecation** — Retiring outdated APIs is impossible without knowing who uses them. Teams either leave obsolete APIs running forever or make risky decisions to shut them down.
-
-These problems compound at scale. Organizations with 300+ APIs see entropy outpace governance without a platform approach.
-
----
-
-### **Why "API as Product" Matters**
-
-Treating internal APIs as products makes them owned, discoverable, and reliable. Developers trust and use them. This shift moves APIs from afterthoughts — built hastily for one project then abandoned — to maintained assets with clear value.
-
-External products get investment in user experience, documentation, support, and continuous improvement. Internal APIs deserve the same care. When treated as products, APIs gain dedicated owners, roadmaps, and quality commitments.
-
-This matters because internal APIs connect modern digital organizations. They integrate systems, speed feature development through reuse, and support platform innovation. Without product thinking, APIs stay scattered and inconsistent. Teams solve the same problems repeatedly instead of building on reliable foundations.
-
-**A Product Mindset Means:**
-
-| Principle                | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| **Clear Ownership**      | Every API has an owner and roadmap                     |
-| **Customer Experience**  | Usability, documentation, and consistency matter       |
-| **Lifecycle Discipline** | Plan versioning, support, deprecation, and retirement  |
-| **Feedback Loops**       | Consumers request features and report issues           |
-| **Value Orientation**    | APIs create reuse, not duplication                     |
-
-This mindset unlocks reuse — the fastest path to better engineering speed.
-
----
-
-### **A Model for Internal API Governance**
+### **Core Platform Capabilities**
 
 To run API-as-product at scale, organizations need these platform capabilities:
 
