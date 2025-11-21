@@ -605,7 +605,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Upvoting mechanism allows multiple consumers to signal common feature requests, informing roadmap priorities</li>
 </ul>
 
-**Issue Tracking Integration**
+<strong>Issue Tracking Integration</strong>
 
 <ul>
 <li>Feedback automatically creates tickets in producer team's issue tracker (Jira, GitHub Issues, Linear)</li>
@@ -614,7 +614,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Public roadmap visibility showing planned features, in-progress work, and recently shipped capabilities</li>
 </ul>
 
-**Support Channel Aggregation**
+<strong>Support Channel Aggregation</strong>
 
 <ul>
 <li>Links to producer team's support channels prominently displayed in API documentation</li>
@@ -628,7 +628,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>Alerting & Observability Integration</strong> — Continuous monitoring for atypical usage, error spikes, performance degradation, cost visibility</summary>
 
-**Proactive Health Monitoring**
+<strong>Proactive Health Monitoring</strong>
 
 <ul>
 <li>Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes</li>
@@ -637,7 +637,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Comparative analysis across API versions showing performance differences to validate improvements</li>
 </ul>
 
-**Consumer-Specific Observability**
+<strong>Consumer-Specific Observability</strong>
 
 <ul>
 <li>Per-subscription dashboards allowing producers to see each consumer's usage patterns individually</li>
@@ -646,7 +646,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Cost attribution reports show infrastructure costs per consumer based on request volume and data transfer</li>
 </ul>
 
-**Deprecation Readiness Metrics**
+<strong>Deprecation Readiness Metrics</strong>
 
 <ul>
 <li>Automated tracking of deprecated API usage, showing which consumers are still active and their traffic volumes</li>
@@ -655,7 +655,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>"Ready to retire" recommendations when deprecated version usage reaches zero or near-zero thresholds</li>
 </ul>
 
-**Security & Compliance Monitoring**
+<strong>Security & Compliance Monitoring</strong>
 
 <ul>
 <li>Authentication failure rate monitoring detecting potential security issues or misconfigured clients</li>
@@ -818,7 +818,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <summary><strong>Departmental API Advisors</strong> — Local champions providing early-stage guidance</summary>
 
 <strong>Purpose:</strong> Local champions who provide early-stage guidance within their product area or department.
-
+<br>
 <strong>Responsibilities:</strong>
 
 <ul>
@@ -839,9 +839,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 </ul>
 
 <strong>Time Commitment:</strong> 10-15% of role (typically 4-6 hours per week)
-
+<br>
 <strong>Organizational Structure:</strong> Each product area or major department designates 1-2 advisors. In organizations with 300+ APIs, this typically means 8-15 advisors total.
-
+<br>
 <strong>Success Metrics:</strong>
 
 <ul>
@@ -858,7 +858,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <summary><strong>Central API Review Panel</strong> — Organizational-level experts conducting formal reviews before publication</summary>
 
 <strong>Purpose:</strong> Organizational-level experts who conduct formal reviews before API publication, ensuring architectural alignment and long-term quality.
-
+<br>
 <strong>Responsibilities:</strong>
 
 <ul>
@@ -879,8 +879,10 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 </ul>
 
 <strong>Panel Composition:</strong> 5-12 experienced reviewers who rotate through assignments
+<br>
 
 <strong>Time Commitment:</strong> 10-20% of role (typically 4-8 hours per week during assigned rotation)
+<br>
 
 <strong>Review Assignment:</strong> Rotating schedule (weekly or bi-weekly) ensures:
 
@@ -910,6 +912,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <summary><strong>11.3 Governance Group (Small & Strategic)</strong> — Defines policy, resolves disputes, handles exceptions</summary>
 
 <strong>Purpose:</strong> Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
+<br>
 
 <strong>Responsibilities:</strong>
 
@@ -931,6 +934,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 </ul>
 
 <strong>Meeting Cadence:</strong> Monthly or quarterly (not involved in day-to-day approvals)
+<br>
 
 <strong>Important Principle:</strong> This group <strong>defines the rules</strong> but doesn't execute reviews or approvals. Product Owners and the Review Panel apply the rules; the Governance Group only intervenes for policy changes or exceptional cases.
 
