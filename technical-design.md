@@ -11,18 +11,18 @@ For the executive overview, [go here](README.md).
 
 ## 1. Introduction
 
-This appendix provides the architecture, data structures, lifecycle flows, and governance practices that enable an API-as-Product operating model. It is platform-agnostic and focuses on concepts required to support scalable internal API ecosystems (300–5,000+ services).
+This appendix covers the architecture, data structures, lifecycle flows, and governance practices for API-as-Product. Platform-agnostic. Supports 300–5,000+ services.
 
-It is intended for:
+Intended for:
 - Principal engineers and architects
 - Platform engineering and developer experience teams
 - API product owners and governance leads
 
 ---
 
-## 2. Reference Architecture Overview
+## 2. Reference Architecture
 
-The architecture below shows the core platform components that enable discoverability, controlled consumption, and measurable API product quality.
+Core platform components for discoverability, controlled consumption, and measurable quality.
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
@@ -66,13 +66,13 @@ flowchart LR
 | **API Gateway** | Enforces access, version rules, routing, policy; captures call metadata |
 | **API Auditor** | Usage analytics, reliability metrics, cost attribution, consumer impact, deprecation readiness |
 
-This architecture ensures APIs are intentionally designed, discoverable, governed, and measurable.
+This architecture makes APIs intentionally designed, discoverable, governed, and measurable.
 
 ---
 
 ## 3. Core Data Model
 
-The following entities form the foundation for API tracking, lifecycle management, and usage relationships.
+These entities support API tracking, lifecycle management, and usage relationships.
 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','secondaryColor':'#f0f0f0','tertiaryColor':'#fff','edgeLabelBackground':'#ffffff','fontSize':'14px'}}}%%
@@ -148,28 +148,28 @@ erDiagram
 ### Entity Descriptions
 
 **Application**  
-Represents an internally registered software system capable of producing or consuming APIs. Each Application has a designated owning team and contact information for operational communication. Applications can both publish APIs (as producers) and consume APIs from other applications (as consumers). The keywords, description, and tags fields enable discoverability through the API Registry's search functionality, allowing teams to find relevant applications and understand their purpose within the broader ecosystem.
+An internally registered software system that produces or consumes APIs. Each has an owning team and contact for operational communication. Applications can publish APIs (as producers) and consume APIs (as consumers). Keywords, description, and tags make applications searchable in the Registry.
 
 **API Version**  
-A specific version of an API, governed by semantic versioning (SemVer). Each API Version carries a lifecycle state (e.g., Draft, Published, Deprecated, Retired) that determines its availability and governance rules. Major and minor version numbers are tracked separately to enable policy enforcement around breaking changes. The release date provides audit trail and helps teams understand API evolution timelines. Description and tags improve searchability and help consumers quickly evaluate whether an API meets their needs. Multiple versions of the same API can coexist, allowing producers to introduce breaking changes in new major versions while maintaining backward compatibility for existing consumers.
+A specific version of an API using semantic versioning (SemVer). Each has a lifecycle state (Draft, Published, Deprecated, Retired) that determines availability and governance rules. Major and minor versions tracked separately for policy enforcement around breaking changes. Release date provides audit trail. Description and tags improve searchability. Multiple versions coexist, allowing producers to introduce breaking changes in new major versions while maintaining backward compatibility.
 
 **Environment**  
-A deployment target for API versions, typically representing different stages in the software development lifecycle such as development, testing, and production. Each environment may have different configurations, access controls, and quality gates. The attributes field allows for environment-specific metadata (e.g., region, cluster, scaling policies), while description and tags aid in organizational clarity. Subscriptions are scoped to specific environments, enabling teams to test integrations in non-production environments before requesting production access.
+A deployment target for API versions: development, testing, production. Each environment has different configurations, access controls, and quality gates. The attributes field stores environment-specific metadata (region, cluster, scaling policies). Subscriptions are scoped to environments, letting teams test integrations in non-production before requesting production access.
 
 **Subscription**  
-A formal, auditable relationship confirming that a specific Application is authorized to consume a particular API Version in a given Environment. Subscriptions require explicit approval from the API producer, ensuring that all consumers are known and intentional—preventing "drive-by" API usage. The status field tracks subscription state (e.g., Pending, Approved, Revoked), and approval_date provides an audit trail. The usage_description field allows consumers to document their intended use case, helping producers understand consumer needs and impact. The estimated_txns_per_sec helps with capacity planning and enables producers to proactively identify high-volume consumers.
+A formal, auditable relationship authorizing an Application to consume an API Version in an Environment. Requires explicit producer approval, preventing "drive-by" API usage. Status tracks subscription state (Pending, Approved, Revoked). Approval_date provides audit trail. Usage_description lets consumers document their use case, helping producers understand needs and impact. Estimated_txns_per_sec helps capacity planning and identifies high-volume consumers.
 
 **Metrics**  
-Time-series performance and usage data collected for each Subscription, providing visibility into API health and consumer behavior. Metrics are typically aggregated by date and include transaction volume (txns_per_sec), latency percentiles (average, 90th, 99th), and error rates broken down by client errors (4xx) and server errors (5xx). This data powers the API Auditor, enabling producers to monitor SLO adherence, identify degradation patterns, understand consumer traffic profiles, and make data-driven decisions about capacity, deprecation readiness, and API improvements. Metrics tied to subscriptions enable granular analysis of which consumers are experiencing issues or driving the most load.
+Time-series performance and usage data per Subscription. Shows API health and consumer behavior. Aggregated by date: transaction volume (txns_per_sec), latency percentiles (average, 90th, 99th), error rates (4xx client errors, 5xx server errors). Powers the Auditor. Producers monitor SLO adherence, identify degradation, understand traffic profiles, and make data-driven decisions about capacity, deprecation, and improvements. Per-subscription metrics show which consumers have issues or drive the most load.
 
 **Errors**  
-Detailed error records captured for failed API calls, providing diagnostic information to help both producers and consumers troubleshoot integration issues. Each error entry includes a timestamp for temporal analysis, the associated subscription_id to identify the consuming application, and the request/response payloads (subject to PII and data sensitivity policies). The response_code indicates the HTTP status returned. This granular error data enables producers to identify systematic issues (e.g., validation errors from a specific consumer, breaking changes not properly versioned) and helps consumers debug their integrations. Error clustering by subscription can reveal patterns like misconfigured clients or documentation gaps that need addressing.
+Detailed error records for failed API calls. Helps producers and consumers troubleshoot. Each includes: timestamp, subscription_id (identifies consumer), request/response payloads (subject to PII policies), response_code (HTTP status). Producers identify systematic issues (validation errors from specific consumers, improperly versioned breaking changes). Consumers debug integrations. Error clustering by subscription reveals patterns like misconfigured clients or documentation gaps.
 
 ---
 
-## 4. API Lifecycle Overview
+## 4. API Lifecycle
 
-The lifecycle supports producer workflow, consumer onboarding, iteration, and responsible deprecation.
+Supports producer workflow, consumer onboarding, iteration, and responsible deprecation.
 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
@@ -186,9 +186,9 @@ Lifecycle states map directly to governance and policy enforcement points.
 
 ---
 
-## 5. Producer & Consumer Lifecycle in Detail
+## 5. Producer & Consumer Lifecycle
 
-This section expands lifecycle stages into actionable workflows for both API producers and consumers.
+Actionable workflows for API producers and consumers.
 
 ### 5.1 Producer Workflow (API Creation → Publication)
 
@@ -231,10 +231,10 @@ sequenceDiagram
 
 **Key Concepts:**
 - **Departmental Advisors** provide early, informal guidance before formal review
-- **Automated linting** catches basic issues (syntax, naming, security patterns) before human review
+- **Automated linting** catches basic issues (syntax, naming, security) before human review
 - **API Review Panel** conducts collaborative review focused on design quality and long-term fit
-- **Iterative improvement** is encouraged; review is mentorship, not gatekeeping
-- Draft versions allow early visibility across the organization
+- **Iterative improvement** encouraged; review is mentorship, not gatekeeping
+- Draft versions create early visibility across the organization
 - Once published, API is contractually "live" as a supported product
 
 ---
@@ -302,9 +302,10 @@ flowchart TD
     D --> E[Minor Updates v2.1, v2.2]
 </pre>
 
-**Policy Recommendations:**
+<details>
+<summary><strong>Policy Recommendations</strong></summary>
 
-1. **Limit Concurrent Major Versions**
+**1. Limit Concurrent Major Versions**
     - Allow only 2-3 active major versions simultaneously (e.g., v2.x, v3.x, and v4.x)
     - This constraint forces disciplined deprecation and prevents unbounded version sprawl
     - Rationale: Each major version requires ongoing support, security patches, infrastructure, and documentation maintenance
@@ -362,6 +363,8 @@ flowchart TD
     - Producers who abandon major versions prematurely (without honoring support commitments) face escalation to Governance Group
     - Repeat offenders may lose fast-track approval privileges and require enhanced review for future changes
 
+</details>
+
 ---
 
 ## 7. Deprecation & Retirement
@@ -390,9 +393,9 @@ flowchart TD
 - Identify all consumers + traffic volume
 - Verify no non-human/system scripts are still calling the API
 
-### 7.2 E2E Consumer Impact Visibility
+### 7.2 Consumer Impact Visibility
 
-To responsibly deprecate, producers need clear consumer insight:
+To deprecate responsibly, producers need clear consumer insight:
 
 - Active vs inactive consumers
 - Version-by-version adoption
@@ -400,22 +403,22 @@ To responsibly deprecate, producers need clear consumer insight:
 - Error clusters by consumer
 - Support tickets or feedback history
 
-The **Auditor** provides this automatically, enabling confident sunsets.
+The **Auditor** provides this automatically for confident sunsets.
 
 ---
 
 ## 8. Governance Policies & Standards
 
-This model aims for **lightweight, automation-first governance** that improves consistency without slowing teams.
+**Lightweight, automation-first governance** that improves consistency without slowing teams.
 
 ### 8.1 Governance Principles
 
 | Principle | Description |
 |-----------|----------------|
-| **Nudge > Police** | Defaults, tooling, and templates encourage desired behavior |
+| **Nudge > Police** | Defaults, tooling, templates encourage desired behavior |
 | **Shift Left** | Quality and consistency checks integrated into design and CI |
-| **Transparency** | All APIs, versions, consumers, and owners are visible along with their traffic |
-| **Product Ownership** | APIs have roadmaps, lifecycle plans, and feedback channels |
+| **Transparency** | All APIs, versions, consumers, owners visible with their traffic |
+| **Product Ownership** | APIs have roadmaps, lifecycle plans, feedback channels |
 | **Evidence-Based Decisions** | Auditor metrics inform reviews and sunsets |
 
 ### 8.2 API Review Criteria
@@ -429,32 +432,32 @@ Reviews check for:
 - Versioning and change impact assessment
 - Documentation completeness (developer onboarding ready)
 
-**Automation Opportunities:**  
-Linting schema, naming, version compatibility, and documentation completeness can be tool-enforced before human review.
+**Automation:**  
+Schema linting, naming, version compatibility, documentation completeness automated before human review.
 
 ---
 
-## 9. Integration with SDLC & Developer Workflows
+## 9. SDLC Integration
 
-### 9.1 Where API Governance Fits in the SDLC
+### 9.1 API Governance in the SDLC
 
 | SDLC Stage | API Governance Touchpoint | How It Works |
 |-------------|-----------------------------|--------------| 
-| **Ideation** | API registered early for visibility | Teams register their API concept in the Registry during planning, even before implementation begins. This creates organization-wide visibility, prevents duplicate efforts, and allows other teams to discover planned capabilities they might want to consume or influence. Early registration encourages collaboration and helps shape APIs based on anticipated consumer needs rather than just producer assumptions. |
-| **Design** | Standards, templates, automated linting | Producers use standardized API specification templates (OpenAPI, GraphQL schemas) that encode organizational conventions for naming, error handling, authentication patterns, and data models. Departmental API Advisors provide guidance on domain boundaries and integration patterns. The Registry runs automated linters that validate specifications against standards before human review, catching common issues like inconsistent naming, missing required fields, or security anti-patterns. This "shift left" approach catches design problems when they're cheapest to fix. |
-| **Build** | Mock/testing environments via Gateway | The Gateway provides sandbox environments where consumers can test against API mocks or development instances without requiring production access. This enables parallel development—consumers can build integrations while producers finalize implementation. Mock servers based on the registered API specification allow early integration testing and help validate that the API design actually meets consumer needs before production deployment. |
-| **Test** | Compatibility testing across versions | Automated compatibility tests verify that new versions maintain backward compatibility promises (for minor versions) and clearly identify breaking changes (for major versions). Contract testing frameworks validate that producer implementations match their published specifications and that consumers aren't relying on undocumented behavior. The Gateway can route percentage-based traffic to new versions for canary testing while monitoring error rates and latency impact before full rollout. |
-| **Release** | Registry + Gateway publish action | Publication is a coordinated action: the Registry marks the API version as "Published," the Gateway receives routing configuration and policy rules, documentation is promoted to the production developer portal, and monitoring baselines are established. This single publish action ensures all platform components stay synchronized. Automated deployment pipelines trigger this publication as part of the release workflow, making governance a natural part of the release process rather than a separate manual step. |
-| **Operate** | Auditor monitors performance & usage | Continuous telemetry flows from the Gateway to the Auditor, tracking per-subscription metrics including request volumes, latency percentiles, error rates, and response sizes. Producers receive dashboards showing API health, consumer adoption trends, top endpoints, and comparative performance across versions. Alerting triggers when SLOs are violated, error rates spike, or unusual usage patterns emerge. This operational visibility enables proactive support rather than reactive firefighting. |
-| **Evolve** | Roadmap + feedback-driven improvements | APIs are treated as living products with roadmaps informed by consumer feedback, usage analytics, and strategic priorities. The Registry provides a feedback channel where consumers can request features, report issues, or suggest improvements. Producers analyze Auditor data to understand which endpoints are heavily used (invest more) versus rarely called (candidates for deprecation). Version planning considers both new capabilities and migration paths for deprecated features. Consumer impact analysis informs prioritization—high-value consumers get prioritized support. |
-| **Sunset** | Deprecation policy & consumer support | When deprecating an API version, producers mark it "Deprecated" in the Registry, triggering automated notifications to all subscribed consumers with clear timelines and migration paths. The Auditor provides detailed reports showing which consumers are still actively using the deprecated version, their traffic volumes, and historical usage trends. Producers can track migration progress and provide targeted support to remaining consumers. Retirement only occurs after the minimum deprecation window and when usage reaches zero or remaining consumers have been individually migrated, ensuring no surprise breakages. |
+| **Ideation** | API registered early for visibility | Teams register their API concept during planning, before implementation. Creates organization-wide visibility, prevents duplicate efforts, lets other teams discover planned capabilities they might consume or influence. Early registration encourages collaboration and shapes APIs based on anticipated consumer needs, not just producer assumptions. |
+| **Design** | Standards, templates, automated linting | Producers use standardized templates (OpenAPI, GraphQL) encoding organizational conventions: naming, error handling, authentication, data models. Departmental Advisors guide on domain boundaries and integration patterns. Registry runs automated linters validating specs against standards before human review, catching inconsistent naming, missing fields, security anti-patterns. This "shift left" approach catches design problems when they're cheapest to fix. |
+| **Build** | Mock/testing environments via Gateway | Gateway provides sandbox environments where consumers test against API mocks or dev instances without production access. Enables parallel development—consumers build integrations while producers finalize implementation. Mock servers based on registered specs allow early integration testing and validate that design meets consumer needs before production. |
+| **Test** | Compatibility testing across versions | Automated tests verify new versions maintain backward compatibility (minor) and identify breaking changes (major). Contract testing validates producer implementations match published specs and consumers don't rely on undocumented behavior. Gateway routes percentage-based traffic to new versions for canary testing while monitoring errors and latency before full rollout. |
+| **Release** | Registry + Gateway publish action | Publication is coordinated: Registry marks API "Published," Gateway receives routing config and policy rules, docs promoted to production portal, monitoring baselines established. Single action keeps all platform components synchronized. Automated deployment pipelines trigger publication as part of release, making governance a natural release step, not separate manual work. |
+| **Operate** | Auditor monitors performance & usage | Continuous telemetry flows from Gateway to Auditor: per-subscription metrics (request volumes, latency percentiles, error rates, response sizes). Producers get dashboards showing API health, consumer adoption, top endpoints, comparative performance across versions. Alerts trigger on SLO violations, error spikes, unusual usage. Operational visibility allows proactive support, not reactive firefighting. |
+| **Evolve** | Roadmap + feedback-driven improvements | APIs are living products with roadmaps informed by consumer feedback, usage analytics, strategic priorities. Registry provides feedback channel for feature requests, issues, improvements. Producers analyze Auditor data: heavily used endpoints (invest more) vs rarely called (deprecation candidates). Version planning considers new capabilities and migration paths. Consumer impact analysis informs prioritization—high-value consumers get prioritized support. |
+| **Sunset** | Deprecation policy & consumer support | When deprecating an API, producers mark it "Deprecated" in Registry, triggering automated notifications to subscribed consumers with timelines and migration paths. Auditor reports which consumers still use the deprecated version, their traffic volumes, historical trends. Producers track migration progress and provide targeted support. Retirement only after minimum deprecation window and when usage reaches zero or remaining consumers migrate individually, preventing surprise breakages. |
 
 ### 9.2 Tooling Integrations
 
-Tooling is the key to making API governance seamless and sustainable. When governance is embedded into existing developer workflows through automation, it becomes invisible infrastructure rather than visible friction.
+Tooling makes API governance seamless and sustainable. When embedded into developer workflows through automation, governance becomes invisible infrastructure, not visible friction.
 
-#### CI/CD Pipeline Integration
-Auto-publish API metadata, run design linters, update Registry as part of the deployment pipeline.
+<details>
+<summary><strong>CI/CD Pipeline Integration</strong> — Auto-publish API metadata, run design linters, update Registry as part of deployment</summary>
 
 - **Automated API Specification Validation**
   - Pre-commit hooks validate OpenAPI/GraphQL schemas for syntax errors before code reaches CI
@@ -474,8 +477,10 @@ Auto-publish API metadata, run design linters, update Registry as part of the de
   - Deployments atomically update both the API service and its gateway configuration, preventing drift
   - Rollback procedures automatically revert both service and gateway configs together
 
-#### Git Hooks & Version Control Integration
-Prevent breaking changes from merging without proper major version bumps.
+</details>
+
+<details>
+<summary><strong>Git Hooks & Version Control Integration</strong> — Prevent breaking changes from merging without proper major version bumps</summary>
 
 - **Pre-Merge Validation**
   - Git hooks analyze API specification diffs and detect breaking changes (removed fields, changed types, deleted endpoints)
@@ -494,8 +499,10 @@ Prevent breaking changes from merging without proper major version bumps.
   - Direct commits to published API specs blocked—all changes must go through PR review
   - Merge queues ensure compatibility testing happens before merges, preventing CI race conditions
 
-#### Developer Portal Integration
-One-stop shop for search, interactive docs, code samples, and self-service onboarding.
+</details>
+
+<details>
+<summary><strong>Developer Portal Integration</strong> — One-stop shop for search, interactive docs, code samples, self-service onboarding</summary>
 
 - **Unified Discovery Experience**
   - Single search interface queries across all registered APIs with filtering by domain, capability, data type, lifecycle state
@@ -521,8 +528,10 @@ One-stop shop for search, interactive docs, code samples, and self-service onboa
   - Link to producer team's support channel (Slack, Teams, email) for questions
   - FAQ section powered by actual consumer questions submitted through feedback channel
 
-#### Support & Feedback Loop Integration
-Continuous feedback channel integrated directly into the Registry and Developer Portal.
+</details>
+
+<details>
+<summary><strong>Support & Feedback Loop Integration</strong> — Continuous feedback channel integrated into Registry and Developer Portal</summary>
 
 - **Consumer Feedback Collection**
   - In-portal feedback widget allowing consumers to report issues, request features, rate documentation quality
@@ -542,8 +551,10 @@ Continuous feedback channel integrated directly into the Registry and Developer 
   - Support ticket history visible to both producers and consumers for each API, creating transparency
   - Common questions automatically suggested as FAQ additions based on frequency and themes
 
-#### Alerting & Observability Integration
-Continuous evaluation monitoring for atypical usage, error spikes, performance degradation, and cost visibility.
+</details>
+
+<details>
+<summary><strong>Alerting & Observability Integration</strong> — Continuous monitoring for atypical usage, error spikes, performance degradation, cost visibility</summary>
 
 - **Proactive Health Monitoring**
   - Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes
@@ -570,6 +581,8 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
   - Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations
   - Automated scans for permissions violations that allow non-gateway API use
 
+</details>
+
 ---
 
 ## 10. KPIs & Maturity Model
@@ -589,11 +602,11 @@ Continuous evaluation monitoring for atypical usage, error spikes, performance d
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'edgeLabelBackground':'#ffffff'}}}%%
 graph TB
-    L1["<b>Level 1: Chaos</b> Ad hoc APIs Unknown consumers No lifecycle"]
-    L2["<b>Level 2: Cataloging</b> Registry exists Ownership visible"]
-    L3["<b>Level 3: Governed</b> Reviews + standards Gateway enforcement"]
-    L4["<b>Level 4: Product Mindset</b> APIs as products Roadmap + feedback"]
-    L5["<b>Level 5: Optimized Ecosystem</b> Automated policy Data-driven evolution High reuse"]
+    L1["<b>Level 1 - Chaos</b>: Ad hoc APIs Unknown consumers No lifecycle"]
+    L2["<b>Level 2 - Cataloging</b>: Registry exists Ownership visible"]
+    L3["<b>Level 3 - Governed</b>: Reviews + standards Gateway enforcement"]
+    L4["<b>Level 4 - Product Mindset</b>: APIs as products Roadmap + feedback"]
+    L5["<b>Level 5 - Optimized Ecosystem</b>: Automated policy Data-driven evolution High reuse"]
     
     L1 -->|Establish visibility| L2
     L2 -->|Add guardrails| L3
@@ -614,9 +627,10 @@ Most large orgs sit between **2 and 3** when they realize change is needed.
 
 ## 11. Operating Model & Roles
 
-To run API-as-Product effectively, roles must be clear but lightweight. The model balances automation with human expertise, ensuring governance scales without becoming bureaucratic.
+Roles must be clear but lightweight. Balance automation with human expertise. Governance scales without bureaucracy.
 
-### 11.1 Core Roles
+<details>
+<summary><strong>11.1 Core Roles</strong></summary>
 
 | Role | Responsibilities | Time Commitment |
 |------|------------------|-----------------|
@@ -625,11 +639,14 @@ To run API-as-Product effectively, roles must be clear but lightweight. The mode
 | **Consumer Team** | Discovers and evaluates APIs, requests subscriptions, integrates APIs into their applications, provides feedback on usability and features, reports issues. Participates in beta testing of new versions and migration from deprecated versions. | As needed for integration work |
 | **Platform Engineering** | Builds and operates the core platform components: Registry, Gateway, Auditor, and Developer Portal. Provides self-service tooling, maintains automation pipelines, ensures platform reliability and performance. Supports teams with onboarding and troubleshooting platform issues. | Dedicated platform team |
 
-### 11.2 API Expert Roles (The Human Element)
+</details>
 
-While automation handles routine governance tasks, **human expertise is critical for design quality and architectural consistency**. The two-tier expert model provides guidance without creating bottlenecks.
+### 11.2 API Expert Roles
 
-#### Departmental API Advisors
+Automation handles routine tasks. **Human expertise is critical for design quality and architectural consistency**. Two-tier model provides guidance without bottlenecks.
+
+<details>
+<summary><strong>Departmental API Advisors</strong> — Local champions providing early-stage guidance</summary>
 
 **Purpose:** Local champions who provide early-stage guidance within their product area or department.
 
@@ -655,9 +672,12 @@ While automation handles routine governance tasks, **human expertise is critical
 - Average time from draft to review-ready submission
 - Producer team satisfaction with guidance received
 
+</details>
+
 ---
 
-#### Central API Review Panel
+<details>
+<summary><strong>Central API Review Panel</strong> — Organizational-level experts conducting formal reviews before publication</summary>
 
 **Purpose:** Organizational-level experts who conduct formal reviews before API publication, ensuring architectural alignment and long-term quality.
 
@@ -692,9 +712,12 @@ While automation handles routine governance tasks, **human expertise is critical
 - Review rejection rate (should be low if Departmental Advisors are effective)
 - Post-review changes required (decreasing over time as quality improves)
 
+</details>
+
 ---
 
-### 11.3 Governance Group (Small & Strategic)
+<details>
+<summary><strong>11.3 Governance Group (Small & Strategic)</strong> — Defines policy, resolves disputes, handles exceptions</summary>
 
 **Purpose:** Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
 
@@ -715,9 +738,12 @@ While automation handles routine governance tasks, **human expertise is critical
 
 **Important Principle:** This group **defines the rules** but doesn't execute reviews or approvals. Product Owners and the Review Panel apply the rules; the Governance Group only intervenes for policy changes or exceptional cases.
 
+</details>
+
 ---
 
-### 11.4 Interaction Model
+<details>
+<summary><strong>11.4 Interaction Model</strong> — How roles work together to balance speed with quality</summary>
 
 The roles work together in a defined flow that balances speed with quality:
 
@@ -744,9 +770,12 @@ flowchart TD
 - **Fast feedback loops** — Reviews happen asynchronously with clear SLAs; no waiting for monthly committee meetings
 - **Escalation is rare** — Most decisions happen at the advisor or panel level; Governance Group only sees edge cases
 
+</details>
+
 ---
 
-### 11.5 Making This Model Scale
+<details>
+<summary><strong>11.5 Making This Model Scale</strong> — Sizing guidance for small, medium, and large organizations</summary>
 
 **For Small Organizations (< 100 APIs):**
 - **Minimum viable approach:** 2-3 API experts serve dual roles as both advisors and reviewers
@@ -771,23 +800,26 @@ flowchart TD
 - **Celebrate quality reviews** and recognize advisors/reviewers for their contribution to platform quality
 - **Measure and improve** review throughput and quality over time
 
----
-
-**Important:** Governance is **not** a committee that reviews every change — it defines policy and automation; product owners apply it, with expert guidance at key decision points.
+</details>
 
 ---
 
-## 12. Security & Compliance Considerations
+**Important:** Governance **defines policy and automation**; product owners apply it, with expert guidance at key decision points. Not a committee reviewing every change.
 
-Even internal APIs need disciplined security, especially in regulated environments. The API Gateway serves as a centralized enforcement point for security policies, audit logging, and compliance controls—but only if all traffic actually flows through it. This section outlines the security controls enforced by the platform, detection mechanisms for non-gateway usage, and a detailed compliance framework suitable for highly regulated industries.
+---
+
+## 12. Security & Compliance
+
+Internal APIs need disciplined security, especially in regulated environments. The Gateway is a centralized enforcement point for security policies, audit logging, and compliance controls—but only if all traffic flows through it. This section covers security controls, detection mechanisms for non-gateway usage, and compliance frameworks for highly regulated industries.
 
 ---
 
 ### 12.1 Gateway-Enforced Security Controls
 
-The API Gateway is the security backbone of the governance platform, enforcing consistent controls across all internal APIs.
+The Gateway is the security backbone, enforcing consistent controls across all internal APIs.
 
-#### Authentication & Authorization
+<details>
+<summary><strong>Authentication & Authorization</strong></summary>
 
 **Identity Verification:**
 - All API requests must present valid credentials (OAuth2 tokens, JWT, mutual TLS certificates, API keys)
@@ -806,7 +838,10 @@ The API Gateway is the security backbone of the governance platform, enforcing c
 - `customer-data-api` endpoints returning PII: require additional role claims beyond basic subscription
 - Admin operations (DELETE, bulk updates): require elevated privileges and approval workflows
 
-#### Rate Limiting & Throttling
+</details>
+
+<details>
+<summary><strong>Rate Limiting & Throttling</strong></summary>
 
 **Consumer Protection:**
 - Per-subscription rate limits prevent individual consumers from overwhelming producer APIs
@@ -824,7 +859,10 @@ The API Gateway is the security backbone of the governance platform, enforcing c
 - Real-time metrics exposed to both producers (who's hitting limits) and consumers (proximity warnings)
 - Automatic alerts when consumers repeatedly hit limits (may indicate bugs or capacity planning needs)
 
-#### Data Security & Privacy
+</details>
+
+<details>
+<summary><strong>Data Security & Privacy</strong></summary>
 
 **Request/Response Filtering:**
 - Gateway can strip sensitive fields from responses based on data classification and consumer authorization
@@ -841,7 +879,10 @@ The API Gateway is the security backbone of the governance platform, enforcing c
 - Cross-border data transfer policies enforced at routing layer
 - Geographic routing metadata declared in API specifications and enforced automatically
 
-#### Network Security
+</details>
+
+<details>
+<summary><strong>Network Security</strong></summary>
 
 **IP Allowlisting:**
 - Subscription-level IP restrictions for services with known source addresses
@@ -858,13 +899,16 @@ The API Gateway is the security backbone of the governance platform, enforcing c
 - OWASP Top 10 protection applied uniformly across all APIs
 - Custom rules for known attack patterns in your domain (e.g., card testing in payments)
 
+</details>
+
 ---
 
-### 12.2 Comprehensive Audit Logging
+### 12.2 Audit Logging
 
-The Gateway and Auditor work together to create tamper-proof audit trails required for security investigations and compliance audits.
+Gateway and Auditor create tamper-proof audit trails for security investigations and compliance audits.
 
-#### What Gets Logged
+<details>
+<summary><strong>What Gets Logged</strong></summary>
 
 **Request Metadata:**
 - Timestamp (microsecond precision), request ID (distributed tracing correlation)
@@ -891,7 +935,10 @@ The Gateway and Auditor work together to create tamper-proof audit trails requir
   - Purpose of access if available from request context
 - Field-level access tracking for highest sensitivity data (SSN, credit card numbers, health records)
 
-#### Log Storage & Retention
+</details>
+
+<details>
+<summary><strong>Log Storage & Retention</strong></summary>
 
 **Immutable Logging:**
 - Logs written to append-only storage (S3 with versioning, immutable buckets, WORM storage)
@@ -909,7 +956,10 @@ The Gateway and Auditor work together to create tamper-proof audit trails requir
 - Read-only access; no ability to modify or delete logs outside retention policies
 - All log access itself is logged (auditing the auditors)
 
-#### Real-Time Security Monitoring
+</details>
+
+<details>
+<summary><strong>Real-Time Security Monitoring</strong></summary>
 
 **Anomaly Detection:**
 - ML models learn normal access patterns per consumer, per API, per user
@@ -927,13 +977,16 @@ The Gateway and Auditor work together to create tamper-proof audit trails requir
 - High-severity threats trigger automatic credential revocation and service blocking
 - Runbooks integrated with alerts guide responders through investigation and remediation
 
+</details>
+
 ---
 
-### 12.3 Detecting & Preventing Non-Gateway API Usage
+### 12.3 Detecting & Preventing Non-Gateway Usage
 
-**The Problem:** If services can call APIs directly (bypassing the Gateway), all security and governance controls are circumvented. Detecting and preventing this is critical.
+**The Problem:** If services call APIs directly (bypassing Gateway), all security and governance controls are circumvented. Detection and prevention are critical.
 
-#### Prevention Mechanisms
+<details>
+<summary><strong>Prevention Mechanisms</strong></summary>
 
 **Network-Level Enforcement:**
 - Backend API services bound to private subnets, not accessible from broader corporate network
@@ -952,7 +1005,10 @@ The Gateway and Auditor work together to create tamper-proof audit trails requir
 - CI/CD pipelines reject configurations that expose APIs outside Gateway
 - Platform team provides "blessed" templates; deviations require explicit exception approval
 
-#### Detection Mechanisms
+</details>
+
+<details>
+<summary><strong>Detection Mechanisms</strong></summary>
 
 **Network Traffic Analysis:**
 - Flow logs analyzed to detect traffic between services that should be going through Gateway
@@ -974,13 +1030,16 @@ The Gateway and Auditor work together to create tamper-proof audit trails requir
 - Discrepancies indicate non-Gateway access (backend handled requests Gateway didn't route)
 - Automated reports flag services with suspicious direct access patterns
 
+</details>
+
 ---
 
 ### 12.4 Data Classification & Handling
 
 APIs must declare the sensitivity level of data they handle, enabling appropriate controls.
 
-#### Classification Levels
+<details>
+<summary><strong>Classification Levels</strong></summary>
 
 | Level | Examples | Access Controls | Logging Requirements |
 |-------|----------|-----------------|---------------------|
@@ -990,7 +1049,10 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 | **Restricted** | PII, financial data, health records | Explicit data access approval beyond subscription | Field-level logging, 7-year retention, encryption at rest |
 | **Highly Restricted** | SSN, credit cards, credentials, encryption keys | Multi-party approval, time-limited access | Full request/response logging (encrypted), immutable storage |
 
-#### Policy Enforcement
+</details>
+
+<details>
+<summary><strong>Policy Enforcement</strong></summary>
 
 **At Design Time:**
 - API specifications declare data classification in metadata
@@ -1008,9 +1070,12 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 - **Data masking:** PII must be masked in logs, non-production environments, and to unauthorized consumers
 - **Retention limits:** Personal data subject to deletion requests (GDPR right to be forgotten)
 
+</details>
+
 ---
 
-### 12.5 Continuous Compliance Monitoring
+<details>
+<summary><strong>12.5 Continuous Compliance Monitoring</strong></summary>
 
 **Automated Compliance Dashboards:**
 - Real-time view of compliance posture: which APIs are PCI-compliant, which handle PII, encryption status
@@ -1032,9 +1097,12 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 - Subscriptions to third-party APIs track what internal data is shared with vendors
 - Audit reports show data flows to third parties for vendor risk assessments
 
+</details>
+
 ---
 
-### 12.6 Security Best Practices for API Producers
+<details>
+<summary><strong>12.6 Security Best Practices for API Producers</strong></summary>
 
 **Secure Defaults:**
 - Platform-provided API templates include security best practices by default
@@ -1056,9 +1124,11 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 - Automated scanning for vulnerable dependencies (Snyk, Dependabot, GitHub Advanced Security)
 - Critical vulnerabilities must be patched within SLA (7 days for critical, 30 days for high)
 
+</details>
+
 ---
 
-**Summary:** By centralizing security enforcement in the Gateway, maintaining comprehensive audit logs, detecting non-gateway usage, and implementing compliance controls as platform features, organizations can meet stringent regulatory requirements while making compliance easier for API producers. The governance platform transforms compliance from a checklist burden into automated, built-in protection.
+**Summary:** Centralizing security in Gateway, maintaining comprehensive audit logs, detecting non-gateway usage, and implementing compliance as platform features lets organizations meet regulatory requirements while making compliance easier for producers. The governance platform transforms compliance from checklist burden to automated, built-in protection.
 
 ---
 
