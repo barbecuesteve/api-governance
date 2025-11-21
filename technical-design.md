@@ -5,7 +5,9 @@
 		theme: 'dark'
 	});
 </script>
-For the executive overview, [go here](README.md).
+
+This is an in-depth technical discussion of an API governance platform. The [main document](README.md) is intended for Director-level up to CTO with a high-level overview of the system components, both technical and organizational. 
+For the executive summary, [go here](exec-summary.md).
 
 # Technical Appendix: API Governance & Platform Model
 
