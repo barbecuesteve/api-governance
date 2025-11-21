@@ -15,7 +15,7 @@ We identify four risk categories where ungoverned architectures create material 
 
 ### **1. Financial Risk: Capital Inefficiency and Margin Erosion**
 
-Organizations with 250+ services pay engineering teams to solve the same problems many times, accumulating redundant implementations while competitors operate leaner.
+Organizations with 250+ services pay engineering teams to solve the same problems many times, accumulating redundant implementations.
 For a 200-engineer organization, that duplication represents **$6-9M annually in wasted labor** plus $500K-2M in redundant infrastructure. This erodes margins and starves strategic initiatives.
 
 Centralized API discovery and reuse enforcement eliminates duplicative work, recapturing engineering capacity for revenue-generating priorities. **Time to benefit: 3-6 months** as teams discover and adopt existing services.
@@ -42,8 +42,8 @@ Centralized authentication, authorization, and audit logging provides demonstrab
 
 ### **4. Competitive Risk: Velocity Degradation at Scale**
 
-As complexity grows, development velocity declines despite headcount increases. Organizations require 40% more engineers to maintain previous output while nimbler competitors ship 2-3x faster, threatening market position.
-Velocity loss compounds quarterly—each percentage point represents delayed revenue, missed market windows, and competitive share loss. Extended onboarding (2-4 months per new hire) further constrains response capacity during growth phases.
+As complexity grows, development velocity declines despite headcount increases. Organizations require 40% more engineers to maintain previous output while nimbler competitors ship faster, threatening market position.
+Velocity loss compounds quarterly - each percentage point represents delayed revenue, missed market windows, and competitive share loss. Extended onboarding (2-4 months per new hire) further constrains response capacity during growth phases.
 
 Standardized APIs with consistent patterns restore most lost productivity and reduce integration cycles by nearly half. **Time to benefit: 4-6 months** as standards adoption reaches critical mass.
 
@@ -84,9 +84,9 @@ Addressing these compounding risks requires disciplined structure, not disruptiv
 
 Organizations that treat API governance as strategic infrastructure build sustainable competitive advantages through operational efficiency, risk mitigation, and innovation velocity. Those who delay accumulate technical debt that eventually forces more disruptive and expensive transformation under crisis.
 
+The [main document](README.md) is intended for Director-level up to CTO with a high-level overview of the system components, both technical and organizational. 
 The detailed [technical design and implementation](technical-design.md) guidance provides technology leaders with a concrete decision framework and execution roadmap for establishing effective API governance—protecting enterprise value while enabling sustainable growth.
 
-[Return to main document](README.md)
 
 <style>
 .caption {
