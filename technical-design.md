@@ -305,7 +305,7 @@ flowchart TD
 <details>
 <summary><strong>Policy Recommendations</strong></summary>
 
-**1. Limit Concurrent Major Versions**
+<strong>1. Limit Concurrent Major Versions</strong>
 
 <ul>
 <li>Allow only 2-3 active major versions simultaneously (e.g., v2.x, v3.x, and v4.x)</li>
@@ -316,7 +316,7 @@ flowchart TD
 <li>Version limits tracked automatically by Registry; attempts to publish beyond limit trigger warnings and review</li>
 </ul>
 
-**2. Require Deprecation Plan When Publishing New Major Version**
+<strong>2. Require Deprecation Plan When Publishing New Major Version</strong>
 
 <ul>
 <li>Before a breaking change (new major version) is approved, producers must document:
@@ -332,7 +332,7 @@ flowchart TD
 <li>High-impact APIs (many consumers, critical business processes) require longer support windows</li>
 </ul>
 
-**3. Producer Obligation: Document the Upgrade Path**
+<strong>3. Producer Obligation: Document the Upgrade Path</strong>
 
 <ul>
 <li>When the upgrade from one major version to the next is <strong>straightforward</strong>, the producing team has a responsibility to map out that path explicitly for consumers</li>
@@ -365,7 +365,7 @@ flowchart TD
 </li>
 </ul>
 
-**4. Producer Support During Migration**
+<strong>4. Producer Support During Migration</strong>
 
 <ul>
 <li>Office hours or dedicated support channel for migration questions during parallel support window</li>
@@ -375,7 +375,7 @@ flowchart TD
 <li>Escalation path for consumers encountering migration blockers that need producer assistance</li>
 </ul>
 
-**5. Consumer Self-Service Migration Tools**
+<strong>5. Consumer Self-Service Migration Tools</strong>
 
 <ul>
 <li>For particularly complex migrations, consider providing:
@@ -388,7 +388,7 @@ flowchart TD
 </li>
 </ul>
 
-**6. Consequences of Non-Compliance**
+<strong>6. Consequences of Non-Compliance</strong>
 
 <ul>
 <li>APIs published without adequate deprecation plans or upgrade documentation may be rejected by Review Panel</li>
@@ -492,7 +492,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>CI/CD Pipeline Integration</strong> — Auto-publish API metadata, run design linters, update Registry as part of deployment</summary>
 
-**Automated API Specification Validation**
+<strong>Automated API Specification Validation</strong>
 
 <ul>
 <li>Pre-commit hooks validate OpenAPI/GraphQL schemas for syntax errors before code reaches CI</li>
@@ -501,7 +501,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Documentation completeness checks ensure every endpoint has descriptions, examples, and error scenarios</li>
 </ul>
 
-**Registry Synchronization**
+<strong>Registry Synchronization</strong>
 
 <ul>
 <li>Deployment pipelines automatically update the Registry when API specifications change</li>
@@ -510,7 +510,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Version publication triggers from deployment success, ensuring Registry always reflects what's actually running</li>
 </ul>
 
-**Gateway Configuration as Code**
+<strong>Gateway Configuration as Code</strong>
 
 <ul>
 <li>Routing rules, rate limits, authentication policies defined in version-controlled configuration files</li>
@@ -524,7 +524,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>Git Hooks & Version Control Integration</strong> — Prevent breaking changes from merging without proper major version bumps</summary>
 
-**Pre-Merge Validation**
+<strong>Pre-Merge Validation</strong>
 
 <ul>
 <li>Git hooks analyze API specification diffs and detect breaking changes (removed fields, changed types, deleted endpoints)</li>
@@ -533,7 +533,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Required approvals escalate for breaking changes—major version updates require API Review Panel sign-off</li>
 </ul>
 
-**Semantic Version Enforcement**
+<strong>Semantic Version Enforcement</strong>
 
 <ul>
 <li>Commit messages parsed for version bump indicators following conventional commits (feat, fix, BREAKING CHANGE)</li>
@@ -542,7 +542,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Changelog generation from commit history, making it easy for consumers to understand what changed</li>
 </ul>
 
-**Branch Protection for Published APIs**
+<strong>Branch Protection for Published APIs</strong>
 
 <ul>
 <li>Production API specifications locked to protected branches requiring review approvals</li>
@@ -555,7 +555,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>Developer Portal Integration</strong> — One-stop shop for search, interactive docs, code samples, self-service onboarding</summary>
 
-**Unified Discovery Experience**
+<strong>Unified Discovery Experience</strong>
 
 <ul>
 <li>Single search interface queries across all registered APIs with filtering by domain, capability, data type, lifecycle state</li>
@@ -564,7 +564,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>"Recommended for you" suggestions based on team's existing subscriptions and domain area</li>
 </ul>
 
-**Interactive Documentation**
+<strong>Interactive Documentation</strong>
 
 <ul>
 <li>API specifications automatically rendered as interactive docs (Swagger UI, GraphQL Playground)</li>
@@ -573,7 +573,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Copy-paste ready code examples showing authentication, error handling, pagination for every endpoint</li>
 </ul>
 
-**Self-Service Subscription Management**
+<strong>Self-Service Subscription Management</strong>
 
 <ul>
 <li>One-click subscription requests with automatic routing to appropriate approvers</li>
@@ -582,7 +582,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Usage dashboards showing each consumer's call volumes, error rates, and quota consumption</li>
 </ul>
 
-**Learning Resources & Support**
+<strong>Learning Resources & Support</strong>
 
 <ul>
 <li>Getting started guides and tutorials auto-generated from API specifications</li>
@@ -596,7 +596,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <details>
 <summary><strong>Support & Feedback Loop Integration</strong> — Continuous feedback channel integrated into Registry and Developer Portal</summary>
 
-**Consumer Feedback Collection**
+<strong>Consumer Feedback Collection</strong>
 
 <ul>
 <li>In-portal feedback widget allowing consumers to report issues, request features, rate documentation quality</li>
@@ -656,6 +656,66 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 </ul>
 
 **Security & Compliance Monitoring**
+
+<ul>
+<li>Authentication failure rate monitoring detecting potential security issues or misconfigured clients</li>
+<li>Data access pattern analysis flagging unusual data retrieval volumes that might indicate data exfiltration</li>
+<li>Compliance audit logs capturing who accessed what data, when, for regulated API endpoints</li>
+<li>Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations</li>
+<li>Automated scans for permissions violations that allow non-gateway API use</li>
+</ul>
+
+**Issue Tracking Integration**
+
+<ul>
+<li>Feedback automatically creates tickets in producer team's issue tracker (Jira, GitHub Issues, Linear)</li>
+<li>Bidirectional sync keeps consumers updated on issue status without requiring them to access separate systems</li>
+<li>SLA tracking for producer response times to consumer issues, with escalation for high-priority consumers</li>
+<li>Public roadmap visibility showing planned features, in-progress work, and recently shipped capabilities</li>
+</ul>
+
+<strong>Support Channel Aggregation</strong>
+
+<ul>
+<li>Links to producer team's support channels prominently displayed in API documentation</li>
+<li>Slack/Teams integration posts alerts to producer channels when new feedback arrives or SLOs are breached</li>
+<li>Support ticket history visible to both producers and consumers for each API, creating transparency</li>
+<li>Common questions automatically suggested as FAQ additions based on frequency and themes</li>
+</ul>
+
+</details>
+
+<details>
+<summary><strong>Alerting & Observability Integration</strong> — Continuous monitoring for atypical usage, error spikes, performance degradation, cost visibility</summary>
+
+<strong>Proactive Health Monitoring</strong>
+
+<ul>
+<li>Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes</li>
+<li>Anomaly detection algorithms identify unusual patterns (traffic spikes, error rate increases, latency degradation)</li>
+<li>Automated alerts to producers when SLOs are at risk or have been violated, with consumer impact analysis</li>
+<li>Comparative analysis across API versions showing performance differences to validate improvements</li>
+</ul>
+
+<strong>Consumer-Specific Observability</strong>
+
+<ul>
+<li>Per-subscription dashboards allowing producers to see each consumer's usage patterns individually</li>
+<li>Error clustering by consumer reveals which teams are struggling with integrations versus systemic API issues</li>
+<li>Rate limit proximity warnings alert consumers before they hit limits, preventing surprise throttling</li>
+<li>Cost attribution reports show infrastructure costs per consumer based on request volume and data transfer</li>
+</ul>
+
+<strong>Deprecation Readiness Metrics</strong>
+
+<ul>
+<li>Automated tracking of deprecated API usage, showing which consumers are still active and their traffic volumes</li>
+<li>Migration progress dashboards visualizing consumer adoption of new versions over time</li>
+<li>Targeted alerts to specific consumers who are still using deprecated versions approaching retirement</li>
+<li>"Ready to retire" recommendations when deprecated version usage reaches zero or near-zero thresholds</li>
+</ul>
+
+<strong>Security & Compliance Monitoring</strong>
 
 <ul>
 <li>Authentication failure rate monitoring detecting potential security issues or misconfigured clients</li>
@@ -757,9 +817,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <details>
 <summary><strong>Departmental API Advisors</strong> — Local champions providing early-stage guidance</summary>
 
-**Purpose:** Local champions who provide early-stage guidance within their product area or department.
+<strong>Purpose:</strong> Local champions who provide early-stage guidance within their product area or department.
 
-**Responsibilities:**
+<strong>Responsibilities:</strong>
 
 <ul>
 <li><strong>Early Design Consultation</strong> — Review draft API specifications before formal submission, providing feedback on naming conventions, domain boundaries, data modeling, and integration patterns</li>
@@ -769,7 +829,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li><strong>Mentorship</strong> — Build API design capability within their department by teaching principles and providing ongoing coaching</li>
 </ul>
 
-**Selection Criteria:**
+<strong>Selection Criteria:</strong>
 
 <ul>
 <li>Experienced engineers (typically Senior+ level) with strong API design skills</li>
@@ -778,11 +838,11 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li>Respected by peers within their department</li>
 </ul>
 
-**Time Commitment:** 10-15% of role (typically 4-6 hours per week)
+<strong>Time Commitment:</strong> 10-15% of role (typically 4-6 hours per week)
 
-**Organizational Structure:** Each product area or major department designates 1-2 advisors. In organizations with 300+ APIs, this typically means 8-15 advisors total.
+<strong>Organizational Structure:</strong> Each product area or major department designates 1-2 advisors. In organizations with 300+ APIs, this typically means 8-15 advisors total.
 
-**Success Metrics:**
+<strong>Success Metrics:</strong>
 
 <ul>
 <li>% of APIs reaching formal review with zero critical issues</li>
@@ -797,9 +857,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <details>
 <summary><strong>Central API Review Panel</strong> — Organizational-level experts conducting formal reviews before publication</summary>
 
-**Purpose:** Organizational-level experts who conduct formal reviews before API publication, ensuring architectural alignment and long-term quality.
+<strong>Purpose:</strong> Organizational-level experts who conduct formal reviews before API publication, ensuring architectural alignment and long-term quality.
 
-**Responsibilities:**
+<strong>Responsibilities:</strong>
 
 <ul>
 <li><strong>Formal API Review</strong> — Evaluate APIs for architectural consistency, security compliance, usability, scalability, and maintainability before publication approval</li>
@@ -809,7 +869,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li><strong>Risk Assessment</strong> — Flag potential production issues, scaling concerns, or integration challenges based on experience</li>
 </ul>
 
-**Selection Criteria:**
+<strong>Selection Criteria:</strong>
 
 <ul>
 <li>Principal Engineers, Architects, or Senior Technical Leads with extensive API design experience</li>
@@ -818,11 +878,11 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li>Balanced perspective: quality-focused but pragmatic about shipping</li>
 </ul>
 
-**Panel Composition:** 5-12 experienced reviewers who rotate through assignments
+<strong>Panel Composition:</strong> 5-12 experienced reviewers who rotate through assignments
 
-**Time Commitment:** 10-20% of role (typically 4-8 hours per week during assigned rotation)
+<strong>Time Commitment:</strong> 10-20% of role (typically 4-8 hours per week during assigned rotation)
 
-**Review Assignment:** Rotating schedule (weekly or bi-weekly) ensures:
+<strong>Review Assignment:</strong> Rotating schedule (weekly or bi-weekly) ensures:
 
 <ul>
 <li>Distributed workload prevents individual burnout</li>
@@ -831,9 +891,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li>Development of more experts over time</li>
 </ul>
 
-**Review SLA:** Maximum 3 business days from submission to initial feedback (target: 1-2 days)
+<strong>Review SLA:</strong> Maximum 3 business days from submission to initial feedback (target: 1-2 days)
 
-**Success Metrics:**
+<strong>Success Metrics:</strong>
 
 <ul>
 <li>Review turnaround time (meeting SLA %)</li>
@@ -849,9 +909,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <details>
 <summary><strong>11.3 Governance Group (Small & Strategic)</strong> — Defines policy, resolves disputes, handles exceptions</summary>
 
-**Purpose:** Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
+<strong>Purpose:</strong> Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
 
-**Responsibilities:**
+<strong>Responsibilities:</strong>
 
 <ul>
 <li><strong>Standards Definition</strong> — Establish and evolve organizational API standards, design patterns, and governance policies</li>
@@ -861,7 +921,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li><strong>Escalation Point</strong> — Handle complex cases that can't be resolved at the advisor or review panel level</li>
 </ul>
 
-**Composition:**
+<strong>Composition:</strong>
 
 <ul>
 <li>1-2 representatives from Platform Engineering</li>
@@ -870,9 +930,9 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <li>Optional: Security, Compliance, or Architecture representatives depending on organizational needs</li>
 </ul>
 
-**Meeting Cadence:** Monthly or quarterly (not involved in day-to-day approvals)
+<strong>Meeting Cadence:</strong> Monthly or quarterly (not involved in day-to-day approvals)
 
-**Important Principle:** This group **defines the rules** but doesn't execute reviews or approvals. Product Owners and the Review Panel apply the rules; the Governance Group only intervenes for policy changes or exceptional cases.
+<strong>Important Principle:</strong> This group <strong>defines the rules</strong> but doesn't execute reviews or approvals. Product Owners and the Review Panel apply the rules; the Governance Group only intervenes for policy changes or exceptional cases.
 
 </details>
 
@@ -881,7 +941,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 <details>
 <summary><strong>11.4 Interaction Model</strong> — How roles work together to balance speed with quality</summary>
 
-The roles work together in a defined flow that balances speed with quality:
+<p>The roles work together in a defined flow that balances speed with quality:</p>
 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
@@ -899,7 +959,7 @@ flowchart TD
     ARP -.->|Exceptions| GG
 </pre>
 
-**Key Workflow Principles:**
+<strong>Key Workflow Principles:</strong>
 
 <ul>
 <li><strong>API Review Panel is made of Advisors</strong> - Obviously the advisor who helped author this API cannot be on its panel, but generally, this is part of the job.</li>
@@ -917,7 +977,7 @@ flowchart TD
 <details>
 <summary><strong>11.5 Making This Model Scale</strong> — Sizing guidance for small, medium, and large organizations</summary>
 
-**For Small Organizations (< 100 APIs):**
+<strong>For Small Organizations (&lt; 100 APIs):</strong>
 
 <ul>
 <li><strong>Minimum viable approach:</strong> 2-3 API experts serve dual roles as both advisors and reviewers</li>
@@ -925,7 +985,7 @@ flowchart TD
 <li>Governance group can be informal (doesn't need regular meetings)</li>
 </ul>
 
-**For Medium Organizations (100-500 APIs):**
+<strong>For Medium Organizations (100-500 APIs):</strong>
 
 <ul>
 <li><strong>Implement both tiers:</strong> 5-8 departmental advisors + 5-8 review panel members (with some overlap)</li>
@@ -933,7 +993,7 @@ flowchart TD
 <li>Automated tooling becomes critical to prevent expert bottlenecks</li>
 </ul>
 
-**For Large Organizations (500+ APIs):**
+<strong>For Large Organizations (500+ APIs):</strong>
 
 <ul>
 <li><strong>Fully staffed tiers:</strong> 10-20 departmental advisors + 8-12 review panel members (minimal overlap)</li>
@@ -942,7 +1002,7 @@ flowchart TD
 <li>Regional or domain-specific advisor networks for global organizations</li>
 </ul>
 
-**Scaling Strategies:**
+<strong>Scaling Strategies:</strong>
 
 <ul>
 <li><strong>Rotate panel membership</strong> to develop more experts and prevent burnout</li>
@@ -973,7 +1033,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <details>
 <summary><strong>Authentication & Authorization</strong></summary>
 
-**Identity Verification:**
+<strong>Identity Verification:</strong>
 
 <ul>
 <li>All API requests must present valid credentials (OAuth2 tokens, JWT, mutual TLS certificates, API keys)</li>
@@ -982,7 +1042,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>User-originated requests carry user identity context through the entire call chain</li>
 </ul>
 
-**Authorization Enforcement:**
+<strong>Authorization Enforcement:</strong>
 
 <ul>
 <li>Gateway validates that the calling application has an active, approved subscription for the requested API version and environment</li>
@@ -991,7 +1051,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Environment isolation strictly enforced—production credentials cannot access dev/test APIs and vice versa</li>
 </ul>
 
-**Policy Examples:**
+<strong>Policy Examples:</strong>
 
 <ul>
 <li><code>payments-api-v2</code> in production: only approved merchant-facing services with production subscriptions</li>
@@ -1004,7 +1064,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <details>
 <summary><strong>Rate Limiting & Throttling</strong></summary>
 
-**Consumer Protection:**
+<strong>Consumer Protection:</strong>
 
 <ul>
 <li>Per-subscription rate limits prevent individual consumers from overwhelming producer APIs</li>
@@ -1013,7 +1073,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Burst allowances for legitimate traffic spikes using token bucket or sliding window algorithms</li>
 </ul>
 
-**Producer Protection:**
+<strong>Producer Protection:</strong>
 
 <ul>
 <li>Global rate limits per API protect producers from aggregate overload across all consumers</li>
@@ -1021,7 +1081,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Priority queuing allows critical consumers (payment processing, fraud detection) to bypass throttling during incidents</li>
 </ul>
 
-**Implementation:**
+<strong>Implementation:</strong>
 
 <ul>
 <li>Distributed rate limiting using Redis or similar shared state</li>
@@ -1034,7 +1094,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <details>
 <summary><strong>Data Security & Privacy</strong></summary>
 
-**Request/Response Filtering:**
+<strong>Request/Response Filtering:</strong>
 
 <ul>
 <li>Gateway can strip sensitive fields from responses based on data classification and consumer authorization</li>
@@ -1042,7 +1102,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Redaction of internal-only fields (debug info, internal IDs) from responses to external-facing services</li>
 </ul>
 
-**Encryption in Transit:**
+<strong>Encryption in Transit:</strong>
 
 <ul>
 <li>All API traffic uses TLS 1.3 (minimum TLS 1.2)</li>
@@ -1050,7 +1110,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Certificate rotation managed centrally, not by individual service teams</li>
 </ul>
 
-**Data Residency:**
+<strong>Data Residency:</strong>
 
 <ul>
 <li>Gateway can route requests to region-specific backends based on data sovereignty requirements</li>
@@ -1063,7 +1123,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <details>
 <summary><strong>Network Security</strong></summary>
 
-**IP Allowlisting:**
+<strong>IP Allowlisting:</strong>
 
 <ul>
 <li>Subscription-level IP restrictions for services with known source addresses</li>
@@ -1071,7 +1131,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Particularly important for third-party integrations or vendor access</li>
 </ul>
 
-**DDoS Protection:**
+<strong>DDoS Protection:</strong>
 
 <ul>
 <li>Gateway sits behind or integrates with DDoS mitigation (Cloudflare, AWS Shield)</li>
@@ -1079,7 +1139,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 <li>Automatic blocking of malicious sources with escalation to security team</li>
 </ul>
 
-**WAF Integration:**
+<strong>WAF Integration:</strong>
 
 <ul>
 <li>Web Application Firewall rules protect against injection attacks, malformed requests</li>
@@ -1098,7 +1158,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <details>
 <summary><strong>What Gets Logged</strong></summary>
 
-**Request Metadata:**
+<strong>Request Metadata:</strong>
 
 <ul>
 <li>Timestamp (microsecond precision), request ID (distributed tracing correlation)</li>
@@ -1108,7 +1168,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Request size, content type, IP source address</li>
 </ul>
 
-**Response Metadata:**
+<strong>Response Metadata:</strong>
 
 <ul>
 <li>Response status code, response size, content type</li>
@@ -1116,7 +1176,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Cache hit/miss status if caching enabled</li>
 </ul>
 
-**Security Events:**
+<strong>Security Events:</strong>
 
 <ul>
 <li>Authentication failures with reason codes (expired token, invalid signature, unknown credential)</li>
@@ -1125,7 +1185,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Policy violations (blocked by WAF, suspicious patterns detected)</li>
 </ul>
 
-**Data Access Logging (for sensitive APIs):**
+<strong>Data Access Logging (for sensitive APIs):</strong>
 
 <ul>
 <li>For APIs handling PII, PHI, financial data, or confidential business information:
@@ -1143,7 +1203,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <details>
 <summary><strong>Log Storage & Retention</strong></summary>
 
-**Immutable Logging:**
+<strong>Immutable Logging:</strong>
 
 <ul>
 <li>Logs written to append-only storage (S3 with versioning, immutable buckets, WORM storage)</li>
@@ -1151,7 +1211,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Critical for proving compliance during audits or forensic investigations</li>
 </ul>
 
-**Retention Policies:**
+<strong>Retention Policies:</strong>
 
 <ul>
 <li>Standard operational logs: 90 days in hot storage, 1 year in cold storage</li>
@@ -1160,7 +1220,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Automated archival and deletion based on data classification and regulatory requirements</li>
 </ul>
 
-**Access Controls:**
+<strong>Access Controls:</strong>
 
 <ul>
 <li>Audit logs accessible only to security team, compliance team, designated auditors</li>
@@ -1173,7 +1233,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <details>
 <summary><strong>Real-Time Security Monitoring</strong></summary>
 
-**Anomaly Detection:**
+<strong>Anomaly Detection:</strong>
 
 <ul>
 <li>ML models learn normal access patterns per consumer, per API, per user</li>
@@ -1181,7 +1241,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Example: a customer service application suddenly accessing payment processing APIs it's never called before</li>
 </ul>
 
-**Threat Detection:**
+<strong>Threat Detection:</strong>
 
 <ul>
 <li>Credential stuffing attempts: many auth failures from same source IP across different credentials</li>
@@ -1190,7 +1250,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Privilege escalation: attempts to access admin endpoints without proper authorization</li>
 </ul>
 
-**Incident Response Integration:**
+<strong>Incident Response Integration:</strong>
 
 <ul>
 <li>Security events automatically create tickets in incident response system (PagerDuty, ServiceNow)</li>
@@ -1209,7 +1269,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <details>
 <summary><strong>Prevention Mechanisms</strong></summary>
 
-**Network-Level Enforcement:**
+<strong>Network-Level Enforcement:</strong>
 
 <ul>
 <li>Backend API services bound to private subnets, not accessible from broader corporate network</li>
@@ -1218,7 +1278,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Firewall rules drop any traffic to API backends that doesn't originate from Gateway</li>
 </ul>
 
-**Application-Level Enforcement:**
+<strong>Application-Level Enforcement:</strong>
 
 <ul>
 <li>API services validate presence of Gateway-injected headers (X-Gateway-Request-ID, X-Subscription-ID)</li>
@@ -1227,7 +1287,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Backends log and alert on any direct access attempts for security team investigation</li>
 </ul>
 
-**Infrastructure as Code:**
+<strong>Infrastructure as Code:</strong>
 
 <ul>
 <li>Terraform/CloudFormation templates for API services enforce Gateway-only networking by default</li>
@@ -1240,7 +1300,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <details>
 <summary><strong>Detection Mechanisms</strong></summary>
 
-**Network Traffic Analysis:**
+<strong>Network Traffic Analysis:</strong>
 
 <ul>
 <li>Flow logs analyzed to detect traffic between services that should be going through Gateway</li>
@@ -1248,7 +1308,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Example: if <code>customer-service</code> suddenly makes direct calls to <code>payment-api</code> instead of via Gateway</li>
 </ul>
 
-**Service Mesh Observability:**
+<strong>Service Mesh Observability:</strong>
 
 <ul>
 <li>Service mesh telemetry shows all service-to-service calls with full path detail</li>
@@ -1256,7 +1316,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Distributed tracing reveals calls missing Gateway span in the trace</li>
 </ul>
 
-**Automated Scanning:**
+<strong>Automated Scanning:</strong>
 
 <ul>
 <li>Periodic security scans attempt direct API calls from test clients</li>
@@ -1264,7 +1324,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <li>Penetration testing includes Gateway bypass attempts as standard test case</li>
 </ul>
 
-**Compliance Auditing:**
+<strong>Compliance Auditing:</strong>
 
 <ul>
 <li>Regular audits compare Gateway access logs against backend service logs</li>
@@ -1331,7 +1391,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <details>
 <summary><strong>Policy Enforcement</strong></summary>
 
-**At Design Time:**
+<strong>At Design Time:</strong>
 
 <ul>
 <li>API specifications declare data classification in metadata</li>
@@ -1339,7 +1399,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Higher classifications trigger additional review requirements (security, privacy, legal)</li>
 </ul>
 
-**At Runtime:**
+<strong>At Runtime:</strong>
 
 <ul>
 <li>Gateway enforces access controls based on data classification</li>
@@ -1347,7 +1407,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Audit logging depth increases with classification level</li>
 </ul>
 
-**Data Handling Requirements:**
+<strong>Data Handling Requirements:</strong>
 
 <ul>
 <li><strong>Encryption at rest:</strong> Required for Restricted and above</li>
@@ -1363,7 +1423,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <details>
 <summary><strong>12.5 Continuous Compliance Monitoring</strong></summary>
 
-**Automated Compliance Dashboards:**
+<strong>Automated Compliance Dashboards:</strong>
 
 <ul>
 <li>Real-time view of compliance posture: which APIs are PCI-compliant, which handle PII, encryption status</li>
@@ -1371,7 +1431,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Trend analysis: are we improving or degrading compliance over time?</li>
 </ul>
 
-**Attestation Automation:**
+<strong>Attestation Automation:</strong>
 
 <ul>
 <li>Quarterly compliance reports auto-generated from platform telemetry</li>
@@ -1379,7 +1439,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Reduces audit preparation from weeks to hours</li>
 </ul>
 
-**Policy as Code:**
+<strong>Policy as Code:</strong>
 
 <ul>
 <li>Compliance requirements encoded as automated policies (Open Policy Agent, AWS Config Rules)</li>
@@ -1387,7 +1447,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Examples: "PCI-compliant APIs must have 7-year log retention," "GDPR-relevant APIs must implement deletion endpoint"</li>
 </ul>
 
-**Third-Party Risk Management:**
+<strong>Third-Party Risk Management:</strong>
 
 <ul>
 <li>Vendor-provided APIs registered in platform with compliance attestations</li>
