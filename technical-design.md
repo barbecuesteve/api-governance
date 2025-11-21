@@ -632,12 +632,37 @@ Roles must be clear but lightweight. Balance automation with human expertise. Go
 <details>
 <summary><strong>11.1 Core Roles</strong></summary>
 
-| Role | Responsibilities | Time Commitment |
-|------|------------------|-----------------|
-| **API Product Owner** | Owns API roadmap, quality, documentation, lifecycle management, and consumer relationships. Acts as the primary point of contact for the API as a product. Makes decisions about feature prioritization, deprecation timing, and breaking changes based on consumer feedback and usage data. | Full-time ownership responsibility |
-| **Producer Team** | Designs, builds, tests, deploys, and operates the API; handles day-to-day support and bug fixes. Implements features from the roadmap, maintains SLO commitments, and responds to consumer issues. Works with Product Owner on technical decisions and capacity planning. | As part of regular development work |
-| **Consumer Team** | Discovers and evaluates APIs, requests subscriptions, integrates APIs into their applications, provides feedback on usability and features, reports issues. Participates in beta testing of new versions and migration from deprecated versions. | As needed for integration work |
-| **Platform Engineering** | Builds and operates the core platform components: Registry, Gateway, Auditor, and Developer Portal. Provides self-service tooling, maintains automation pipelines, ensures platform reliability and performance. Supports teams with onboarding and troubleshooting platform issues. | Dedicated platform team |
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Responsibilities</th>
+<th>Time Commitment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API Product Owner</strong></td>
+<td>Owns API roadmap, quality, documentation, lifecycle management, and consumer relationships. Acts as the primary point of contact for the API as a product. Makes decisions about feature prioritization, deprecation timing, and breaking changes based on consumer feedback and usage data.</td>
+<td>Full-time ownership responsibility</td>
+</tr>
+<tr>
+<td><strong>Producer Team</strong></td>
+<td>Designs, builds, tests, deploys, and operates the API; handles day-to-day support and bug fixes. Implements features from the roadmap, maintains SLO commitments, and responds to consumer issues. Works with Product Owner on technical decisions and capacity planning.</td>
+<td>As part of regular development work</td>
+</tr>
+<tr>
+<td><strong>Consumer Team</strong></td>
+<td>Discovers and evaluates APIs, requests subscriptions, integrates APIs into their applications, provides feedback on usability and features, reports issues. Participates in beta testing of new versions and migration from deprecated versions.</td>
+<td>As needed for integration work</td>
+</tr>
+<tr>
+<td><strong>Platform Engineering</strong></td>
+<td>Builds and operates the core platform components: Registry, Gateway, Auditor, and Developer Portal. Provides self-service tooling, maintains automation pipelines, ensures platform reliability and performance. Supports teams with onboarding and troubleshooting platform issues.</td>
+<td>Dedicated platform team</td>
+</tr>
+</tbody>
+</table>
 
 </details>
 
@@ -1041,13 +1066,48 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <details>
 <summary><strong>Classification Levels</strong></summary>
 
-| Level | Examples | Access Controls | Logging Requirements |
-|-------|----------|-----------------|---------------------|
-| **Public** | Marketing content, public product catalog | Standard authentication | Standard operational logs |
-| **Internal** | Employee directory, org structure | Internal users/services only | Standard with 1-year retention |
-| **Confidential** | Customer data, business metrics | Need-to-know basis, subscription approval required | Enhanced logging, 2-year retention |
-| **Restricted** | PII, financial data, health records | Explicit data access approval beyond subscription | Field-level logging, 7-year retention, encryption at rest |
-| **Highly Restricted** | SSN, credit cards, credentials, encryption keys | Multi-party approval, time-limited access | Full request/response logging (encrypted), immutable storage |
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Examples</th>
+<th>Access Controls</th>
+<th>Logging Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Public</strong></td>
+<td>Marketing content, public product catalog</td>
+<td>Standard authentication</td>
+<td>Standard operational logs</td>
+</tr>
+<tr>
+<td><strong>Internal</strong></td>
+<td>Employee directory, org structure</td>
+<td>Internal users/services only</td>
+<td>Standard with 1-year retention</td>
+</tr>
+<tr>
+<td><strong>Confidential</strong></td>
+<td>Customer data, business metrics</td>
+<td>Need-to-know basis, subscription approval required</td>
+<td>Enhanced logging, 2-year retention</td>
+</tr>
+<tr>
+<td><strong>Restricted</strong></td>
+<td>PII, financial data, health records</td>
+<td>Explicit data access approval beyond subscription</td>
+<td>Field-level logging, 7-year retention, encryption at rest</td>
+</tr>
+<tr>
+<td><strong>Highly Restricted</strong></td>
+<td>SSN, credit cards, credentials, encryption keys</td>
+<td>Multi-party approval, time-limited access</td>
+<td>Full request/response logging (encrypted), immutable storage</td>
+</tr>
+</tbody>
+</table>
 
 </details>
 
