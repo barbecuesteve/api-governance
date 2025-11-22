@@ -401,16 +401,6 @@ Track these quarterly to measure long-term success:
 | Production incidents from API changes | 20% reduction | 40% reduction | Greater than 50% reduction |
 | Engineering hours saved/month | 200-400 hrs | 600-1000 hrs | 1500-2500 hrs |
 
-### **Red Flags Requiring Action**
-
-Stop and reassess if you see:
-
-* **Low adoption after 6 months** (less than 20% of APIs registered) — Platform isn't meeting needs. Interview teams to understand barriers.
-* **Developer satisfaction declining** — Process is too heavy or platform has reliability issues. Immediate review needed.
-* **Review becoming bottleneck** (greater than 5 day turnaround) — Need more reviewers or better automation. Can't scale without fixing.
-* **Shadow APIs emerging** (direct service-to-service calls bypassing gateway) — Enforcement too weak or platform too painful. Address root cause immediately.
-* **Executive disengagement** — Without top-down support, governance will fail. Re-secure sponsorship or pause initiative.
-
 ---
 
 ## **Risk Assessment & Mitigation**
