@@ -13,10 +13,6 @@
 This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For context on why this matters to your organization, see the [executive summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
 
 --- 
-
-### **Overview**
-
-
 <table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
 <tr><td>
 
@@ -51,18 +47,20 @@ This document provides a high-level overview of API governance for Directors, VP
 
 </td></tr>
 </table>
+
+### **Overview**
+
 Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
 
 This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
 
 ---
-<br clear=all>
 
-## **Technical Implementation**
+### **Technical Implementation**
 
 The technical foundation consists of integrated platform components and clear lifecycle management.
 
-### **Platform Components**
+#### **Platform Components**
 
 This model shows how a registry, gateway, and auditor work together to deliver **Standardization**, **Discoverability**, and **Auditability**.
 
@@ -128,7 +126,7 @@ flowchart LR
 
 ---
 
-### **API Product Lifecycle**
+#### **API Product Lifecycle**
 
 A well-governed API follows this lifecycle:
 
@@ -157,7 +155,7 @@ This keeps APIs fit for purpose, safe to evolve, and easy to use.
 
 ---
 
-### **Developer Experience Requirements**
+#### **Developer Experience Requirements**
 
 Good governance only works when **developers want to use it**. That requires:
 
@@ -176,11 +174,11 @@ This approach guides behavior without forcing it. Good internal developer experi
 ---
 
 
-## **Organizational Implementation**
+### **Organizational Implementation**
 
 Technical platforms only succeed with the right organizational structure, governance, and change management.
 
-### **Required Resources & Team Structure**
+#### **Required Resources & Team Structure**
 
 Successful API governance requires dedicated teams and clear roles. The investment scales with organization size.
 
@@ -252,7 +250,7 @@ Done well, expert review becomes a service teams seek, not a hurdle they avoid.
 
 ---
 
-### **Adoption Strategy & Change Management**
+#### **Adoption Strategy & Change Management**
 
 Introducing API governance requires careful change management. Force adoption too quickly and teams bypass the system. Move too slowly and chaos persists.
 
@@ -306,9 +304,9 @@ Track these indicators to gauge organizational acceptance:
 
 ---
 
-## **Success Metrics & Governance**
+### **Success Metrics & Governance**
 
-### **Leading Indicators (Early Signals)**
+#### **Leading Indicators (Early Signals)**
 
 Monitor these metrics monthly to detect problems early:
 
@@ -320,7 +318,7 @@ Monitor these metrics monthly to detect problems early:
 | Self-service success rate | Greater than 80% get to first call in less than 20 min | Less than 60% success rate |
 | API reuse citations in new projects | Increasing quarterly | Flat or declining |
 
-### **Lagging Indicators (Outcome Measures)**
+#### **Lagging Indicators (Outcome Measures)**
 
 Track these quarterly to measure long-term success:
 
@@ -335,9 +333,9 @@ Track these quarterly to measure long-term success:
 
 ---
 
-## **Risk Assessment & Mitigation**
+### **Risk Assessment & Mitigation**
 
-### **Cost of Inaction**
+#### **Cost of Inaction**
 
 Organizations without API governance face compounding costs:
 
@@ -362,7 +360,7 @@ Organizations without API governance face compounding costs:
 * Inability to respond quickly to market changes
 * Competitor with better API governance ships 20-30% faster
 
-### **What Could Cause This Initiative to Fail**
+#### **What Could Cause This Initiative to Fail**
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
@@ -374,7 +372,7 @@ Organizations without API governance face compounding costs:
 | **Fragmented tooling chosen** | Medium | Medium | Invest in integrated platform. Avoid "we already have" trap leading to tool sprawl. |
 | **Governance becomes bureaucracy** | Medium | Critical | Default to permissive. Time-box decisions. Automate approvals for routine cases. |
 
-### **De-Risking Strategies**
+#### **De-Risking Strategies**
 
 **Start Small, Prove Value:**
 * Pilot with 2-3 friendly teams before broad rollout
@@ -422,9 +420,9 @@ Clear authority prevents gridlock and ensures accountability.
 
 ---
 
-## **What Success Looks Like**
+### **What Success Looks Like**
 
-### **After 6 Months:**
+#### **After 6 Months:**
 
 **For a Developer:**
 * Searches registry and finds the customer address API immediately, avoiding the need to build from scratch.
@@ -444,7 +442,7 @@ Clear authority prevents gridlock and ensures accountability.
 * Notes that approval times are fast, not the feared bottleneck.
 * Observes early adoption momentum with positive developer feedback.
 
-### **After 12 Months:**
+#### **After 12 Months:**
 
 **For a Developer:**
 * Every new API they encounter feels familiar—same patterns, consistent experience.
@@ -469,7 +467,7 @@ Clear authority prevents gridlock and ensures accountability.
 * Reduced cloud costs from retiring zombie APIs and optimized gateway routing.
 * Competitive advantage: shipping features faster than before through systematic reuse.
 
-### **After 24 Months:**
+#### **After 24 Months:**
 
 **Organization-Wide:**
 * API governance is simply "how we work."
@@ -481,9 +479,9 @@ Clear authority prevents gridlock and ensures accountability.
 
 ---
 
-## **Investment & Resource Planning**
+### **Investment & Resource Planning**
 
-### **Budget Considerations**
+#### **Budget Considerations**
 
 API governance requires investment in platform, people, and process. Budget varies by organization size and ambition.
 
@@ -544,9 +542,9 @@ Based on industry studies and customer case studies:
 
 ---
 
-## **Executive Responsibilities**
+### **Executive Responsibilities**
 
-### **What Executives Must Do for This to Succeed**
+#### **What Executives Must Do for This to Succeed**
 
 API governance requires active executive leadership, not just budget approval.
 
@@ -586,7 +584,7 @@ API governance requires active executive leadership, not just budget approval.
 * **Quarterly**: Share metrics dashboard and success stories in all-hands
 * **As needed**: Address resistance, celebrate wins, course-correct based on feedback
 
-### **Common Leadership Mistakes to Avoid**
+#### **Common Leadership Mistakes to Avoid**
 
 | Mistake | Consequence | What to Do Instead |
 |---------|-------------|-------------------|
