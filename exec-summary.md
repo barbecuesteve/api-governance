@@ -4,7 +4,7 @@ This summary shows how API governance reduces risk. For technical details, see t
 [Steve Sparks](resume.pdf)  
 <br>November 2025
 
-## **Executive Summary: API Governance as Risk Management**
+### **Executive Summary: API Governance as Risk Management**
 
 Scaling distributed systems to thousands of services without governance creates measurable financial, operational, and compliance risks. We watch external APIs closely, but let internal ones grow unchecked. Good API governance reduces this risk.
 
@@ -12,9 +12,9 @@ This document identifies four areas where ungoverned architectures expose risk, 
 
 ---
 
-## **Critical Risk Areas**
+### **Critical Risk Areas**
 
-### **1. Financial Risk: Wasted Engineering Time**
+#### **1. Financial Risk: Wasted Engineering Time**
 
 Companies with 250+ services pay engineers to solve the same problems twice.
 For a 200-person team, this wastes **$6-9M a year in labor** and $500K-2M in infrastructure. This cuts margins and kills the budget for new work.
@@ -23,7 +23,7 @@ Centralized discovery stops this waste, freeing engineers for revenue work. **Ti
 
 ---
 
-### **2. Operational Risk: Incident Response and Business Continuity**
+#### **2. Operational Risk: Incident Response and Business Continuity**
 
 Without knowing dependencies, we can't see what an incident affects. This slows response from hours to days.
 Each hour costs **$100K-500K** and loses customer trust. Recovery time jumps 3-5x as services grow.
@@ -32,7 +32,7 @@ Mapping dependencies cuts response time by 60-70% and cascading failures by half
 
 ---
 
-### **3. Compliance Risk: Audit Failures and Regulatory Fines**
+#### **3. Compliance Risk: Audit Failures and Regulatory Fines**
 
 Without audit trails, we face fines. We can't say which systems access customer data or prove compliance (GDPR, HIPAA, SOC 2, PCI-DSS).
 Failed audits mean fines and lost sales for 6-12 months. Preparing for audits takes 2-6 months of senior engineering time.
@@ -41,7 +41,7 @@ Centralized logging proves compliance, cutting prep time by 60-80% and speeding 
 
 ---
 
-### **4. Competitive Risk: Slower Development**
+#### **4. Competitive Risk: Slower Development**
 
 As complexity grows, speed drops. We need 40% more engineers just to maintain output, while competitors move faster.
 This slowness compounds. Every delay costs revenue and market share. Onboarding new hires (2-4 months) slows us further.
@@ -50,7 +50,7 @@ Standard APIs restore speed and cut integration time in half. **Time to benefit:
 
 ---
 
-## **Systemic Risk: The Compounding Effect**
+### **Systemic Risk: The Compounding Effect**
 
 These risks compound. Waste kills investment. Blind spots risk compliance. Slowness breeds inefficiency. **We enter a spiral where inaction makes the problem costlier and harder to fix.**
 
@@ -58,7 +58,7 @@ Governance reverses this. Better discovery cuts waste, funds tools, and speeds d
 
 ---
 
-## **The Governance Framework: Minimal Viable Structure**
+### **The Governance Framework: Minimal Viable Structure**
 
 We need structure, not disruption. This paper proposes a simple framework to reduce risk without slowing us down:
 

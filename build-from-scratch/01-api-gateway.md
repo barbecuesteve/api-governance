@@ -13,7 +13,7 @@ The Gateway is the runtime enforcement point for all API traffic, providing secu
 
 ### High-Level Architecture
 <pre class="mermaid">
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
     Client[API Consumer]
     
@@ -23,11 +23,16 @@ flowchart LR
     end
     
     Backend[Backend APIs]
+    Registry[API Registry]
+    Auditor[API Auditor]
     
     Client --> RequestPipeline
     RequestPipeline --> Backend
     Backend --> ResponsePipeline
     ResponsePipeline --> Client
+
+    Registry -.->|Config & Policy| Gateway
+    Gateway -.->|Logs & Metrics| Auditor
 </pre>
 
 ### Request Processing Pipeline
