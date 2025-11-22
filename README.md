@@ -10,17 +10,14 @@
 Steve Sparks
 <br>November 2025
 
-For an executive summary of why this topic matters, [go here](exec-summary.md).
+This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For context on why this matters to your organization, see the [executive summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
 
 --- 
 
 ### **Overview**
 
-Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
 
-This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
-
-<table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0;">
+<table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
 <tr><td>
 
 ### **At a Glance**
@@ -31,11 +28,14 @@ This paper proposes treating internal APIs as products to improve developer expe
 | **Timeline** | 12-24 months to full adoption<br>Early wins visible in 3-6 months |
 | **Team Required** | 5-10 dedicated platform FTEs<br>15-20% time from senior engineers as reviewers |
 | **ROI Expectation** | Break-even in 12-18 months<br>15-25% reduction in duplicate work<br>20-30% faster feature delivery through reuse |
-| **Success Metrics** | 95%+ API traffic through gateway by Month 18<br>80%+ of new projects reusing existing APIs<br>Developer satisfaction >4/5 rating |
+| **Success Metrics** | 95%+ API traffic through gateway by Month 18<br>80%+ of new projects reusing existing APIs<br>Developer satisfaction greater than 4/5 rating |
 | **Cost of Inaction** | 30-40% engineering capacity wasted on duplicate work<br>Uncontrolled version sprawl and technical debt<br>Security and compliance risks from ungoverned APIs |
 
 </td></tr>
 </table>
+Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
+
+This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
 
 ---
 
@@ -56,6 +56,7 @@ To run API-as-product at scale, organizations need these platform capabilities:
 These pillars form a healthy API ecosystem.
 
 ---
+<br clear=all>
 
 ## **Technical Implementation**
 
@@ -353,10 +354,10 @@ Monitor these metrics monthly to detect problems early:
 
 | Metric | Target | Red Flag |
 |--------|--------|----------|
-| Platform adoption rate | 10-15 new APIs/month | <5 APIs/month after Month 6 |
-| API review turnaround time | <3 business days | >5 days consistently |
-| Developer satisfaction with platform | >4/5 | <3/5 for two consecutive quarters |
-| Self-service success rate | >80% get to first call in <20 min | <60% success rate |
+| Platform adoption rate | 10-15 new APIs/month | Less than 5 APIs/month after Month 6 |
+| API review turnaround time | Less than 3 business days | Greater than 5 days consistently |
+| Developer satisfaction with platform | Greater than 4/5 | Less than 3/5 for two consecutive quarters |
+| Self-service success rate | Greater than 80% get to first call in less than 20 min | Less than 60% success rate |
 | API reuse citations in new projects | Increasing quarterly | Flat or declining |
 
 ### **Lagging Indicators (Outcome Measures)**
@@ -365,20 +366,20 @@ Track these quarterly to measure long-term success:
 
 | Metric | Month 6 Target | Month 12 Target | Month 24 Target |
 |--------|----------------|-----------------|-----------------|
-| APIs in platform | 30-40% of total | 60-70% of total | 90%+ of total |
-| Traffic through gateway | 40-50% | 75-85% | 95%+ |
+| APIs in platform | 30-40% of total | 60-70% of total | Greater than 90% of total |
+| Traffic through gateway | 40-50% | 75-85% | Greater than 95% |
 | Duplicate work reduction | 5-10% | 15-20% | 25-30% |
-| Time-to-first-API-call | <30 min | <20 min | <15 min |
-| Production incidents from API changes | 20% reduction | 40% reduction | 50%+ reduction |
+| Time-to-first-API-call | Less than 30 min | Less than 20 min | Less than 15 min |
+| Production incidents from API changes | 20% reduction | 40% reduction | Greater than 50% reduction |
 | Engineering hours saved/month | 200-400 hrs | 600-1000 hrs | 1500-2500 hrs |
 
 ### **Red Flags Requiring Action**
 
 Stop and reassess if you see:
 
-* **Low adoption after 6 months** (<20% of APIs registered) — Platform isn't meeting needs. Interview teams to understand barriers.
+* **Low adoption after 6 months** (less than 20% of APIs registered) — Platform isn't meeting needs. Interview teams to understand barriers.
 * **Developer satisfaction declining** — Process is too heavy or platform has reliability issues. Immediate review needed.
-* **Review becoming bottleneck** (>5 day turnaround) — Need more reviewers or better automation. Can't scale without fixing.
+* **Review becoming bottleneck** (greater than 5 day turnaround) — Need more reviewers or better automation. Can't scale without fixing.
 * **Shadow APIs emerging** (direct service-to-service calls bypassing gateway) — Enforcement too weak or platform too painful. Address root cause immediately.
 * **Executive disengagement** — Without top-down support, governance will fail. Re-secure sponsorship or pause initiative.
 
@@ -393,7 +394,7 @@ Organizations without API governance face compounding costs:
 **Wasted Engineering Capacity:**
 * 30-40% of engineering time spent rebuilding capabilities that already exist
 * For a 200-engineer organization, that's 60-80 engineers worth of duplicate work annually
-* Estimated opportunity cost: $9M-20M/year in lost productivity
+* Estimated opportunity cost: 9-20 million dollars per year in lost productivity
 
 **Technical Debt Accumulation:**
 * Uncontrolled version sprawl creates maintenance burden (v1, v2, v1.1, v2-beta, v2-internal...)
@@ -597,15 +598,15 @@ API governance requires investment in platform, people, and process. Budget vari
 
 Based on industry studies and customer case studies:
 
-* **Reduced duplication** — 15-25% reduction in duplicate development (teams reuse vs. rebuild). For a 200-engineer org, that's 30-50 engineers' worth of work redirected to new features. Value: $4.5M-12.5M/year.
+* **Reduced duplication** — 15-25% reduction in duplicate development (teams reuse vs. rebuild). For a 200-engineer org, that's 30-50 engineers' worth of work redirected to new features. Value: 4.5-12.5 million dollars per year.
 
 * **Faster development** — 20-30% faster time-to-market for features using existing APIs. Competitive advantage difficult to quantify but significant.
 
-* **Fewer outages** — Standardized error handling, rate limiting, and circuit breakers reduce production incidents 30-50%. Each major incident costs $100K-1M+ in lost revenue and engineering time.
+* **Fewer outages** — Standardized error handling, rate limiting, and circuit breakers reduce production incidents 30-50%. Each major incident costs 100K-1M+ dollars in lost revenue and engineering time.
 
 * **Improved compliance** — Automated audit trails and policy enforcement reduce compliance violations and audit preparation time. Avoid fines and reduce audit costs 40-60%.
 
-* **Lower infrastructure costs** — Consolidated gateway infrastructure and retired zombie APIs reduce cloud spend 10-20%. For $10M/year cloud bill, that's $1-2M savings.
+* **Lower infrastructure costs** — Consolidated gateway infrastructure and retired zombie APIs reduce cloud spend 10-20%. For 10 million dollars per year cloud bill, that's 1-2 million dollars in savings.
 
 **Break-even typically occurs in 12-18 months** for medium-to-large organizations. Small organizations see longer payback (18-24 months) but still positive ROI.
 
