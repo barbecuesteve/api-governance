@@ -48,8 +48,8 @@ flowchart LR
     Gateway -->|proxied/tracked| AppP
     AppC -->|requests| Gateway
     TeamP -->|apps/apis| Registry
-    TeamP --> AppP
-    TeamC --> AppC
+    TeamP === AppP
+    TeamC === AppC
     TeamC -->|subscriptions| Registry
     TeamP --> Auditor
     Admin -->|uses| Auditor
