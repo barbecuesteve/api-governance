@@ -1,6 +1,8 @@
 
 This executive summary examines API governance as risk mitigation for enterprise technology organizations. For technical implementation details, see the [technical design document](technical-design.md). For organizational strategy and component overview, see the [main document](README.md).
 
+[Steve Sparks](resume.pdf)  
+<br>November 2025
 
 ## **Executive Summary: API Governance as Risk Management**
 

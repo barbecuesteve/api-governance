@@ -8,6 +8,9 @@
 
 This technical appendix provides implementation details for engineering teams building or operating an API governance platform. For a high-level overview of components and organizational strategy, see the [main document](README.md). For business context and risk assessment, see the [executive summary](exec-summary.md).
 
+[Steve Sparks](resume.pdf)
+<br>November 2025
+
 # Technical Appendix: API Governance & Platform Model
 
 ## 1. Introduction

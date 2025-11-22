@@ -7,7 +7,7 @@
 </script>
 
 
-Steve Sparks
+[Steve Sparks](resume.pdf)
 <br>November 2025
 
 This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For context on why this matters to your organization, see the [executive summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
