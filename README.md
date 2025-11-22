@@ -201,32 +201,42 @@ Technical platforms only succeed with the right organizational structure, govern
 <table style="background-color: #fff3cd; border: 2px solid #f39c12; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
 <tr><td>
 
-### **Executive Decision Points**
+<h3><strong>Executive Decision Points</strong></h3>
 
-**Month 1: Initiate**
-- Approve budget & team allocation
-- Designate executive sponsor
-- Select pilot teams
+<p><strong>Month 1: Initiate</strong></p>
+<ul>
+<li>Approve budget & team allocation</li>
+<li>Designate executive sponsor</li>
+<li>Select pilot teams</li>
+</ul>
 
-**Month 3: Validate**
-- Review pilot results
-- Go/no-go decision on broader rollout
-- Adjust based on feedback
+<p><strong>Month 3: Validate</strong></p>
+<ul>
+<li>Review pilot results</li>
+<li>Go/no-go decision on broader rollout</li>
+<li>Adjust based on feedback</li>
+</ul>
 
-**Month 6: Expand**
-- Approve mandatory adoption for new APIs
-- Confirm resource allocation
-- Review early metrics
+<p><strong>Month 6: Expand</strong></p>
+<ul>
+<li>Approve mandatory adoption for new APIs</li>
+<li>Confirm resource allocation</li>
+<li>Review early metrics</li>
+</ul>
 
-**Month 12: Enforce**
-- Require all traffic through gateway
-- Review ROI against projections
-- Adjust investment if needed
+<p><strong>Month 12: Enforce</strong></p>
+<ul>
+<li>Require all traffic through gateway</li>
+<li>Review ROI against projections</li>
+<li>Adjust investment if needed</li>
+</ul>
 
-**Month 18+: Optimize**
-- Quarterly governance reviews
-- Annual budget planning
-- Strategic platform evolution
+<p><strong>Month 18+: Optimize</strong></p>
+<ul>
+<li>Quarterly governance reviews</li>
+<li>Annual budget planning</li>
+<li>Strategic platform evolution</li>
+</ul>
 
 </td></tr>
 </table>
