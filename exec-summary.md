@@ -79,7 +79,7 @@ Together with standardized design patterns and lightweight review processes, the
 - Primary costs: Commercial platform licensing or custom development, platform team, expert reviewers, organizational change management
 
 **Expected Returns:**
-- 30-40% reduction in duplicate engineering work
+- 15-25% reduction in duplicate engineering work
 - 15-20% infrastructure cost reduction through API consolidation and zombie API retirement
 - 60-70% faster incident response through dependency visibility
 - 20-30% improvement in engineering velocity through reuse and standardization
