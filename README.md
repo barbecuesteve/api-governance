@@ -20,16 +20,34 @@ This document provides a high-level overview of API governance for Directors, VP
 <table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
 <tr><td>
 
-### **At a Glance**
+<h3><strong>At a Glance</strong></h3>
 
-| Dimension | Details |
-|-----------|---------|
-| **Investment** | 30-40% of platform engineering budget Year 1<br>15-25% ongoing annual investment |
-| **Timeline** | 12-24 months to full adoption<br>Early wins visible in 3-6 months |
-| **Team Required** | 5-10 dedicated platform FTEs<br>15-20% time from senior engineers as reviewers |
-| **ROI Expectation** | Break-even in 12-18 months<br>15-25% reduction in duplicate work<br>20-30% faster feature delivery through reuse |
-| **Success Metrics** | 95%+ API traffic through gateway by Month 18<br>80%+ of new projects reusing existing APIs<br>Developer satisfaction greater than 4/5 rating |
-| **Cost of Inaction** | 30-40% engineering capacity wasted on duplicate work<br>Uncontrolled version sprawl and technical debt<br>Security and compliance risks from ungoverned APIs |
+<table style="width: 100%; border-collapse: collapse;">
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>Investment</strong></td>
+<td style="padding: 8px; vertical-align: top;">30-40% of platform engineering budget Year 1<br>15-25% ongoing annual investment</td>
+</tr>
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>Timeline</strong></td>
+<td style="padding: 8px; vertical-align: top;">12-24 months to full adoption<br>Early wins visible in 3-6 months</td>
+</tr>
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>Team Required</strong></td>
+<td style="padding: 8px; vertical-align: top;">5-10 dedicated platform FTEs<br>15-20% time from senior engineers as reviewers</td>
+</tr>
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>ROI Expectation</strong></td>
+<td style="padding: 8px; vertical-align: top;">Break-even in 12-18 months<br>15-25% reduction in duplicate work<br>20-30% faster feature delivery through reuse</td>
+</tr>
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>Success Metrics</strong></td>
+<td style="padding: 8px; vertical-align: top;">95%+ API traffic through gateway by Month 18<br>80%+ of new projects reusing existing APIs<br>Developer satisfaction greater than 4/5 rating</td>
+</tr>
+<tr>
+<td style="padding: 8px; vertical-align: top;"><strong>Cost of Inaction</strong></td>
+<td style="padding: 8px; vertical-align: top;">30-40% engineering capacity wasted on duplicate work<br>Uncontrolled version sprawl and technical debt<br>Security and compliance risks from ungoverned APIs</td>
+</tr>
+</table>
 
 </td></tr>
 </table>
