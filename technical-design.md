@@ -666,8 +666,10 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations</li>
 <li>Automated scans for permissions violations that allow non-gateway API use</li>
 </ul>
+</details>
 
-**Issue Tracking Integration**
+<details>
+<summary><strong>Issue Tracking Integration</strong></summary>
 
 <ul>
 <li>Feedback automatically creates tickets in producer team's issue tracker (Jira, GitHub Issues, Linear)</li>
@@ -685,47 +687,6 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <li>Common questions automatically suggested as FAQ additions based on frequency and themes</li>
 </ul>
 
-</details>
-
-<details>
-<summary><strong>Alerting & Observability Integration</strong> — Continuous monitoring for atypical usage, error spikes, performance degradation, cost visibility</summary>
-
-<strong>Proactive Health Monitoring</strong>
-
-<ul>
-<li>Real-time dashboards showing per-API metrics: request rate, latency percentiles, error rates, data transfer volumes</li>
-<li>Anomaly detection algorithms identify unusual patterns (traffic spikes, error rate increases, latency degradation)</li>
-<li>Automated alerts to producers when SLOs are at risk or have been violated, with consumer impact analysis</li>
-<li>Comparative analysis across API versions showing performance differences to validate improvements</li>
-</ul>
-
-<strong>Consumer-Specific Observability</strong>
-
-<ul>
-<li>Per-subscription dashboards allowing producers to see each consumer's usage patterns individually</li>
-<li>Error clustering by consumer reveals which teams are struggling with integrations versus systemic API issues</li>
-<li>Rate limit proximity warnings alert consumers before they hit limits, preventing surprise throttling</li>
-<li>Cost attribution reports show infrastructure costs per consumer based on request volume and data transfer</li>
-</ul>
-
-<strong>Deprecation Readiness Metrics</strong>
-
-<ul>
-<li>Automated tracking of deprecated API usage, showing which consumers are still active and their traffic volumes</li>
-<li>Migration progress dashboards visualizing consumer adoption of new versions over time</li>
-<li>Targeted alerts to specific consumers who are still using deprecated versions approaching retirement</li>
-<li>"Ready to retire" recommendations when deprecated version usage reaches zero or near-zero thresholds</li>
-</ul>
-
-<strong>Security & Compliance Monitoring</strong>
-
-<ul>
-<li>Authentication failure rate monitoring detecting potential security issues or misconfigured clients</li>
-<li>Data access pattern analysis flagging unusual data retrieval volumes that might indicate data exfiltration</li>
-<li>Compliance audit logs capturing who accessed what data, when, for regulated API endpoints</li>
-<li>Automated reports for security teams showing API access patterns, failed auth attempts, and policy violations</li>
-<li>Automated scans for permissions violations that allow non-gateway API use</li>
-</ul>
 
 </details>
 
