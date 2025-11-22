@@ -691,9 +691,135 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 
 ---
 
-## 10. KPIs & Maturity Model
+## 10. System Integration & Automation
 
-### 10.1 Key Performance Indicators
+To ensure performance at scale and seamless developer experience, the platform relies on specific integration patterns for synchronization and telemetry.
+
+### 10.1 Control Plane Synchronization
+
+The Gateway requires sub-millisecond access to policy and routing data. Direct database lookups on every request introduce unacceptable latency and create a single point of failure.
+
+**Architecture: Postgres + In-Memory Cache**
+*   **Registry (Write Side):** Persists state in PostgreSQL. This is the authoritative source of truth.
+*   **Gateway (Read Side):** Maintains a hot in-memory cache of active subscriptions, routing rules, and policies.
+*   **Sync Mechanism:** A "Cache-Aside" pattern with event-driven invalidation.
+
+**Capacity Planning:**
+| Metric | Estimate | Memory Impact |
+| :--- | :--- | :--- |
+| Total APIs | 5,000 | |
+| Avg Consumers/API | 20 | |
+| Total Subscriptions | 100,000 | |
+| Config Size/Sub | 1 KB | |
+| **Total Cache Size** | | **~100 MB** |
+
+*Conclusion: The entire routing and policy table fits comfortably in RAM, allowing the Gateway to operate with zero network hops for policy checks.*
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
+sequenceDiagram
+    participant Admin as Producer/Admin
+    participant Reg as Registry (DB)
+    participant Bus as Event Bus
+    participant GW as Gateway (Cache)
+    
+    Admin->>Reg: 1. Approve Subscription
+    Reg->>Reg: Commit to DB
+    Reg->>Bus: 2. Publish "Sub_Updated" (w/ Payload)
+    Bus->>GW: 3. Push Event + Config
+    GW->>GW: 4. Update RAM Cache
+    Note over GW,Reg: (Fetch only needed on startup/reconcile)
+</pre>
+
+### 10.2 Telemetry Pipeline (Gateway to Auditor)
+
+To handle high-volume traffic (10k+ TPS) without adding latency to API calls, telemetry is strictly decoupled from request processing using a "Fire and Forget" pattern.
+
+**Architecture: Distributed Gateways + Centralized Stream**
+*   **Gateways (Producers):** Multiple Gateway instances running in different regions/clusters buffer metadata in memory and asynchronously flush batches to a high-throughput stream (e.g., AWS Kinesis, Apache Kafka).
+*   **Stream (Buffer):** Acts as a shock absorber, handling traffic spikes without backpressure on the Gateways.
+*   **Auditor (Consumer):** Reads from the stream, performs aggregation (windowing), and writes to storage.
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
+flowchart LR
+    subgraph Region A
+        GW1[Gateway Instance 1]
+        GW2[Gateway Instance 2]
+    end
+    subgraph Region B
+        GW3[Gateway Instance 3]
+    end
+    
+    Stream[("AWS Kinesis / Kafka<br>(Log Stream)")]
+    
+    subgraph Auditor Service
+        Worker[Stream Processor]
+        TSDB[(Time-Series DB)]
+        WH[(Data Warehouse)]
+    end
+
+    GW1 & GW2 & GW3 -.->|Async Batch Push| Stream
+    Stream -->|Pull & Aggregate| Worker
+    Worker -->|Real-time Metrics| TSDB
+    Worker -->|Long-term Audit| WH
+</pre>
+
+**Data Flow:**
+1.  **Capture:** Gateway captures start/end timestamps, consumer ID, and response status.
+2.  **Buffer:** Data is buffered locally (e.g., up to 100ms or 1MB).
+3.  **Emit:** Buffer is flushed to Kinesis. If Kinesis is down, metrics are dropped to preserve API availability (fail-open for metrics).
+4.  **Process:** Auditor consumes records, calculating sliding windows (p95 latency, error rates) and detecting anomalies.
+
+### 10.3 CI/CD Automation
+
+Governance checks are injected into existing pipelines to "shift left" on quality.
+
+**Pipeline Triggers & Actions:**
+
+| Stage | Trigger Condition | Action | Result |
+| :--- | :--- | :--- | :--- |
+| **1. Lint** | PR opened with changes to `openapi.yaml` | Run `spectral lint` against org ruleset | **Blocker:** PR cannot merge if style guide violations exist. |
+| **2. Register** | Merge to `main` branch | POST spec to `registry-api/versions` | **Draft Created:** New version (e.g., v1.2.0) appears in Registry as "Draft". |
+| **3. Deploy** | CD pipeline targets `production` | Query `registry-api/versions/{id}/status` | **Gatekeeper:** Deployment fails if API version is not "Published". |
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as GitHub/GitLab
+    participant CI as CI Runner
+    participant Reg as Registry
+
+    Dev->>Git: Push Branch & Open PR
+    Git->>CI: Trigger: "Lint Spec"
+    CI->>CI: Validate OpenAPI (Spectral)
+    CI-->>Git: Pass/Fail Status
+
+    Dev->>Git: Merge to Main
+    Git->>CI: Trigger: "Register Draft"
+    CI->>Reg: POST /apis/{id}/versions
+    Reg-->>CI: 201 Created (Status: Draft)
+
+    Note over Dev, Reg: (Manual Review & Approval happens here)
+
+    Dev->>CI: Trigger: "Deploy to Prod"
+    CI->>Reg: GET /apis/{id}/versions/{v}
+    alt Status == Published
+        Reg-->>CI: 200 OK
+        CI->>CI: Proceed with Deployment
+    else Status == Draft
+        Reg-->>CI: 403 Forbidden
+        CI->>CI: Fail Deployment
+    end
+</pre>
+
+
+--- 
+
+## 11. KPIs & Maturity Model
+
+### 11.1 Key Performance Indicators
 
 | Category | Metric | Target Behavior |
 |-----------|---------|------------------|
@@ -704,7 +830,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 | **Governance** | % API changes using correct versioning | High semver compliance |
 | **Sunset Discipline** | Avg. time from deprecation → retirement | Predictable, < policy max |
 
-### 10.2 Maturity Stages
+### 11.2 Maturity Stages
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'edgeLabelBackground':'#ffffff'}}}%%
 graph TB
@@ -731,12 +857,11 @@ Most large orgs sit between **2 and 3** when they realize change is needed.
 
 ---
 
-## 11. Operating Model & Roles
+## 12. Operating Model & Roles
 
 Roles must be clear but lightweight. Balance automation with human expertise. Governance scales without bureaucracy.
 
-<details>
-<summary><strong>11.1 Core Roles</strong></summary>
+<strong>12.1 Core Roles</strong>
 
 <table>
 <thead>
@@ -770,9 +895,7 @@ Roles must be clear but lightweight. Balance automation with human expertise. Go
 </tbody>
 </table>
 
-</details>
-
-### 11.2 API Expert Roles
+### 12.2 API Expert Roles
 
 Automation handles routine tasks. **Human expertise is critical for design quality and architectural consistency**. Two-tier model provides guidance without bottlenecks.
 
@@ -871,7 +994,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 ---
 
 <details>
-<summary><strong>11.3 Governance Group (Small & Strategic)</strong> — Defines policy, resolves disputes, handles exceptions</summary>
+<summary><strong>12.3 Governance Group (Small & Strategic)</strong> — Defines policy, resolves disputes, handles exceptions</summary>
 
 <strong>Purpose:</strong> Lightweight steering group that defines policy, resolves disputes, and handles exceptions—not a committee that reviews every change.
 <br>
@@ -905,7 +1028,7 @@ Automation handles routine tasks. **Human expertise is critical for design quali
 ---
 
 <details>
-<summary><strong>11.4 Interaction Model</strong> — How roles work together to balance speed with quality</summary>
+<summary><strong>12.4 Interaction Model</strong> — How roles work together to balance speed with quality</summary>
 
 <p>The roles work together in a defined flow that balances speed with quality:</p>
 
@@ -941,7 +1064,7 @@ flowchart TD
 ---
 
 <details>
-<summary><strong>11.5 Making This Model Scale</strong> — Sizing guidance for small, medium, and large organizations</summary>
+<summary><strong>12.5 Making This Model Scale</strong> — Sizing guidance for small, medium, and large organizations</summary>
 
 <strong>For Small Organizations (&lt; 100 APIs):</strong>
 
@@ -986,13 +1109,13 @@ flowchart TD
 
 ---
 
-## 12. Security & Compliance
+## 13. Security & Compliance
 
 Internal APIs need disciplined security, especially in regulated environments. The Gateway is a centralized enforcement point for security policies, audit logging, and compliance controls—but only if all traffic flows through it. This section covers security controls, detection mechanisms for non-gateway usage, and compliance frameworks for highly regulated industries.
 
 ---
 
-### 12.1 Gateway-Enforced Security Controls
+### 13.1 Gateway-Enforced Security Controls
 
 The Gateway is the security backbone, enforcing consistent controls across all internal APIs.
 
@@ -1117,7 +1240,7 @@ The Gateway is the security backbone, enforcing consistent controls across all i
 
 ---
 
-### 12.2 Audit Logging
+### 13.2 Audit Logging
 
 Gateway and Auditor create tamper-proof audit trails for security investigations and compliance audits.
 
@@ -1228,7 +1351,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 
 ---
 
-### 12.3 Detecting & Preventing Non-Gateway Usage
+### 13.3 Detecting & Preventing Non-Gateway Usage
 
 **The Problem:** If services call APIs directly (bypassing Gateway), all security and governance controls are circumvented. Detection and prevention are critical.
 
@@ -1302,7 +1425,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 
 ---
 
-### 12.4 Data Classification & Handling
+### 13.4 Data Classification & Handling
 
 APIs must declare the sensitivity level of data they handle, enabling appropriate controls.
 
@@ -1386,18 +1509,19 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 
 ---
 
+### 13.5 Continuous Compliance Monitoring
 <details>
-<summary><strong>12.5 Continuous Compliance Monitoring</strong></summary>
-
-<strong>Automated Compliance Dashboards:</strong>
+<summary><strong>Automated Compliance Dashboards:</strong></summary>
 
 <ul>
 <li>Real-time view of compliance posture: which APIs are PCI-compliant, which handle PII, encryption status</li>
 <li>Red/yellow/green indicators for each compliance control: access controls, logging, encryption, testing</li>
 <li>Trend analysis: are we improving or degrading compliance over time?</li>
 </ul>
+</details>
 
-<strong>Attestation Automation:</strong>
+<details>
+<summary><strong>Attestation Automation:</strong></summary>
 
 <ul>
 <li>Quarterly compliance reports auto-generated from platform telemetry</li>
@@ -1405,7 +1529,10 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Reduces audit preparation from weeks to hours</li>
 </ul>
 
-<strong>Policy as Code:</strong>
+</details>
+
+<details>
+<summary><strong>Policy as Code:</strong></summary>
 
 <ul>
 <li>Compliance requirements encoded as automated policies (Open Policy Agent, AWS Config Rules)</li>
@@ -1413,7 +1540,10 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 <li>Examples: "PCI-compliant APIs must have 7-year log retention," "GDPR-relevant APIs must implement deletion endpoint"</li>
 </ul>
 
-<strong>Third-Party Risk Management:</strong>
+</details>
+
+<details>
+<summary><strong>Third-Party Risk Management:</strong></summary>
 
 <ul>
 <li>Vendor-provided APIs registered in platform with compliance attestations</li>
@@ -1426,7 +1556,7 @@ APIs must declare the sensitivity level of data they handle, enabling appropriat
 ---
 
 <details>
-<summary><strong>12.6 Security Best Practices for API Producers</strong></summary>
+<summary><strong>13.6 Security Best Practices for API Producers</strong></summary>
 
 **Secure Defaults:**
 
