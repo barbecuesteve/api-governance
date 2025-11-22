@@ -83,24 +83,51 @@ The technical foundation consists of integrated platform components and clear li
 ### **Platform Components**
 
 This model shows how a registry, gateway, and auditor work together.
+
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
-A[API Producer Team] --> B[API Registry: Design/Version/Docs]
-B --> C[API Gateway: Policy/Access/Routing]
-C --> D[Consumers: Internal Applications]
-D --> C
-C --> E[API Auditor: Usage/Quality/Cost/Health]
-E --> B
+    subgraph Teams
+        TeamP[Producer App Team]
+        TeamC[Consumer App Team]
+        Admin[Governance Team]
+    end
+
+    subgraph Platform
+        Registry[API Registry]
+        Gateway[API Gateway]
+        Auditor[API Auditor]
+    end
+
+    subgraph Implementations
+        AppC[Consumer App]
+        AppP[Producer App]
+    end
+
+    Registry -->|authorizes| Gateway
+    Gateway -->|proxied/tracked| AppP
+    AppC -->|requests| Gateway
+    TeamP -->|apps/apis| Registry
+    TeamP --> AppP
+    TeamC --> AppC
+    TeamC -->|subscriptions| Registry
+    TeamP --> Auditor
+    Admin -->|uses| Auditor
+    Auditor -->|watches| Gateway
+
+    style Platform fill:#D0EED0
+    style Teams fill:#D0D0EE  
+    style Implementations fill:#E0D0E0
 </pre>
-* **Registry**: Source of truth for APIs, versions, documentation, ownership, and consumers
+
+* **API Registry**: Source of truth for APIs, versions, documentation, ownership, and consumers
   * **API Catalog** — Stores each API's business purpose, technical specs (OpenAPI/GraphQL schemas), and lifecycle state. One place to discover what exists.
   * **Version Management** — Tracks all versions with compatibility status, release notes, and migration guides. Shows which versions are current, deprecated, or scheduled for retirement.
   * **Ownership Records** — Lists who owns each API: primary and secondary contacts, team, on-call rotation, escalation paths. Clear accountability for support, features, and incidents.
   * **Documentation Hub** — Hosts getting started guides, authentication instructions, endpoint references, code samples, and integration patterns. Good documentation increases adoption and reduces support.
   * **Consumer Relationships** — Lists all approved consumers and their subscriptions. Shows who depends on each API for impact analysis, incident communication, and deprecation decisions.
 
-* **Gateway**: Enforces access control, version rules, and gathers telemetry
+* **API Gateway**: Enforces access control, version rules, and gathers telemetry
   * **Authentication & Authorization** — Validates consumer identity and enforces access policies. Only approved applications call specific APIs. Consistent security across all APIs without each service implementing its own auth.
   * **Subscription Enforcement** — Verifies every request comes from an application with an active subscription for that API version and environment. Prevents unauthorized usage.
   * **Version Routing** — Routes requests to the right API version based on subscription and request headers. Multiple versions run in parallel during transitions. Teams migrate at their own pace.
@@ -108,7 +135,7 @@ E --> B
   * **Telemetry Collection** — Captures metrics on every call: latency, errors, sizes, consumer identity, and endpoints. Data flows to the Auditor for analysis and dashboards for monitoring.
   * **Request/Response Transformation** — Optionally translates protocols, converts formats, or enriches responses to maintain backward compatibility when APIs evolve.
 
-* **Auditor**: Shows usage, reliability, cost, and lifecycle health
+* **API Auditor**: Shows usage, reliability, cost, and lifecycle health
   * **Usage Analytics** — Analyzes call patterns: top consumers, most-used endpoints, peak times, adoption trends. Shows producers how teams actually use their API versus expectations. Informs roadmap priorities.
   * **Reliability Metrics** — Tracks error rates, latency, availability, and SLO compliance for each API and version. Producers maintain quality and spot degradation before it impacts consumers.
   * **Consumer Impact Assessment** — Lists which applications depend on specific API versions and endpoints, call frequency, and error patterns. Essential for planning breaking changes, deprecations, and incident communication.
