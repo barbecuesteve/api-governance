@@ -6,14 +6,13 @@
 	});
 </script>
 
-This is an in-depth technical discussion of an API governance platform. The [main document](README.md) is intended for Director-level up to CTO with a high-level overview of the system components, both technical and organizational. 
-For the executive summary, [go here](exec-summary.md).
+This technical appendix provides implementation details for engineering teams building or operating an API governance platform. For a high-level overview of components and organizational strategy, see the [main document](README.md). For business context and risk assessment, see the [executive summary](exec-summary.md).
 
 # Technical Appendix: API Governance & Platform Model
 
 ## 1. Introduction
 
-This appendix covers the architecture, data structures, lifecycle flows, and governance practices for API-as-Product. Platform-agnostic. Supports 300–5,000+ services.
+This appendix covers the architecture, data structures, lifecycle flows, and governance practices for treating internal APIs as products. The design is platform-agnostic and scales from 300 to 5,000+ services.
 
 Intended for:
 - Principal engineers and architects
