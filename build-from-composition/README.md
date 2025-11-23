@@ -430,6 +430,105 @@ Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
 
 **Failure handling**: Default to fail-closed (deny) if Registry is unreachable, with per-API override for fail-open in non-production environments.
 
+##### Advanced Optimization: In-Memory Subscription Store
+
+**The "Autonomous Gateway" Pattern:**
+
+Instead of calling the Registry on every request (or relying on short-lived caches), we can load the **entire active subscription dataset** into Kong's shared memory. This is a proven pattern used by companies like Stripe, Cloudflare, and Fastly when sub-millisecond latency is critical.
+
+**Why This Works:**
+
+- **Feasibility**: 100,000 subscriptions × 1KB avg size ≈ 100MB. Kong's `lua_shared_dict` can easily handle gigabytes of shared memory across all worker processes.
+- **Performance**: Lookups become **nanosecond-scale** memory reads. No network call, no serialization, no timeout handling.
+- **Resilience**: Gateway becomes **fully autonomous**. It can continue enforcing policy indefinitely even if Registry goes down for maintenance, deployment, or network partition.
+- **Simplicity**: Eliminates the entire "fail-open vs fail-closed" dilemma. The Gateway always has the last known good state.
+
+**Implementation Pattern:**
+
+```lua
+-- 1. Kong Configuration (nginx.conf)
+lua_shared_dict subscriptions 512m;
+
+-- 2. Plugin Initialization (init_worker_by_lua)
+local function sync_subscriptions()
+  while true do
+    local res = http.get("http://registry:8080/subscriptions/export")
+    if res.status == 200 then
+      local data = cjson.decode(res.body)
+      local version_hash = ngx.md5(res.body)
+      
+      -- Only update if data changed
+      if version_hash ~= ngx.shared.subscriptions:get("version_hash") then
+        for _, sub in ipairs(data.subscriptions) do
+          local key = sub.consumer_app_id .. ":" .. sub.api_id .. ":" .. sub.version .. ":" .. sub.environment
+          ngx.shared.subscriptions:set(key, cjson.encode(sub))
+        end
+        ngx.shared.subscriptions:set("version_hash", version_hash)
+        ngx.log(ngx.INFO, "Synced ", #data.subscriptions, " subscriptions")
+      end
+    end
+    ngx.sleep(30) -- Poll every 30 seconds
+  end
+end
+
+ngx.timer.at(0, sync_subscriptions)
+
+-- 3. Authorization Check (access phase)
+local key = consumer_app_id .. ":" .. api_id .. ":" .. version .. ":" .. environment
+local sub_json = ngx.shared.subscriptions:get(key)
+
+if not sub_json then
+  return kong.response.exit(403, {message = "No subscription found"})
+end
+
+local subscription = cjson.decode(sub_json)
+-- Enforce policy using in-memory data (nanosecond-scale lookup)
+```
+
+**Registry Support:**
+
+Add a new endpoint to Registry:
+
+```
+GET /subscriptions/export
+Returns:
+{
+  "version": "abc123hash",
+  "exported_at": "2025-11-22T10:00:00Z",
+  "subscriptions": [
+    {...full subscription record...},
+    {...full subscription record...}
+  ]
+}
+```
+
+**Push Invalidation (Optional Enhancement):**
+
+For critical operations (like emergency subscription revocation), Registry can push invalidation webhooks to Kong:
+
+```
+POST https://gateway.company.com/_admin/invalidate
+{
+  "subscription_id": "uuid",
+  "action": "revoke"
+}
+```
+
+Gateway immediately removes that subscription from shared memory, without waiting for the next sync cycle.
+
+**Tradeoffs:**
+
+- **Eventual Consistency**: Changes take 30-60 seconds to propagate (acceptable for most governance use cases)
+- **Memory per Node**: Each gateway instance needs the RAM allocation (but 100MB is negligible on modern hardware)
+- **Bootstrap Time**: On startup, Gateway must fetch initial dataset before accepting traffic
+
+**When to Use This:**
+
+- Production environments with strict latency SLAs (P99 < 10ms)
+- High-traffic APIs (>10K RPS) where network calls become the bottleneck
+- Mission-critical systems that must survive Registry outages
+- Cost optimization (eliminates thousands of Registry API calls per second)
+
 #### 3.3 Backstage Developer Portal (Customize/Extend)
 
 **Responsibilities:**
