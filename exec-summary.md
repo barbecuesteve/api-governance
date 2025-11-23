@@ -1,21 +1,26 @@
 
-Over a decade of consulting, I've seen the same API governance problems 
-at 50+ companies: teams rebuilding the same capabilities, outages that 
-take hours because nobody knows the dependencies, compliance scrambles 
-with no audit trail, APIs that no one dares shut down because usage is 
-invisible.
+Over 15+ years, I've seen API governance fail at dozens of organizations. 
+Capital One came closest to solving it—they had registry, gateway, and 
+auditing components that actually worked at scale.
 
-I’ve also seen one organization get remarkably close to solving this at scale. Their approach combined software, process, and culture into a functioning governance ecosystem—assembled over years, imperfect in places, but effective in practice. Most importantly, it proved that near-complete visibility and consistent API management is achievable in a large, complex enterprise.
+As a team lead managing a dozen APIs in their system, I experienced both 
+what worked (visibility, discoverability, enforced patterns) and what 
+didn't (individual vs. team ownership, manual consumer management, weak 
+deprecation support). Bumping into their system daily, combined with 
+seeing this problem everywhere for a decade, made the ideal solution 
+suddenly obvious to me.
 
-This framework distills those lessons into first principles: what works, why it works, and how to implement a comprehensive API governance platform without a decade of iteration.
+This framework takes Capital One's working components and addresses the 
+gaps I experienced firsthand. It's the system I wish I'd had as an API 
+producer.
 
-I would love the opportunity to build this properly, either as a product or 
-for an organization ready to solve this problem systematically.
+I'm looking to build this, either as a product or for an organization 
+ready to solve API governance systematically.
 
-The [main document](README.md) gives a high-level overview for Directors and CTOs. 
-The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
 
-[Steve Sparks](resume.pdf)  
+[Steve Sparks](resume.pdf)
+Founder/Architect, Accucast (acquired by PGi, 2006)  
+Most recently: Engineering Lead, Capital One (2024)
 November 2025
 
 ### **Executive Summary: API Governance as Risk Management**
