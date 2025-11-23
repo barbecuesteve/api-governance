@@ -8,18 +8,18 @@
 
 Over 15+ years, I've seen API governance fail at dozens of organizations. 
 Capital One came closest to solving it—they had registry, gateway, and 
-auditing components that actually worked at scale. It wasn't perfect but it was close enough to be astonishing.
+auditing components that actually worked at scale. It wasn't perfect but it 
+was close enough to be astonishing.
 
 As a team lead managing a dozen APIs in their system, I experienced both 
 what worked (visibility, discoverability, enforced patterns) and what 
 didn't (individual vs. team asset ownership, consumer management gaps, weak 
 deprecation support). Bumping into their system daily, combined with 
 seeing this problem everywhere for a decade, made the ideal solution 
-suddenly obvious.
+suddenly obvious to me.
 
-This framework expands upon that system and addresses the 
-gaps I experienced firsthand. It's the system I wish I'd had as an API 
-producer.
+This framework expands upon such a system and addresses the gaps I experienced
+firsthand. It's the system I wish I'd had as an API producer.
 
 I'm looking to build this, either as a product or for an organization 
 ready to solve API governance systematically.
@@ -27,7 +27,7 @@ ready to solve API governance systematically.
 
 [Steve Sparks](resume.pdf)
 Founder/Architect, Accucast (acquired by PGi, 2006)  
-Most recently: Engineering Lead, Capital One (2024)
+Most recently: Engineering Lead, Capital One (2025)
 November 2025
 
 This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For executive context on why this matters to your organization, see the [this summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
