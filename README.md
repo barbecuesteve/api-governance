@@ -31,7 +31,7 @@ November 2025
 This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For executive context on why this matters to your organization, see the [this summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
 
 --- 
-<table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
+<table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; width: 100%;">
 <tr><td>
 
 <h3><strong>At a Glance</strong></h3>
