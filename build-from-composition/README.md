@@ -104,7 +104,7 @@ graph TD
 {
   "subscription_id": "uuid",
   
-  // Natural composite key - UNIQUE constraint on these four fields
+  // Natural composite key—UNIQUE constraint on these four fields
   "consumer_app_id": "uuid",     // WHO is consuming
   "api_id": "uuid",               // WHAT they're consuming  
   "api_version": "2.1.0",         // WHICH version
@@ -178,7 +178,7 @@ The `subscription_id` (UUID) remains useful as:
 
 **Why Subscriptions Drive Policy:**
 
-1. **Scoped Access Control**: Endpoint/operation scope defines precisely what the consumer can call - Gateway enforces this without hardcoded rules
+1. **Scoped Access Control**: Endpoint/operation scope defines precisely what the consumer can call—Gateway enforces this without hardcoded rules
 2. **Purpose-Based Auditing**: Purpose string enables audit review ("Is this subscription still being used for its stated intent?")
 3. **Data Classification Enforcement**: Gateway/OPA checks subscription's `max_sensitivity` against API endpoint data classification
 4. **Dynamic Rate Limiting**: SLA tier + throughput estimate inform Gateway rate limiting without manual Kong configuration per consumer

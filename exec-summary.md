@@ -3,19 +3,27 @@
 [Steve Sparks](resume.pdf)  
 Founder/Architect, Accucast (acquired by PGi, 2006)
 
-I've built, broken, and rebuilt API platforms at scale. I've watched 
-teams rebuild the same API multiple times. 
-I've spent 6 hours debugging an outage because nobody knew the 
-dependency graph. I've scrambled through compliance audits with no 
-audit trail. I've agonized over whether it was safe to take down an older 
-API and wondered which consumer was 80% of my traffic.
 
-This framework is what I wish I'd had then. It's been refined across 
-more than a decade of consulting and reflects what actually works - measurable 
-reduction in duplicate work, faster incident response, and governance that 
-developers are willing to adopt. It combines technology with the human element to 
-create a system that turns compliance into a platform feature and makes the right 
-choice the easiest choice. 
+Over a decade of consulting, I've seen the same API governance problems 
+at 50+ companies: teams rebuilding the same capabilities, outages that 
+take hours because nobody knows the dependencies, compliance scrambles 
+with no audit trail, APIs that no one dares shut down because usage is 
+invisible.
+
+I've seen one organization solve this well at scale: Capital One's system 
+combined software and process into a working governance model. 
+It was built from a patchwork of components over time, and it covered almost all 
+of the critical gaps these documents identify. It had its limitations but
+it had actually achieved something amazing: Capital One has almost complete 
+visibility into their internal API ecosystem. It's not perfect, but close 
+enough to be astonishing.
+
+This framework synthesizes such a system from first principles—what 
+worked, why it worked, and how to implement it without a decade of 
+iteration and false starts.
+
+I would love the opportunity to build this properly, either as a product or 
+for an organization ready to solve this problem systematically.
 
 The [main document](README.md) gives a high-level overview for Directors and CTOs. 
 The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
