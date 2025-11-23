@@ -18,7 +18,7 @@ The [main document](README.md) gives a high-level overview for Directors and CTO
 The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
 
 [Steve Sparks](resume.pdf)  
-<br>November 2025
+November 2025
 
 ### **Executive Summary: API Governance as Risk Management**
 
