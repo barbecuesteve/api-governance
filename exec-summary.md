@@ -1,5 +1,4 @@
 
-This summary shows how API governance reduces risk. For technical details, see the [technical design document](technical-design.md). For strategy, see the [main document](README.md).
 
 [Steve Sparks](resume.pdf)  
 Founder/Architect, Accucast (acquired by PGi, 2006)
@@ -17,6 +16,8 @@ reduction in duplicate work, faster incident response, and governance that
 developers are willing to adopt. It combines technology with the human element to 
 create a system that turns compliance into a platform feature and makes the right 
 choice the easiest choice. 
+
+This page shows how API governance reduces risk. For technical details, see the [technical design document](technical-design.md). For leader-level strategy, see the [main document](README.md).
 
 <br>November 2025
 
