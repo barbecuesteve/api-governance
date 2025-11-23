@@ -88,7 +88,7 @@ These three components form the foundation for governance.
 Treating API governance as infrastructure builds advantage. Delaying it builds debt, forcing expensive changes later.
 
 The [main document](README.md) gives a high-level overview for Directors and CTOs. 
-The [technical design](technical-design.md) gives technology leaders a roadmap to build it.
+The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
 
 
 <style>

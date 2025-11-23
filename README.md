@@ -603,4 +603,4 @@ Internal APIs are valuable assets in modern companies — but only when treated 
 This approach empowers developers, improves platform ROI, and reduces complexity. Organizations that adopt it now will innovate faster as automation, AI-driven development, and platform engineering accelerate.
 
 ---
-[Technical Appendix: API Governance and Platform Model](technical-design.md)
+[Technical Appendix: API Governance and Platform Model](technical-design.md) Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).

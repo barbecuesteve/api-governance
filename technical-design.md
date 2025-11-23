@@ -1640,3 +1640,4 @@ This example covers:
 
 ---
     
+Here you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
