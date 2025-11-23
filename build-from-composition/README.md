@@ -7,9 +7,9 @@
 </script>
 Description of this system for [implementers](../technical-design.md), [leaders](../README.md), or [executives](../exec-summary.md).
 
-# Application Plan: Build from Composition
+## Application Plan: Build from Composition
 
-## Table of Contents
+### Table of Contents
 1. [Overview](#overview)
 2. [Architecture](#architecture)
 3. [Core Concepts](#core-concepts)
@@ -19,9 +19,9 @@ Description of this system for [implementers](../technical-design.md), [leaders]
 
 ---
 
-## 1. Overview
+### 1. Overview
 
-### Design Philosophy
+#### Design Philosophy
 
 This architecture balances off-the-shelf components with custom governance logic, centered on **subscriptions as the source of truth** for all policy enforcement.
 
@@ -31,7 +31,7 @@ This architecture balances off-the-shelf components with custom governance logic
 - **Single source of truth**: Registry owns all governance data; other components read from it via APIs
 - **Policy as code**: Externalize business rules to OPA for flexibility and auditability
 
-### Why Subscriptions Matter (The "Aha!" Moment)
+#### Why Subscriptions Matter (The "Aha!" Moment)
 
 **The Problem with Traditional Governance:**
 In most organizations, "governance" is a PDF document that nobody reads. Security rules are hardcoded in gateway configs, rate limits are guessed, and nobody knows who is using which API. When you need to deprecate an API, you send a mass email and hope for the best.
@@ -47,7 +47,7 @@ By making the **Subscription** the atomic unit of governance, we solve multiple 
     *   **Deprecation?** Notify the subscription owners.
 3.  **It Makes Governance Real**: Instead of a policy document saying "You must have approval," the system physically prevents access without an active subscription. Governance becomes a runtime reality, not a paperwork exercise.
 
-### High-Level Architecture
+#### High-Level Architecture
 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
@@ -69,7 +69,7 @@ graph TD
 - **Kong Gateway** (Configure): Off-the-shelf API gateway for auth, rate limiting, routing, and observability
 - **Auditor** (BUILD THIS): Custom analytics layer built on Prometheus/Grafana for compliance reporting, chargeback, and SLA tracking
 
-### Data Ownership Boundaries
+#### Data Ownership Boundaries
 
 **Backstage Owns (Native Catalog):**
 - API discovery metadata: name, description, owner team
@@ -92,13 +92,13 @@ graph TD
 
 ---
 
-## 2. Core Concepts
+### 2. Core Concepts
 
-### Subscriptions as First-Class Citizens
+#### Subscriptions as First-Class Citizens
 
 **Subscriptions are the source of truth for policy enforcement.** Rather than encoding rules at the API or Gateway level, all authorization and governance decisions derive from subscription metadata.
 
-#### Subscription Schema
+##### Subscription Schema
 
 ```json
 {
@@ -205,7 +205,7 @@ allow {
 }
 ```
 
-### Policy Engine Boundary
+#### Policy Engine Boundary
 
 **Externalize Policy Decisions (OPA/Cedar):**
 
@@ -335,9 +335,9 @@ Gateway behavior when policy engine is unreachable:
 
 ---
 
-## 3. Component Specifications
+### 3. Component Specifications
 
-### 3.1 API Registry & Governance Core (Custom Build)
+#### 3.1 API Registry & Governance Core (Custom Build)
 
 **Responsibilities:**
 - Maintain API catalog with version management
@@ -364,7 +364,7 @@ Gateway behavior when policy engine is unreachable:
 - REST API (Node.js, Go, or Python)
 - Event bus for publishing lifecycle events
 
-### 3.2 Kong Gateway (Configure)
+#### 3.2 Kong Gateway (Configure)
 
 **Responsibilities:**
 - Route traffic to backend APIs
@@ -374,7 +374,7 @@ Gateway behavior when policy engine is unreachable:
 - Emit structured logs for Auditor
 - Cache authorization decisions with TTL
 
-#### URL Structure
+##### URL Structure
 
 All API requests use path-based versioning with this structure:
 
@@ -394,7 +394,7 @@ GET  https://staging-gateway.company.com/products-api/v1/products?category=elect
 3. **Version**: Explicit in URL path (`/v2/`)
 4. **Consumer App ID**: Extracted from JWT bearer token claims (`app_id` field)
 
-#### Kong Route Configuration
+##### Kong Route Configuration
 
 Each API version gets its own Kong service and route with registry metadata:
 
@@ -416,7 +416,7 @@ services:
           registry_url: "http://registry-service:8080"
 ```
 
-#### Custom Plugin Implementation
+##### Custom Plugin Implementation
 
 Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
 
@@ -430,7 +430,7 @@ Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
 
 **Failure handling**: Default to fail-closed (deny) if Registry is unreachable, with per-API override for fail-open in non-production environments.
 
-### 3.3 Backstage Developer Portal (Customize/Extend)
+#### 3.3 Backstage Developer Portal (Customize/Extend)
 
 **Responsibilities:**
 - Provide searchable API catalog UI
@@ -440,7 +440,7 @@ Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
 - Visualize deprecation timelines
 - Surface compliance/attestation status
 
-#### Backstage's Native Entity Model
+##### Backstage's Native Entity Model
 
 **Core Entities:**
 - **`Component`**: Represents services/applications (your "Consumer Apps")
@@ -463,7 +463,7 @@ Build a Lua plugin (`kong/plugins/registry-auth`) with the following behavior:
 5. **Deprecation Workflows**: Lifecycle is just a label; no enforcement or transition timelines
 6. **Compliance/Purpose Tracking**: No purpose strings, attestations, or compliance metadata
 
-#### Custom Backstage Plugins Required
+##### Custom Backstage Plugins Required
 
 Build these React components to surface Registry data:
 
@@ -473,7 +473,7 @@ Build these React components to surface Registry data:
 4. **`<DeprecationTimeline>`**: Visual countdown for deprecated APIs
 5. **`<ComplianceWidget>`**: Dashboard for security/compliance teams
 
-#### Backstage Catalog YAML Example
+##### Backstage Catalog YAML Example
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -492,7 +492,7 @@ spec:
     $text: https://github.com/company/users-api/blob/main/openapi.yaml
 ```
 
-### 3.4 Auditor (Custom Build)
+#### 3.4 Auditor (Custom Build)
 
 **Responsibilities:**
 - Ingest golden log envelope from Gateway
@@ -516,9 +516,9 @@ spec:
 
 ---
 
-## 4. Integration Contracts
+### 4. Integration Contracts
 
-### 4.1 Registry ↔ Gateway
+#### 4.1 Registry ↔ Gateway
 
 **Authorization Check API:**
 
@@ -566,7 +566,7 @@ Response:
 | `version.published` | New API version available | Update routing configuration |
 | `api.deprecated` | API marked deprecated | Inject deprecation warnings in response headers |
 
-### 4.2 Gateway ↔ Auditor
+#### 4.2 Gateway ↔ Auditor
 
 **Golden Log Envelope:**
 
@@ -595,9 +595,9 @@ Auditor ingests these logs for:
 - Chargeback calculation
 - SLA tracking
 
-### 4.3 Backstage ↔ Registry
+#### 4.3 Backstage ↔ Registry
 
-#### Read Operations
+##### Read Operations
 
 | Backstage View | Registry API Call | Purpose |
 |----------------|-------------------|---------|
@@ -608,7 +608,7 @@ Auditor ingests these logs for:
 | Deprecation Dashboard | `GET /apis?lifecycle=deprecated` | List deprecated APIs with sunset timelines |
 | Compliance Report | `GET /subscriptions?data_classification=pii` | Audit PII access |
 
-#### Write Operations
+##### Write Operations
 
 | User Action in Backstage | Registry API Call | Outcome |
 |---------------------------|-------------------|---------|
@@ -618,7 +618,7 @@ Auditor ingests these logs for:
 | "Publish New Version" | `POST /apis/{id}/versions` | Creates new version, triggers CI/CD |
 | "Revoke Subscription" | `DELETE /subscriptions/{id}` | Soft deletes subscription, invalidates Gateway cache |
 
-#### Caching Strategy
+##### Caching Strategy
 
 To minimize Registry API calls:
 
@@ -629,7 +629,7 @@ To minimize Registry API calls:
   - `api.deprecated` → invalidate API detail cache
 - **Long-Lived Cache**: 1-hour TTL for API ownership, team info
 
-#### Security/Authorization
+##### Security/Authorization
 
 - **Backstage Permissions Plugin**: Restrict who can see/request subscriptions
 - **Token Passthrough**: Backstage forwards user OAuth token to Registry APIs
@@ -637,9 +637,9 @@ To minimize Registry API calls:
 
 ---
 
-## 5. Implementation Guide
+### 5. Implementation Guide
 
-### Implementation Phases
+#### Implementation Phases
 
 **Phase 1 (Months 1-3): Foundation**
 - Deploy Kong Gateway + basic config
@@ -660,9 +660,9 @@ To minimize Registry API calls:
 
 ---
 
-## Appendix: Entity Mapping
+### Appendix: Entity Mapping
 
-### Backstage ↔ Registry Entity Mapping
+#### Backstage ↔ Registry Entity Mapping
 
 | Backstage Concept | Registry Equivalent | Notes |
 |-------------------|---------------------|-------|
