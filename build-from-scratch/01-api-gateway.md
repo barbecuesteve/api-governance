@@ -60,6 +60,11 @@ flowchart TB
         Circuit[Circuit Breaker]
     end
     
+    subgraph Observability["Observability"]
+        Logging[Logging]
+        Metrics[Metrics]
+    end
+    
     Backend[Backend<br/>API]
     
     Request --> Auth
@@ -70,6 +75,14 @@ flowchart TB
     Transform --> SecurityFilter
     SecurityFilter --> Circuit
     Circuit --> Backend
+    
+    Auth -.-> Logging
+    Authz -.-> Logging
+    RateLimit -.-> Logging
+    
+    Auth -.-> Metrics
+    Authz -.-> Metrics
+    RateLimit -.-> Metrics
 </pre>
 
 ### Response Processing Pipeline
