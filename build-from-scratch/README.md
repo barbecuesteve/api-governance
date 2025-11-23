@@ -159,7 +159,7 @@ The platform is designed to support a continuous feedback loop that turns govern
 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333','fontSize':'14px'}}}%%
-flowchart TD
+flowchart LR
     Risk["Risk & Compliance<br/>Requirements"]
     Policy["Policy Definition<br/>& Configuration"]
     Enforcement["Runtime Enforcement<br/>(Gateway)"]
