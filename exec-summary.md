@@ -17,7 +17,7 @@ developers are willing to adopt. It combines technology with the human element t
 create a system that turns compliance into a platform feature and makes the right 
 choice the easiest choice. 
 
-This page shows how API governance reduces risk. For technical details, see the [technical design document](technical-design.md). For leader-level strategy, see the [main document](README.md).
+For technical details, see the [technical design document](technical-design.md). For leader-level strategy, see the [main document](README.md).
 
 <br>November 2025
 
