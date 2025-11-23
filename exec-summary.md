@@ -2,6 +2,22 @@
 This summary shows how API governance reduces risk. For technical details, see the [technical design document](technical-design.md). For strategy, see the [main document](README.md).
 
 [Steve Sparks](resume.pdf)  
+Founder/Architect, Accucast (acquired by PGi, 2006)
+
+I've built, broken, and rebuilt API platforms at scale. I've watched 
+teams rebuild the same API multiple times. 
+I've spent 6 hours debugging an outage because nobody knew the 
+dependency graph. I've scrambled through compliance audits with no 
+audit trail. I've agonized over whether it was safe to take down an older 
+API and wondered which consumer was 80% of my traffic.
+
+This framework is what I wish I'd had then. It's been refined across 
+more than a decade of consulting and reflects what actually works - measurable 
+reduction in duplicate work, faster incident response, and governance that 
+developers are willing to adopt. It combines technology with the human element to 
+create a system that turns compliance into a platform feature and makes the right 
+choice the easiest choice. 
+
 <br>November 2025
 
 ### **Executive Summary: API Governance as Risk Management**
