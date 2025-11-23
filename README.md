@@ -342,7 +342,9 @@ Organizations without API governance face compounding costs:
 **Wasted Engineering Capacity:**
 * 30-40% of engineering time spent rebuilding capabilities that already exist
 * For a 200-engineer organization, that's 60-80 engineers worth of duplicate work annually
-* Estimated opportunity cost: 9-20 million dollars per year in lost productivity
+* Estimated opportunity cost: 9-20 million dollars per year in lost productivity[^1]
+
+[^1]: **Lost productivity calculation:** Assumes fully-loaded cost per engineer of $150K-250K/year (salary + benefits + overhead). For 200 engineers with 30-40% spending time on duplicate work: 60-80 FTE × $150K-250K = $9M-20M annually. This represents opportunity cost - work that could be redirected to new features, customer value, or innovation rather than rebuilding existing capabilities.
 
 **Technical Debt Accumulation:**
 * Uncontrolled version sprawl creates maintenance burden (v1, v2, v1.1, v2-beta, v2-internal...)
