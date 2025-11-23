@@ -246,11 +246,14 @@ flowchart LR
 - IP allowlist/denylist enforcement for subscription-level restrictions
 
 **Technical Implementation:**
-- Subscription lookup: Query Registry API or local cache for subscription status
+- **Subscription lookup strategies** (choose based on performance requirements):
+  - **In-Memory Store (Recommended for Production)**: Load entire active subscription dataset into gateway shared memory for **nanosecond-scale lookups**. A typical dataset of 100,000 subscriptions ≈ 100MB. Gateway polls Registry every 30-60 seconds for updates. This eliminates network latency, provides full autonomy (gateway continues operating during Registry outages), and delivers sub-millisecond authorization decisions. Proven pattern used by Stripe, Cloudflare, and Fastly.
+  - **Short-TTL Cache**: Query Registry API with aggressive caching (5-30 second TTL). Provides balance between freshness and performance. Suitable for lower-traffic environments.
+  - **Direct Registry Query**: Real-time lookup for every request. Highest consistency but adds network latency (5-50ms). Only use when immediate revocation is critical.
 - Policy engine: Open Policy Agent (OPA), AWS IAM, or custom rule engine
 - Decision caching: Cache authorization decisions with short TTL to reduce latency
 - Policy as code: Authorization rules defined in Cedar or similar DSL
-- Real-time subscription checks: Validate subscription is still active (not revoked or expired)
+- **Performance target**: Authorization decisions should complete in <1ms (P95) to avoid becoming the bottleneck in request processing
 
 **Inputs:**
 - Authenticated identity from Authentication Module
