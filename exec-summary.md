@@ -1,6 +1,4 @@
 
-
-
 Over a decade of consulting, I've seen the same API governance problems 
 at 50+ companies: teams rebuilding the same capabilities, outages that 
 take hours because nobody knows the dependencies, compliance scrambles 

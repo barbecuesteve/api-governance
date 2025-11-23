@@ -6,11 +6,29 @@
 	});
 </script>
 
+Over a decade of consulting, I've seen the same API governance problems 
+at 50+ companies: teams rebuilding the same capabilities, outages that 
+take hours because nobody knows the dependencies, compliance scrambles 
+with no audit trail, APIs that no one dares shut down because usage is 
+invisible.
+
+I’ve also seen one organization get remarkably close to solving this at scale. 
+Their approach combined software, process, and culture into a functioning 
+governance ecosystem—assembled over years, imperfect in places, but effective 
+in practice. Most importantly, it proved that near-complete visibility and 
+consistent API management is achievable in a large, complex enterprise.
+
+This framework distills those lessons into first principles: what works, why 
+it works, and how to implement a comprehensive API governance platform without 
+a decade of iteration.
+
+I would love the opportunity to build this properly, either as a product or 
+for an organization ready to solve this problem systematically.
 
 [Steve Sparks](resume.pdf)
-<br>November 2025
+November 2025
 
-This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For context on why this matters to your organization, see the [executive summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
+This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For executive context on why this matters to your organization, see the [this summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
 
 --- 
 <table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; float: right; width: 35%; margin-left: 20px;">
