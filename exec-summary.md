@@ -17,7 +17,8 @@ developers are willing to adopt. It combines technology with the human element t
 create a system that turns compliance into a platform feature and makes the right 
 choice the easiest choice. 
 
-For technical details, see the [technical design document](technical-design.md). For leader-level strategy, see the [main document](README.md).
+The [main document](README.md) gives a high-level overview for Directors and CTOs. 
+The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
 
 <br>November 2025
 
@@ -104,8 +105,6 @@ These three components form the foundation for governance.
 
 Treating API governance as infrastructure builds advantage. Delaying it builds debt, forcing expensive changes later.
 
-The [main document](README.md) gives a high-level overview for Directors and CTOs. 
-The [technical design](technical-design.md) gives technology leaders a roadmap to build it. Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
 
 
 <style>
