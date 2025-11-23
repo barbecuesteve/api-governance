@@ -5,6 +5,9 @@
 		theme: 'dark'
 	});
 </script>
+
+[Back to the top](README.md)
+
 # API Auditor
 
 The Auditor is the analytics and observability layer of the platform, providing insights into API usage, performance, compliance, and business value. It processes logs and metrics from the Gateway, correlates them with Registry metadata, and surfaces actionable intelligence for producers, consumers, and governance teams.

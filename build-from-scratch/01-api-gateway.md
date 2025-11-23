@@ -5,6 +5,9 @@
 		theme: 'dark'
 	});
 </script>
+
+[Back to the top](README.md)
+
 # API Gateway
 
 The Gateway is the runtime enforcement point for all API traffic, providing security, routing, observability, and policy enforcement.

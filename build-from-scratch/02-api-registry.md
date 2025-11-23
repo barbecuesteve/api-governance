@@ -5,6 +5,9 @@
 		theme: 'dark'
 	});
 </script>
+
+[Back to the top](README.md)
+
 # API Registry
 
 The Registry is the system of record for all API metadata, serving as the central source of truth for API specifications, versions, subscriptions, and governance policies. It provides both human-facing interfaces and machine-readable APIs for the entire platform.

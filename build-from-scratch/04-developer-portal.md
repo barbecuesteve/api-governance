@@ -5,6 +5,9 @@
 		theme: 'dark'
 	});
 </script>
+
+[Back to the top](README.md)
+
 # Developer Portal
 
 The Developer Portal is the primary interface for API producers and consumers, providing self-service capabilities for discovery, documentation, subscription management, testing, and support. It serves as the "front door" to the API platform, delivering an exceptional developer experience.
