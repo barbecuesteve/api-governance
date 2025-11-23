@@ -160,11 +160,11 @@ The platform is designed to support a continuous feedback loop that turns govern
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333','fontSize':'14px'}}}%%
 flowchart TD
-    Risk[Risk & Compliance<br/>Requirements]
-    Policy[Policy Definition<br/>& Configuration]
-    Enforcement[Runtime Enforcement<br/>(Gateway)]
-    Analytics[Analytics &<br/>Observability]
-    Lifecycle[Lifecycle<br/>Management]
+    Risk["Risk & Compliance<br/>Requirements"]
+    Policy["Policy Definition<br/>& Configuration"]
+    Enforcement["Runtime Enforcement<br/>(Gateway)"]
+    Analytics["Analytics &<br/>Observability"]
+    Lifecycle["Lifecycle<br/>Management"]
 
     Risk -->|Defines| Policy
     Policy -->|Configures| Enforcement
