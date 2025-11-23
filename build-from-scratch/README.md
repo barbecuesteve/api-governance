@@ -153,6 +153,32 @@ flowchart LR
 
 </pre>
 
+### Governance Feedback Loop
+
+The platform is designed to support a continuous feedback loop that turns governance from a static gate into a dynamic, improving process.
+
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#fff','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333','fontSize':'14px'}}}%%
+flowchart TD
+    Risk[Risk & Compliance<br/>Requirements]
+    Policy[Policy Definition<br/>& Configuration]
+    Enforcement[Runtime Enforcement<br/>(Gateway)]
+    Analytics[Analytics &<br/>Observability]
+    Lifecycle[Lifecycle<br/>Management]
+
+    Risk -->|Defines| Policy
+    Policy -->|Configures| Enforcement
+    Enforcement -->|Generates Data| Analytics
+    Analytics -->|Identifies Issues| Lifecycle
+    Lifecycle -->|Mitigates| Risk
+
+    style Risk fill:#ffe6e6,stroke:#cc0000,stroke-width:2px
+    style Policy fill:#fff0e6,stroke:#ff6600,stroke-width:2px
+    style Enforcement fill:#e6f3ff,stroke:#0066cc,stroke-width:2px
+    style Analytics fill:#e6ffe6,stroke:#00cc66,stroke-width:2px
+    style Lifecycle fill:#f9f2ff,stroke:#9933cc,stroke-width:2px
+</pre>
+
 ### Key Features
 
 **Comprehensive Governance:**
