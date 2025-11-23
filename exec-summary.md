@@ -10,17 +10,9 @@ take hours because nobody knows the dependencies, compliance scrambles
 with no audit trail, APIs that no one dares shut down because usage is 
 invisible.
 
-I've seen one organization solve this well at scale: Capital One's system 
-combined software and process into a working governance model. 
-It was built from a patchwork of components over time, and it covered almost all 
-of the critical gaps these documents identify. It had its limitations but
-it had actually achieved something amazing: Capital One has almost complete 
-visibility into their internal API ecosystem. It's not perfect, but close 
-enough to be astonishing.
+I’ve also seen one organization get remarkably close to solving this at scale. Their approach combined software, process, and culture into a functioning governance ecosystem—assembled over years, imperfect in places, but effective in practice. Most importantly, it proved that near-complete visibility and consistent API management is achievable in a large, complex enterprise.
 
-This framework synthesizes such a system from first principles—what 
-worked, why it worked, and how to implement it without a decade of 
-iteration and false starts.
+This framework distills those lessons into first principles: what works, why it works, and how to implement a comprehensive API governance platform without a decade of iteration.
 
 I would love the opportunity to build this properly, either as a product or 
 for an organization ready to solve this problem systematically.
