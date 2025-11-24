@@ -13,6 +13,47 @@ This technical appendix provides implementation details for engineering teams bu
 
 # Technical Appendix: API Governance & Platform Model
 
+## Table of Contents
+
+1. [Introduction](#1-introduction)
+2. [Reference Architecture](#2-reference-architecture)
+3. [Core Data Model](#3-core-data-model)
+4. [API Lifecycle](#4-api-lifecycle)
+5. [Producer & Consumer Lifecycle](#5-producer--consumer-lifecycle)
+   - [5.1 Producer Workflow (API Creation → Publication)](#51-producer-workflow-api-creation--publication)
+   - [5.2 Consumer Workflow (Discovery → Permissioned Use)](#52-consumer-workflow-discovery--permissioned-use)
+6. [API Versioning & Evolution](#6-api-versioning--evolution)
+   - [6.1 Version Evolution Flow](#61-version-evolution-flow)
+7. [Deprecation & Retirement](#7-deprecation--retirement)
+   - [7.1 Deprecation to Retirement Flow](#71-deprecation-to-retirement-flow)
+   - [7.2 Consumer Impact Visibility](#72-consumer-impact-visibility)
+8. [Governance Policies & Standards](#8-governance-policies--standards)
+   - [8.1 Governance Principles](#81-governance-principles)
+   - [8.2 API Review Criteria](#82-api-review-criteria)
+9. [SDLC Integration](#9-sdlc-integration)
+   - [9.1 API Governance in the SDLC](#91-api-governance-in-the-sdlc)
+   - [9.2 Tooling Integrations](#92-tooling-integrations)
+10. [System Integration & Automation](#10-system-integration--automation)
+    - [10.1 Control Plane Synchronization](#101-control-plane-synchronization)
+    - [10.2 Telemetry Pipeline (Gateway to Auditor)](#102-telemetry-pipeline-gateway-to-auditor)
+    - [10.3 CI/CD Automation](#103-cicd-automation)
+11. [KPIs & Maturity Model](#11-kpis--maturity-model)
+    - [11.1 Key Performance Indicators](#111-key-performance-indicators)
+    - [11.2 Maturity Stages](#112-maturity-stages)
+12. [Operating Model & Roles](#12-operating-model--roles)
+    - [12.1 Core Roles](#121-core-roles)
+    - [12.2 API Expert Roles](#122-api-expert-roles)
+13. [Security & Compliance](#13-security--compliance)
+    - [13.1 Gateway-Enforced Security Controls](#131-gateway-enforced-security-controls)
+    - [13.2 Audit Logging](#132-audit-logging)
+    - [13.3 Detecting & Preventing Non-Gateway Usage](#133-detecting--preventing-non-gateway-usage)
+    - [13.4 Data Classification & Handling](#134-data-classification--handling)
+    - [13.5 Continuous Compliance Monitoring](#135-continuous-compliance-monitoring)
+    - [13.6 Security Best Practices for API Producers](#136-security-best-practices-for-api-producers)
+14. [Appendix: Compliance Framework Examples](#appendix-compliance-framework-examples)
+
+---
+
 ## 1. Introduction
 
 This appendix covers the architecture, data structures, lifecycle flows, and governance practices for treating internal APIs as products. The design is platform-agnostic and scales from 300 to 5,000+ services.
