@@ -48,10 +48,9 @@ was close enough to be astonishing.
 
 As a team lead managing a dozen APIs in their system, I experienced both 
 what worked (visibility, discoverability, enforced patterns) and what 
-didn't (individual vs. team asset ownership, consumer management gaps, weak 
-deprecation support). Bumping into their system daily, combined with 
-seeing this problem everywhere for a decade, made the ideal solution 
-suddenly obvious to me.
+didn't (asset ownership, consumer management gaps, and difficult deprecation.) 
+Bumping into their system daily, combined with seeing this problem everywhere 
+for a decade, made the ideal solution suddenly obvious to me.
 
 This framework expands upon such a system and addresses the gaps I experienced
 firsthand. It's the system I wish I'd had as an API producer.
