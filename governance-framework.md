@@ -232,6 +232,20 @@ Effective organizations use two tiers:
 
 * **Central API Review Panel** — A rotating panel of 5-12 senior experts reviews all APIs before publication. Members rotate weekly or bi-weekly to distribute work and prevent bottlenecks. Fresh perspectives while maintaining consistency through shared standards. The panel checks architectural alignment, security, usability, scalability, and maintainability. This is **collaborative review**, not gatekeeping — the role is to improve quality through feedback, not prevent progress. Approval means the API meets standards and is ready to become a supported product.
 
+**Cultivating an API Expert Community of Practice:**
+
+Building API expertise requires intentional investment in training and progression pathways. Organizations should establish a structured program:
+
+* **Training & Certification** — Candidates complete formal training covering OpenAPI specification, REST/GraphQL design principles, versioning strategies, security patterns, and organizational standards. Training concludes with a practical assessment: reviewing sample API designs and identifying issues. Only those who pass the assessment are eligible to become Departmental API Advisors.
+
+* **Shadowing Period** — New advisors shadow experienced reviewers for 4-6 weeks, observing real reviews and learning to balance quality standards with pragmatic guidance. They practice giving feedback on draft APIs under supervision before advising independently. This apprenticeship model transfers tacit knowledge about common pitfalls, effective feedback techniques, and when to escalate.
+
+* **Progression to Review Panel** — After 6-12 months successfully coaching teams as a Departmental API Advisor, individuals become eligible for election to the Central API Review Panel. Progression is based on demonstrated expertise: quality of guidance, peer recommendations, consistency in applying standards, and mentorship effectiveness. Panel membership represents recognition of mastery and contribution to platform quality.
+
+* **Continuous Learning** — The community of practice meets monthly to share lessons learned, discuss challenging cases, calibrate standards interpretation, and evolve best practices. This forum keeps expertise current and maintains consistency across advisors and panel members.
+
+This progression creates a sustainable pipeline of expertise while ensuring reviewers have proven capability and organizational credibility. It makes the expert role aspirational—something engineers earn through demonstrated skill—rather than appointed authority.
+
 **Why Human Review Matters:**
 
 Automated linting catches schema errors and naming violations. It cannot assess whether an API solves the right problem, whether abstractions make sense, whether it will scale, or whether it integrates well with existing services. Human experts bring:
