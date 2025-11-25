@@ -804,4 +804,4 @@ The infrastructure layer provides the foundational services, networking, securit
 
 **Next:** [Integration & Automation](06-integration-automation.md)
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)

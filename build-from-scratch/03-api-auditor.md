@@ -589,4 +589,4 @@ flowchart LR
 
 **Next:** [Developer Portal](04-developer-portal.md)
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)

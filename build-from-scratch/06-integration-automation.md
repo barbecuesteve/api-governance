@@ -774,4 +774,4 @@ The platform supports the complete API lifecycle from design and development thr
 
 ---
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)

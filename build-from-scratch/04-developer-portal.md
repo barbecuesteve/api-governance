@@ -641,4 +641,4 @@ flowchart LR
 
 **Next:** [Platform Infrastructure](05-platform-infrastructure.md)
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)

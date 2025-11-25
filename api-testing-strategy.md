@@ -1,3 +1,5 @@
+[Back to API Governance Framework](README.md)
+
 # API Testing Strategy & Performance Governance
 
 This document extends the API governance framework to include comprehensive testing capabilities. Testing is not separate from governance—it's how we verify that governance actually works. The platform's existing components (Registry, Gateway, Auditor) provide natural integration points for automated testing throughout the API lifecycle.

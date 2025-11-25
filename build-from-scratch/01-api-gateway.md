@@ -783,5 +783,5 @@ kafka://.../orders.created.v2     → Kafka topic subscription
 
 **Next:** [API Registry](02-api-registry.md)
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)
 

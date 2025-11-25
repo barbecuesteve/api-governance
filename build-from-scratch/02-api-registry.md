@@ -561,4 +561,4 @@ flowchart TB
 
 **Next:** [API Auditor](03-api-auditor.md)
 
-[← Back to Overview](../README.md)
+[Back to Overview](../README.md)
