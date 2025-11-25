@@ -16,6 +16,7 @@ For executives, this represents a systematic approach to reducing the 30-40% of 
 
 ### Technical Implementation
 - **[Technical Design](technical-design.md)** — Detailed technical appendix with reference architecture, data models, lifecycle flows, security controls, and SDLC integration for engineering teams
+- **[API Testing Strategy](api-testing-strategy.md)** — Contract testing, automated performance testing, load testing integration, chaos engineering, and quality gates
 
 ### Implementation Paths
 - **[Build from Scratch](build-from-scratch/README.md)** — Step-by-step guide for building custom API governance platform components
