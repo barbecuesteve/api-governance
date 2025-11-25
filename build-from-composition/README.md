@@ -73,7 +73,7 @@ graph TD
 
 **Backstage Owns (Native Catalog):**
 - API discovery metadata: name, description, owner team
-- OpenAPI spec file location
+- Specification file location (OpenAPI, GraphQL schema, or AsyncAPI)
 - Documentation links (TechDocs)
 - Component relationships (which services produce which APIs)
 
@@ -110,11 +110,21 @@ graph TD
   "api_version": "2.1.0",         // WHICH version
   "environment": "production",    // WHERE (dev/staging/prod)
   
+  "protocol": "openapi",          // openapi | graphql | asyncapi | grpc
+  
   "status": "approved|pending|revoked|expired",
   
   "scope": {
+    // REST (OpenAPI): endpoints and HTTP methods
     "endpoints": ["/users/{id}", "/users/{id}/orders"],
     "operations": ["GET", "POST"],
+    // GraphQL: allowed operations and fields
+    "graphql_operations": ["query GetUser", "mutation UpdateUser"],
+    "graphql_fields": ["User.id", "User.name", "User.email"],
+    // AsyncAPI: channels and message types
+    "channels": ["orders.created", "orders.updated"],
+    "message_types": ["OrderCreatedEvent", "OrderUpdatedEvent"],
+    // Common: field-level access control
     "fields": ["id", "name", "email"]
   },
   
@@ -374,10 +384,11 @@ Gateway behavior when policy engine is unreachable:
 - Emit structured logs for Auditor
 - Cache authorization decisions with TTL
 
-##### URL Structure
+##### URL Structure by Protocol
 
-All API requests use path-based versioning with this structure:
+URL patterns vary by API protocol. The gateway handles all three first-class protocols:
 
+**REST APIs (OpenAPI):**
 ```
 https://{environment}-gateway.company.com/{api-slug}/{version}/{resource-path}
 
@@ -387,16 +398,41 @@ POST https://prod-gateway.company.com/orders-api/v3/orders
 GET  https://staging-gateway.company.com/products-api/v1/products?category=electronics
 ```
 
+**GraphQL APIs:**
+```
+https://{environment}-gateway.company.com/{api-slug}/{version}/graphql
+
+Examples:
+POST https://prod-gateway.company.com/orders-graphql/v2/graphql
+     Body: {"query": "query GetOrder($id: ID!) { order(id: $id) { ... } }"}
+```
+
+GraphQL APIs expose a single endpoint; versioning applies to the schema, not individual endpoints.
+
+**AsyncAPI (Event-Driven):**
+```
+wss://{environment}-gateway.company.com/{api-slug}/{version}/events
+kafka://{environment}-broker.company.com/{channel-name}
+
+Examples:
+wss://prod-gateway.company.com/order-events/v2/events
+kafka://prod-broker.company.com/orders.created.v2
+```
+
+Event-driven APIs use WebSocket connections or message broker topics. The gateway validates subscriptions before allowing channel subscriptions.
+
 **Four-Field Composite Key Extraction:**
 
 1. **Environment**: Derived from gateway cluster hostname (`prod-gateway` → `production`, `staging-gateway` → `staging`)
 2. **API ID**: Mapped from URL slug (`/users-api/`) to Registry UUID via Kong route configuration
-3. **Version**: Explicit in URL path (`/v2/`)
+3. **Version**: Explicit in URL path (`/v2/`) or topic name (`.v2`)
 4. **Consumer App ID**: Extracted from JWT bearer token claims (`app_id` field)
 
 ##### Kong Route Configuration
 
 Each API version gets its own Kong service and route with registry metadata:
+
+**REST API Example:**
 
 ```yaml
 services:
@@ -410,11 +446,42 @@ services:
     plugins:
       - name: registry-auth
         config:
-          api_id: "550e8400-e29b-41d4-a716-446655440000"  # Registry UUID for users-api
+          api_id: "550e8400-e29b-41d4-a716-446655440000"
           version: "2.0"
+          protocol: "openapi"
           environment: "production"
           registry_url: "http://registry-service:8080"
 ```
+
+**GraphQL API Example:**
+
+```yaml
+services:
+  - name: orders-graphql-v2-prod
+    url: http://orders-graphql-service-v2.internal:8080/graphql
+    routes:
+      - name: orders-graphql-v2-route
+        paths:
+          - /orders-graphql/v2/graphql
+        methods:
+          - POST
+    plugins:
+      - name: registry-auth
+        config:
+          api_id: "661e8400-e29b-41d4-a716-446655440001"
+          version: "2.0"
+          protocol: "graphql"
+          environment: "production"
+          registry_url: "http://registry-service:8080"
+      - name: graphql-rate-limiting
+        config:
+          max_cost_per_request: 1000  # Limit query complexity
+```
+
+**GraphQL-Specific Considerations:**
+- Query complexity analysis prevents expensive operations
+- Field-level authorization maps to subscription scopes
+- Introspection can be disabled in production for security
 
 ##### Custom Plugin Implementation
 
@@ -572,7 +639,11 @@ Build these React components to surface Registry data:
 4. **`<DeprecationTimeline>`**: Visual countdown for deprecated APIs
 5. **`<ComplianceWidget>`**: Dashboard for security/compliance teams
 
-##### Backstage Catalog YAML Example
+##### Backstage Catalog YAML Examples
+
+The platform supports three first-class API protocols. Each uses the same governance workflow but with protocol-appropriate specifications:
+
+**REST API (OpenAPI):**
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -583,12 +654,53 @@ metadata:
   annotations:
     registry.io/api-id: "550e8400-e29b-41d4-a716-446655440000"
     registry.io/classification: "confidential"
+    registry.io/protocol: "openapi"
 spec:
   type: openapi
   lifecycle: production
   owner: platform-team
   definition:
     $text: https://github.com/company/users-api/blob/main/openapi.yaml
+```
+
+**GraphQL API:**
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: orders-graphql
+  description: Order queries and mutations for mobile and web clients
+  annotations:
+    registry.io/api-id: "661e8400-e29b-41d4-a716-446655440001"
+    registry.io/classification: "internal"
+    registry.io/protocol: "graphql"
+spec:
+  type: graphql
+  lifecycle: production
+  owner: commerce-team
+  definition:
+    $text: https://github.com/company/orders-graphql/blob/main/schema.graphql
+```
+
+**Event-Driven API (AsyncAPI):**
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: order-events
+  description: Order lifecycle events for downstream consumers
+  annotations:
+    registry.io/api-id: "772e8400-e29b-41d4-a716-446655440002"
+    registry.io/classification: "internal"
+    registry.io/protocol: "asyncapi"
+spec:
+  type: asyncapi
+  lifecycle: production
+  owner: commerce-team
+  definition:
+    $text: https://github.com/company/order-events/blob/main/asyncapi.yaml
 ```
 
 #### 3.4 Auditor (Custom Build)
@@ -669,14 +781,16 @@ Response:
 
 **Golden Log Envelope:**
 
-Gateway emits structured log for every API call:
+Gateway emits structured log for every API call. The schema adapts to the protocol:
 
+**REST (OpenAPI) Log:**
 ```json
 {
   "trace_id": "uuid",
   "subscription_id": "uuid",
   "api_id": "uuid",
   "version": "2.1.0",
+  "protocol": "openapi",
   "environment": "production",
   "route": "/users/{id}",
   "verb": "GET",
@@ -688,11 +802,52 @@ Gateway emits structured log for every API call:
 }
 ```
 
+**GraphQL Log:**
+```json
+{
+  "trace_id": "uuid",
+  "subscription_id": "uuid",
+  "api_id": "uuid",
+  "version": "2.1.0",
+  "protocol": "graphql",
+  "environment": "production",
+  "operation_name": "GetOrder",
+  "operation_type": "query",
+  "fields_accessed": ["order.id", "order.status", "order.lineItems"],
+  "query_complexity": 42,
+  "status": 200,
+  "latency_ms": 78,
+  "size_bytes": 2048,
+  "policy_decision": "allow",
+  "error_class": null
+}
+```
+
+**AsyncAPI (Event) Log:**
+```json
+{
+  "trace_id": "uuid",
+  "subscription_id": "uuid",
+  "api_id": "uuid",
+  "version": "2.1.0",
+  "protocol": "asyncapi",
+  "environment": "production",
+  "channel": "orders.created",
+  "message_type": "OrderCreatedEvent",
+  "action": "publish",
+  "size_bytes": 512,
+  "policy_decision": "allow",
+  "error_class": null
+}
+```
+
 Auditor ingests these logs for:
-- Analytics dashboards
+- Analytics dashboards (protocol-aware metrics)
 - Compliance reporting
 - Chargeback calculation
 - SLA tracking
+- GraphQL query complexity monitoring
+- Event throughput analysis
 
 #### 4.3 Backstage ↔ Registry
 

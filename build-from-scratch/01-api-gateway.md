@@ -320,7 +320,11 @@ flowchart LR
 **Purpose:** Modifies requests and responses to maintain compatibility, enforce security, and support API evolution.
 
 **Key Responsibilities:**
-- Protocol translation (REST ↔ GraphQL, SOAP ↔ REST, gRPC ↔ HTTP)
+- Protocol translation (REST ↔ GraphQL, SOAP ↔ REST, gRPC ↔ HTTP, WebSocket ↔ HTTP)
+- Protocol-native handling for first-class protocols:
+  - **REST/OpenAPI**: Standard HTTP request/response with path-based routing
+  - **GraphQL**: Single endpoint, query parsing, field-level authorization, complexity limiting
+  - **AsyncAPI**: WebSocket connections, message broker integration, channel subscriptions
 - Request enrichment: Add headers, inject subscription metadata, append correlation IDs
 - Response filtering: Strip sensitive fields based on consumer authorization and data classification
 - PII masking: Redact personally identifiable information for consumers without explicit PII access
@@ -331,7 +335,7 @@ flowchart LR
 
 **Technical Implementation:**
 - Transformation DSL or scripting (Lua, JavaScript, XSLT, JSONPath expressions)
-- Schema-aware transformations using API specifications (OpenAPI, GraphQL schema)
+- Schema-aware transformations using API specifications (OpenAPI, GraphQL schema, AsyncAPI)
 - Performance optimization: Streaming transformations for large payloads
 - Configurable per subscription: Different transformations for different consumers
 
@@ -614,6 +618,85 @@ flowchart LR
 - Cached responses for cache hits (faster latency)
 - Cache metrics (hit rate, miss rate, eviction rate)
 - Reduced backend load
+
+---
+
+### Multi-Protocol Support
+**Purpose:** Handle REST, GraphQL, and AsyncAPI as first-class protocols with protocol-appropriate processing.
+
+The gateway supports three primary API protocols, each with specialized handling:
+
+#### REST APIs (OpenAPI)
+**Routing:** Path-based with HTTP method matching
+```
+GET  /users-api/v2/users/{id}     → users-service-v2:8080/users/{id}
+POST /orders-api/v3/orders        → orders-service-v3:8080/orders
+```
+
+**Key Features:**
+- Standard HTTP caching (Cache-Control, ETag)
+- Per-endpoint rate limiting
+- Response field filtering based on subscription scope
+
+#### GraphQL APIs
+**Routing:** Single endpoint per API, all operations via POST
+```
+POST /orders-graphql/v2/graphql   → graphql-service-v2:8080/graphql
+```
+
+**Key Features:**
+- **Query complexity limiting**: Prevent expensive queries from overloading backends
+  - Assign cost per field (e.g., scalar = 1, list = 10, nested object = 5)
+  - Reject queries exceeding max cost per request
+- **Field-level authorization**: Check subscription scope against requested fields
+- **Introspection control**: Disable `__schema` queries in production
+- **Query depth limiting**: Prevent deeply nested queries (max depth: 10)
+- **Persisted queries**: Cache approved query hashes to reduce parsing overhead
+
+**GraphQL-Specific Logging:**
+```json
+{
+  "operation_name": "GetOrderWithItems",
+  "operation_type": "query",
+  "fields_accessed": ["order.id", "order.status", "order.lineItems.sku"],
+  "query_complexity": 42,
+  "depth": 3
+}
+```
+
+#### AsyncAPI (Event-Driven)
+**Routing:** WebSocket connections and message broker integration
+```
+wss://.../order-events/v2/events  → WebSocket to event stream
+kafka://.../orders.created.v2     → Kafka topic subscription
+```
+
+**Key Features:**
+- **Channel subscription validation**: Verify consumer has subscription before allowing channel access
+- **Message rate limiting**: Limit messages per second per subscription
+- **Dead letter handling**: Route failed messages for investigation
+- **Connection management**: Heartbeat, reconnection, graceful shutdown
+
+**Event-Specific Logging:**
+```json
+{
+  "channel": "orders.created",
+  "message_type": "OrderCreatedEvent",
+  "action": "subscribe",
+  "messages_delivered": 150,
+  "connection_duration_ms": 3600000
+}
+```
+
+#### Protocol Selection by Use Case
+
+| Use Case | Recommended Protocol | Reason |
+|----------|---------------------|--------|
+| CRUD operations | REST (OpenAPI) | Clear resource modeling, HTTP caching |
+| Mobile app with varied data needs | GraphQL | Client-specified fields, reduced over-fetching |
+| Real-time notifications | AsyncAPI (WebSocket) | Push-based, persistent connection |
+| Event sourcing, microservice integration | AsyncAPI (Kafka/AMQP) | Reliable delivery, decoupling |
+| High-frequency data aggregation | GraphQL | Single request for multiple resources |
 
 ---
 

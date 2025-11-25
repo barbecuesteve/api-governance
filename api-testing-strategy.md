@@ -46,7 +46,7 @@ Testing integrates at every lifecycle stage:
 
 | Stage | Testing Activity | Platform Integration |
 |-------|------------------|---------------------|
-| **Design** | Schema validation, mock generation | Registry validates OpenAPI specs; generates mocks automatically |
+| **Design** | Schema validation, mock generation | Registry validates specs (OpenAPI, GraphQL SDL, AsyncAPI); generates mocks automatically |
 | **Review** | Contract compatibility check | Automated breaking change detection before approval |
 | **Build** | Unit tests, contract tests | CI/CD integration via Registry webhooks |
 | **Pre-Production** | Performance baseline, load testing | Gateway routes to test environments; Auditor captures baselines |
@@ -54,15 +54,29 @@ Testing integrates at every lifecycle stage:
 | **Production** | Continuous performance monitoring | Auditor tracks SLO compliance in real-time |
 | **Deprecation** | Consumer migration verification | Auditor confirms consumers moved to new version |
 
-```
-┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
-│ Design  │───▶│ Review  │───▶│  Build  │───▶│ Staging │───▶│  Prod   │
-└────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘
-     │              │              │              │              │
-     ▼              ▼              ▼              ▼              ▼
-  Schema         Breaking       Contract      Performance   Continuous
-  Validation     Change         Tests         Baseline      Monitoring
-  Mock Gen       Detection      Unit Tests    Load Tests    SLO Tracking
+```mermaid
+flowchart LR
+    subgraph Design
+        D1[Schema Validation]
+        D2[Mock Gen]
+    end
+    subgraph Review
+        R1[Breaking Change Detection]
+    end
+    subgraph Build
+        B1[Contract Tests]
+        B2[Unit Tests]
+    end
+    subgraph Staging
+        S1[Performance Baseline]
+        S2[Load Tests]
+    end
+    subgraph Prod
+        P1[Continuous Monitoring]
+        P2[SLO Tracking]
+    end
+    
+    Design --> Review --> Build --> Staging --> Prod
 ```
 
 ---
@@ -125,23 +139,20 @@ Contract testing inverts the model: **consumers define their expectations, produ
 
 #### Contract Testing Workflow
 
-```
-Consumer Team                    Registry                      Producer Team
-     │                              │                               │
-     │  1. Define contract          │                               │
-     │─────────────────────────────▶│                               │
-     │                              │                               │
-     │                              │  2. Notify producer           │
-     │                              │──────────────────────────────▶│
-     │                              │                               │
-     │                              │  3. Fetch contracts           │
-     │                              │◀──────────────────────────────│
-     │                              │                               │
-     │                              │  4. Run contract tests        │
-     │                              │                               │
-     │  5. Contract verified        │  5. Report results            │
-     │◀─────────────────────────────│◀──────────────────────────────│
-```
+<pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
+sequenceDiagram
+    participant Consumer as Consumer Team
+    participant Registry as Registry
+    participant Producer as Producer Team
+
+    Consumer->>Registry: 1. Define contract
+    Registry->>Producer: 2. Notify producer
+    Producer->>Registry: 3. Fetch contracts
+    Note over Producer: 4. Run contract tests
+    Producer->>Registry: 5. Report results
+    Registry->>Consumer: 5. Contract verified
+</pre>
 
 #### Breaking Change Detection
 
@@ -166,18 +177,192 @@ Registry Analysis on PR:
   ⚠️  Breaking Changes Detected
   
   Affected Consumers: 3
-  
-  ┌─────────────────────────────────────────────────────────────┐
-  │ Change: Field 'customer_name' removed from GET /orders/{id} │
-  │                                                             │
-  │ Consumers expecting this field:                             │
-  │   • checkout-service (12,000 calls/day)                     │
-  │   • reporting-dashboard (500 calls/day)                     │
-  │   • mobile-app-backend (8,000 calls/day)                    │
-  │                                                             │
-  │ Action Required: Bump to major version (v2 → v3)            │
-  └─────────────────────────────────────────────────────────────┘
 ```
+
+<table>
+<tr><th colspan="2">Change: Field 'customer_name' removed from GET /orders/{id}</th></tr>
+<tr><td><strong>Consumers expecting this field:</strong></td><td></td></tr>
+<tr><td>checkout-service</td><td>12,000 calls/day</td></tr>
+<tr><td>reporting-dashboard</td><td>500 calls/day</td></tr>
+<tr><td>mobile-app-backend</td><td>8,000 calls/day</td></tr>
+<tr><td colspan="2"><strong>Action Required:</strong> Bump to major version (v2 → v3)</td></tr>
+</table>
+
+### Protocol-Specific Contract Testing
+
+Contract testing varies by API protocol. The platform supports all three first-class protocols with tailored approaches.
+
+#### REST (OpenAPI) Contracts
+
+The example above shows REST contract testing. Additional considerations:
+
+- **HTTP semantics matter** — Status codes, headers, and content types are part of the contract
+- **Path parameters** — Contracts specify expected path patterns and parameter types
+- **Pagination contracts** — Consumers can specify expected pagination behavior
+
+#### GraphQL Contracts
+
+GraphQL contracts focus on **operations and fragments**, not endpoints:
+
+```json
+{
+  "consumer": "mobile-app",
+  "provider": "orders-graphql-api",
+  "protocol": "graphql",
+  "interactions": [
+    {
+      "description": "fetch order with line items",
+      "operation": "query",
+      "query": "query GetOrder($id: ID!) { order(id: $id) { id status lineItems { sku quantity } } }",
+      "variables": { "id": "order-123" },
+      "expectedResponse": {
+        "data": {
+          "order": {
+            "id": "order-123",
+            "status": "string",
+            "lineItems": [{ "sku": "string", "quantity": "number" }]
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+**GraphQL-Specific Breaking Changes:**
+
+| Change | Breaking? | Notes |
+|--------|-----------|-------|
+| Remove field from type | ✅ Yes | Consumers may query this field |
+| Change field type | ✅ Yes | Response shape changes |
+| Make nullable field non-nullable | ✅ Yes | Consumers may not handle null |
+| Add required argument | ✅ Yes | Existing queries will fail |
+| Remove type from union | ✅ Yes | Consumers may expect this type |
+| Deprecate field | ❌ No | Field still works, just warned |
+| Add optional field | ❌ No | Consumers ignore unknown fields |
+| Add optional argument | ❌ No | Existing queries still work |
+
+**GraphQL Contract Testing Tools:**
+- **Apollo Studio** — Schema change detection and field usage tracking
+- **GraphQL Inspector** — CLI for schema diffing and breaking change detection
+- **Stellate** — Schema registry with compatibility checking
+
+#### AsyncAPI (Event-Driven) Contracts
+
+Event-driven contracts define **message schemas and channel bindings**:
+
+```json
+{
+  "consumer": "notification-service",
+  "provider": "orders-events",
+  "protocol": "asyncapi",
+  "interactions": [
+    {
+      "description": "order created event",
+      "channel": "orders.created",
+      "operation": "subscribe",
+      "message": {
+        "headers": {
+          "correlationId": "string",
+          "timestamp": "string"
+        },
+        "payload": {
+          "orderId": "string",
+          "customerId": "string",
+          "totalAmount": "number",
+          "currency": "string"
+        }
+      }
+    },
+    {
+      "description": "order status changed event",
+      "channel": "orders.status.changed",
+      "operation": "subscribe",
+      "message": {
+        "payload": {
+          "orderId": "string",
+          "previousStatus": "string",
+          "newStatus": "string",
+          "changedAt": "string"
+        }
+      }
+    }
+  ]
+}
+```
+
+**AsyncAPI-Specific Breaking Changes:**
+
+| Change | Breaking? | Notes |
+|--------|-----------|-------|
+| Remove field from payload | ✅ Yes | Consumers may depend on field |
+| Change field type | ✅ Yes | Deserialization will fail |
+| Rename channel | ✅ Yes | Consumers subscribed to old name |
+| Change message format (JSON→Avro) | ✅ Yes | Consumers can't deserialize |
+| Add required field without default | ✅ Yes | Old messages won't validate |
+| Add optional field | ❌ No | Consumers ignore unknown fields |
+| Add new channel | ❌ No | Consumers don't auto-subscribe |
+
+**AsyncAPI Contract Testing Tools:**
+- **AsyncAPI Diff** — Schema comparison and breaking change detection
+- **Specmatic** — Contract testing for async APIs
+- **Schema Registry** (Confluent/Apicurio) — Compatibility checking for Avro/JSON Schema
+
+#### Multi-Protocol Contract Verification
+
+When an API exposes multiple protocols, contracts must be verified across all:
+
+<table style="border: 2px solid #333; border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif;">
+<tr style="background-color: #2c5aa0; color: white;">
+  <th colspan="3" style="padding: 12px; text-align: center; font-size: 1.1em;">Orders API Contract Status</th>
+</tr>
+<tr style="background-color: #e8f4f8;">
+  <td style="padding: 8px; font-weight: bold;">REST (OpenAPI)</td>
+  <td style="padding: 8px;">checkout-service</td>
+  <td style="padding: 8px;">✅ 12 interactions verified</td>
+</tr>
+<tr>
+  <td style="padding: 8px;"></td>
+  <td style="padding: 8px;">admin-dashboard</td>
+  <td style="padding: 8px;">✅ 8 interactions verified</td>
+</tr>
+<tr>
+  <td style="padding: 8px;"></td>
+  <td style="padding: 8px;">mobile-app</td>
+  <td style="padding: 8px;">✅ 15 interactions verified</td>
+</tr>
+<tr style="background-color: #e8f4f8;">
+  <td style="padding: 8px; font-weight: bold;">GraphQL</td>
+  <td style="padding: 8px;">mobile-app</td>
+  <td style="padding: 8px;">✅ 6 operations verified</td>
+</tr>
+<tr>
+  <td style="padding: 8px;"></td>
+  <td style="padding: 8px;">analytics-service</td>
+  <td style="padding: 8px;">⚠️ 2/4 operations verified (2 deprecated)</td>
+</tr>
+<tr style="background-color: #e8f4f8;">
+  <td style="padding: 8px; font-weight: bold;">AsyncAPI (Events)</td>
+  <td style="padding: 8px;">notification-service</td>
+  <td style="padding: 8px;">✅ 3 channels verified</td>
+</tr>
+<tr>
+  <td style="padding: 8px;"></td>
+  <td style="padding: 8px;">audit-logger</td>
+  <td style="padding: 8px;">✅ 5 channels verified</td>
+</tr>
+<tr>
+  <td style="padding: 8px;"></td>
+  <td style="padding: 8px;">inventory-sync</td>
+  <td style="padding: 8px;">❌ 1 channel FAILED<br><small style="color: #666;">└─ orders.created: Missing 'warehouseId' field</small></td>
+</tr>
+<tr style="background-color: #ffebee; border-top: 2px solid #333;">
+  <td colspan="3" style="padding: 12px; text-align: center;">
+    <strong>Overall Status: ❌ BLOCKED</strong><br>
+    <span style="color: #666;">Fix required before publication</span>
+  </td>
+</tr>
+</table>
 
 ---
 
@@ -239,63 +424,42 @@ These SLOs are:
 
 Every API version has a performance baseline established during pre-production testing:
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    Performance Baseline: orders-api v2.1         │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Endpoint: GET /orders/{id}                                      │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │ Latency (ms)                                               │  │
-│  │                                                            │  │
-│  │  p50:  ████████░░░░░░░░░░░░  42ms                         │  │
-│  │  p90:  █████████████░░░░░░░  89ms                         │  │
-│  │  p95:  ██████████████░░░░░░  112ms                        │  │
-│  │  p99:  ███████████████████░  198ms                        │  │
-│  │                                                            │  │
-│  │  SLO Target p95: 150ms  ✅ PASS                           │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  Throughput: 3,200 RPS @ 100 concurrent connections              │
-│  Error Rate: 0.02% under load                                    │
-│  Baseline Date: 2025-11-20                                       │
-│  Test Duration: 15 minutes                                       │
-│  Test Environment: staging-us-east-1                             │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+<table>
+<tr><th colspan="3">Performance Baseline: orders-api v2.1</th></tr>
+<tr><th colspan="3">Endpoint: GET /orders/{id}</th></tr>
+<tr><th>Percentile</th><th>Latency</th><th>Status</th></tr>
+<tr><td>p50</td><td>42ms</td><td></td></tr>
+<tr><td>p90</td><td>89ms</td><td></td></tr>
+<tr><td>p95</td><td>112ms</td><td>SLO Target: 150ms ✅ PASS</td></tr>
+<tr><td>p99</td><td>198ms</td><td></td></tr>
+<tr><th colspan="3">Summary</th></tr>
+<tr><td>Throughput</td><td colspan="2">3,200 RPS @ 100 concurrent connections</td></tr>
+<tr><td>Error Rate</td><td colspan="2">0.02% under load</td></tr>
+<tr><td>Baseline Date</td><td colspan="2">2025-11-20</td></tr>
+<tr><td>Test Duration</td><td colspan="2">15 minutes</td></tr>
+<tr><td>Test Environment</td><td colspan="2">staging-us-east-1</td></tr>
+</table>
 
 ### Regression Detection
 
 When a new version is submitted, automated performance tests compare against the baseline:
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│         Performance Comparison: v2.1.0 → v2.2.0                  │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  GET /orders/{id}                                                │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │            Baseline (v2.1)    New (v2.2)     Change        │  │
-│  │  p50:      42ms               45ms           +7%   ⚠️      │  │
-│  │  p90:      89ms               94ms           +6%   ⚠️      │  │
-│  │  p95:      112ms              156ms          +39%  ❌      │  │
-│  │  p99:      198ms              312ms          +58%  ❌      │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  ❌ REGRESSION DETECTED                                          │
-│                                                                  │
-│  p95 latency exceeds SLO (150ms) and baseline by >20%           │
-│                                                                  │
-│  Possible causes:                                                │
-│  • New database query in OrderService.getOrder()                 │
-│  • N+1 query pattern detected in order line items                │
-│  • Missing index on orders.customer_id                           │
-│                                                                  │
-│  Action: Publication blocked until regression resolved           │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+<table>
+<tr><th colspan="4">Performance Comparison: v2.1.0 → v2.2.0</th></tr>
+<tr><th colspan="4">GET /orders/{id}</th></tr>
+<tr><th>Percentile</th><th>Baseline (v2.1)</th><th>New (v2.2)</th><th>Change</th></tr>
+<tr><td>p50</td><td>42ms</td><td>45ms</td><td>+7% ⚠️</td></tr>
+<tr><td>p90</td><td>89ms</td><td>94ms</td><td>+6% ⚠️</td></tr>
+<tr><td>p95</td><td>112ms</td><td>156ms</td><td>+39% ❌</td></tr>
+<tr><td>p99</td><td>198ms</td><td>312ms</td><td>+58% ❌</td></tr>
+<tr><th colspan="4">❌ REGRESSION DETECTED</th></tr>
+<tr><td colspan="4">p95 latency exceeds SLO (150ms) and baseline by >20%</td></tr>
+<tr><th colspan="4">Possible Causes</th></tr>
+<tr><td colspan="4">• New database query in OrderService.getOrder()</td></tr>
+<tr><td colspan="4">• N+1 query pattern detected in order line items</td></tr>
+<tr><td colspan="4">• Missing index on orders.customer_id</td></tr>
+<tr><th colspan="4">Action: Publication blocked until regression resolved</th></tr>
+</table>
 
 ### Performance Quality Gates
 
@@ -360,44 +524,44 @@ Performance tests run automatically at key lifecycle points:
 
 The Gateway and Auditor provide natural infrastructure for load testing:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Load Testing Architecture                    │
-└─────────────────────────────────────────────────────────────────┘
-
-                    ┌─────────────────┐
-                    │  Test Scheduler │
-                    │   (Registry)    │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-              ▼              ▼              ▼
-       ┌──────────┐   ┌──────────┐   ┌──────────┐
-       │  Worker  │   │  Worker  │   │  Worker  │
-       │  Node 1  │   │  Node 2  │   │  Node 3  │
-       └────┬─────┘   └────┬─────┘   └────┬─────┘
-            │              │              │
-            └──────────────┼──────────────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   Gateway   │◄─── Test traffic tagged
-                    │  (Staging)  │     with test_run_id
-                    └──────┬──────┘
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-         ┌────────┐  ┌────────┐  ┌────────┐
-         │ API A  │  │ API B  │  │ API C  │
-         └────────┘  └────────┘  └────────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   Auditor   │◄─── Aggregates metrics
-                    │             │     by test_run_id
-                    └─────────────┘
+```mermaid
+flowchart TB
+    subgraph Orchestration
+        Scheduler[Test Scheduler<br/>Registry]
+    end
+    
+    subgraph Workers
+        W1[Worker Node 1]
+        W2[Worker Node 2]
+        W3[Worker Node 3]
+    end
+    
+    subgraph Gateway Layer
+        GW[Gateway - Staging<br/>Test traffic tagged with test_run_id]
+    end
+    
+    subgraph APIs
+        A[API A]
+        B[API B]
+        C[API C]
+    end
+    
+    subgraph Metrics
+        Auditor[Auditor<br/>Aggregates metrics by test_run_id]
+    end
+    
+    Scheduler --> W1
+    Scheduler --> W2
+    Scheduler --> W3
+    W1 --> GW
+    W2 --> GW
+    W3 --> GW
+    GW --> A
+    GW --> B
+    GW --> C
+    A --> Auditor
+    B --> Auditor
+    C --> Auditor
 ```
 
 ### Load Test Specification
@@ -511,26 +675,24 @@ load_test:
 
 The Auditor captures production traffic patterns that can be replayed for realistic load testing:
 
-```
-Production Traffic Capture → Sanitization → Replay in Staging
-
-┌─────────────────────────────────────────────────────────────────┐
-│                    Traffic Replay Pipeline                       │
-└─────────────────────────────────────────────────────────────────┘
-
-  Production                Sanitization              Staging
-  ┌────────┐               ┌────────────┐           ┌────────┐
-  │ Auditor│──────────────▶│  Redactor  │──────────▶│ Replay │
-  │  Logs  │  Raw traffic  │            │ Sanitized │ Engine │
-  └────────┘               └────────────┘           └────────┘
-                                 │
-                                 ▼
-                           ┌──────────┐
-                           │ Redacts: │
-                           │ • PII    │
-                           │ • Tokens │
-                           │ • Keys   │
-                           └──────────┘
+```mermaid
+flowchart LR
+    subgraph Production
+        Logs[Auditor Logs]
+    end
+    
+    subgraph Sanitization
+        Redactor[Redactor]
+        Redacts[Redacts:<br/>PII, Tokens, Keys]
+    end
+    
+    subgraph Staging
+        Replay[Replay Engine]
+    end
+    
+    Logs -->|Raw traffic| Redactor
+    Redactor -->|Sanitized| Replay
+    Redactor --> Redacts
 ```
 
 **Benefits of Traffic Replay:**
@@ -543,82 +705,44 @@ Production Traffic Capture → Sanitization → Replay in Staging
 
 For high-confidence pre-production validation, mirror production traffic to the new version:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Shadow Traffic Architecture                   │
-└─────────────────────────────────────────────────────────────────┘
-
-                         Production Request
-                                │
-                                ▼
-                    ┌───────────────────────┐
-                    │       Gateway         │
-                    │    (Production)       │
-                    └───────────┬───────────┘
-                                │
-                    ┌───────────┴───────────┐
-                    │                       │
-                    ▼                       ▼ (async copy)
-            ┌───────────────┐       ┌───────────────┐
-            │  API v2.1     │       │  API v2.2     │
-            │  (Current)    │       │  (Shadow)     │
-            └───────┬───────┘       └───────┬───────┘
-                    │                       │
-                    ▼                       ▼
-            Response returned        Response compared
-            to client                but discarded
-                                            │
-                                            ▼
-                                    ┌───────────────┐
-                                    │   Comparator  │
-                                    │               │
-                                    │ • Latency Δ   │
-                                    │ • Response Δ  │
-                                    │ • Error Δ     │
-                                    └───────────────┘
+```mermaid
+flowchart TB
+    Request[Production Request]
+    Gateway[Gateway - Production]
+    V21[API v2.1 - Current]
+    V22[API v2.2 - Shadow]
+    Response[Response returned to client]
+    Compare[Response compared but discarded]
+    Comparator[Comparator:<br/>Latency Δ, Response Δ, Error Δ]
+    
+    Request --> Gateway
+    Gateway --> V21
+    Gateway -->|async copy| V22
+    V21 --> Response
+    V22 --> Compare
+    Compare --> Comparator
 ```
 
 **Shadow Traffic Comparison Report:**
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│           Shadow Traffic Comparison: v2.1 vs v2.2                │
-│           Duration: 24 hours | Requests: 1,247,832               │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  LATENCY COMPARISON                                              │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │        v2.1 (prod)     v2.2 (shadow)    Difference         │  │
-│  │  p50:  43ms            41ms             -4.6% ✅           │  │
-│  │  p95:  112ms           108ms            -3.5% ✅           │  │
-│  │  p99:  198ms           187ms            -5.5% ✅           │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  RESPONSE COMPARISON                                             │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │  Identical responses:     1,245,219  (99.79%)              │  │
-│  │  Expected differences:        2,401  (0.19%)  ⚠️           │  │
-│  │  Unexpected differences:        212  (0.02%)  ⚠️           │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  UNEXPECTED DIFFERENCES (sample):                                │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │  GET /orders/98234                                         │  │
-│  │    v2.1: {"status": "pending", "items": [...]}            │  │
-│  │    v2.2: {"status": "PENDING", "items": [...]}            │  │
-│  │    Issue: Enum case change (pending → PENDING)             │  │
-│  │                                                            │  │
-│  │  GET /orders?customer_id=12345&limit=100                   │  │
-│  │    v2.1: 100 items returned                                │  │
-│  │    v2.2: 50 items returned                                 │  │
-│  │    Issue: Default limit changed from 100 to 50             │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  VERDICT: ⚠️ REVIEW REQUIRED                                    │
-│  2 potential breaking changes detected in shadow comparison      │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+<table>
+<tr><th colspan="4">Shadow Traffic Comparison: v2.1 vs v2.2</th></tr>
+<tr><td colspan="4"><strong>Duration:</strong> 24 hours | <strong>Requests:</strong> 1,247,832</td></tr>
+<tr><th colspan="4">Latency Comparison</th></tr>
+<tr><th>Percentile</th><th>v2.1 (prod)</th><th>v2.2 (shadow)</th><th>Difference</th></tr>
+<tr><td>p50</td><td>43ms</td><td>41ms</td><td>-4.6% ✅</td></tr>
+<tr><td>p95</td><td>112ms</td><td>108ms</td><td>-3.5% ✅</td></tr>
+<tr><td>p99</td><td>198ms</td><td>187ms</td><td>-5.5% ✅</td></tr>
+<tr><th colspan="4">Response Comparison</th></tr>
+<tr><td>Identical responses</td><td colspan="2">1,245,219</td><td>99.79%</td></tr>
+<tr><td>Expected differences</td><td colspan="2">2,401</td><td>0.19% ⚠️</td></tr>
+<tr><td>Unexpected differences</td><td colspan="2">212</td><td>0.02% ⚠️</td></tr>
+<tr><th colspan="4">Unexpected Differences (sample)</th></tr>
+<tr><td colspan="4"><code>GET /orders/98234</code><br/>v2.1: <code>{"status": "pending", "items": [...]}</code><br/>v2.2: <code>{"status": "PENDING", "items": [...]}</code><br/><em>Issue: Enum case change (pending → PENDING)</em></td></tr>
+<tr><td colspan="4"><code>GET /orders?customer_id=12345&limit=100</code><br/>v2.1: 100 items returned<br/>v2.2: 50 items returned<br/><em>Issue: Default limit changed from 100 to 50</em></td></tr>
+<tr><th colspan="4">⚠️ VERDICT: REVIEW REQUIRED</th></tr>
+<tr><td colspan="4">2 potential breaking changes detected in shadow comparison</td></tr>
+</table>
 
 ---
 
@@ -698,33 +822,21 @@ chaos_experiment:
 
 The Auditor calculates a resilience score based on chaos experiment results:
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                 Resilience Score: orders-api v2.1                │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Overall Score: 78/100  ⚠️                                       │
-│                                                                  │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │ Category                    Score    Status                │  │
-│  │                                                            │  │
-│  │ Timeout Handling            92/100   ✅ Excellent          │  │
-│  │ Circuit Breaker             85/100   ✅ Good               │  │
-│  │ Retry Logic                 80/100   ✅ Good               │  │
-│  │ Graceful Degradation        65/100   ⚠️ Needs Work        │  │
-│  │ Error Response Quality      70/100   ⚠️ Needs Work        │  │
-│  │ Failover Speed              68/100   ⚠️ Needs Work        │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  Recommendations:                                                │
-│  • Graceful degradation: Return cached data when inventory-api   │
-│    is unavailable instead of 503                                 │
-│  • Error responses: Include retry-after header on 503s           │
-│  • Failover: Reduce circuit breaker threshold from 10 to 5       │
-│    consecutive failures                                          │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+<table>
+<tr><th colspan="3">Resilience Score: orders-api v2.1</th></tr>
+<tr><td colspan="3"><strong>Overall Score: 78/100 ⚠️</strong></td></tr>
+<tr><th>Category</th><th>Score</th><th>Status</th></tr>
+<tr><td>Timeout Handling</td><td>92/100</td><td>✅ Excellent</td></tr>
+<tr><td>Circuit Breaker</td><td>85/100</td><td>✅ Good</td></tr>
+<tr><td>Retry Logic</td><td>80/100</td><td>✅ Good</td></tr>
+<tr><td>Graceful Degradation</td><td>65/100</td><td>⚠️ Needs Work</td></tr>
+<tr><td>Error Response Quality</td><td>70/100</td><td>⚠️ Needs Work</td></tr>
+<tr><td>Failover Speed</td><td>68/100</td><td>⚠️ Needs Work</td></tr>
+<tr><th colspan="3">Recommendations</th></tr>
+<tr><td colspan="3">• Graceful degradation: Return cached data when inventory-api is unavailable instead of 503</td></tr>
+<tr><td colspan="3">• Error responses: Include retry-after header on 503s</td></tr>
+<tr><td colspan="3">• Failover: Reduce circuit breaker threshold from 10 to 5 consecutive failures</td></tr>
+</table>
 
 ---
 
@@ -734,58 +846,36 @@ The Auditor calculates a resilience score based on chaos experiment results:
 
 The platform provides isolated test environments that mirror production:
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    Test Environment Topology                      │
-└──────────────────────────────────────────────────────────────────┘
-
-  ┌─────────────────────────────────────────────────────────────┐
-  │                        Production                            │
-  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-  │  │ Gateway  │  │ Registry │  │ Auditor  │  │  APIs    │    │
-  │  │ (prod)   │  │ (prod)   │  │ (prod)   │  │  (prod)  │    │
-  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-  └─────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    │   Config Mirror   │
-                    └─────────┬─────────┘
-                              │
-  ┌─────────────────────────────────────────────────────────────┐
-  │                        Staging                               │
-  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-  │  │ Gateway  │  │ Registry │  │ Auditor  │  │  APIs    │    │
-  │  │ (staging)│  │ (staging)│  │ (staging)│  │ (staging)│    │
-  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-  │                                                              │
-  │  • Production config synced daily                            │
-  │  • Synthetic test data                                       │
-  │  • Isolated network                                          │
-  │  • Full load testing capability                              │
-  └─────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    │  On-Demand Envs   │
-                    └─────────┬─────────┘
-                              │
-  ┌─────────────────────────────────────────────────────────────┐
-  │                   Ephemeral Test Environments                │
-  │                                                              │
-  │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐   │
-  │  │  PR #1234     │  │  PR #1235     │  │  PR #1236     │   │
-  │  │  ───────────  │  │  ───────────  │  │  ───────────  │   │
-  │  │  Gateway ✓    │  │  Gateway ✓    │  │  Gateway ✓    │   │
-  │  │  orders-api   │  │  users-api    │  │  orders-api   │   │
-  │  │  v2.2-pr1234  │  │  v3.1-pr1235  │  │  v2.2-pr1236  │   │
-  │  │               │  │               │  │               │   │
-  │  │  TTL: 24h     │  │  TTL: 24h     │  │  TTL: 24h     │   │
-  │  └───────────────┘  └───────────────┘  └───────────────┘   │
-  │                                                              │
-  │  • Spun up automatically on PR                               │
-  │  • Destroyed after merge/close                               │
-  │  • Minimal test data                                         │
-  │  • Contract tests only                                       │
-  └─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Production
+        PGW[Gateway - prod]
+        PRG[Registry - prod]
+        PAU[Auditor - prod]
+        PAP[APIs - prod]
+    end
+    
+    subgraph Staging
+        SGW[Gateway - staging]
+        SRG[Registry - staging]
+        SAU[Auditor - staging]
+        SAP[APIs - staging]
+        SN1[Production config synced daily]
+        SN2[Synthetic test data]
+        SN3[Full load testing capability]
+    end
+    
+    subgraph Ephemeral["Ephemeral Test Environments"]
+        PR1[PR #1234<br/>orders-api v2.2-pr1234<br/>TTL: 24h]
+        PR2[PR #1235<br/>users-api v3.1-pr1235<br/>TTL: 24h]
+        PR3[PR #1236<br/>orders-api v2.2-pr1236<br/>TTL: 24h]
+        EN1[Spun up automatically on PR]
+        EN2[Destroyed after merge/close]
+        EN3[Contract tests only]
+    end
+    
+    Production -->|Config Mirror| Staging
+    Staging -->|On-Demand Envs| Ephemeral
 ```
 
 ### Test Data Management
@@ -866,56 +956,26 @@ load_generator:
 
 The Auditor provides unified visibility into all test results:
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    API Testing Dashboard                         │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Test Execution Summary (Last 7 Days)                            │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │                                                            │  │
-│  │  Total Tests: 1,247        Pass Rate: 94.2%               │  │
-│  │                                                            │  │
-│  │  By Type:                                                  │  │
-│  │    Contract Tests:    847  (96% pass)  ████████████████░  │  │
-│  │    Performance Tests: 234  (91% pass)  ██████████████░░░  │  │
-│  │    Load Tests:         98  (89% pass)  █████████████░░░░  │  │
-│  │    Chaos Tests:        68  (94% pass)  ███████████████░░  │  │
-│  │                                                            │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  Quality Gate Status                                             │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │                                                            │  │
-│  │  APIs Ready for Production:     42/47                      │  │
-│  │                                                            │  │
-│  │  Blocked APIs:                                             │  │
-│  │    • inventory-api v3.2    - Performance regression       │  │
-│  │    • shipping-api v2.0     - Contract test failures       │  │
-│  │    • auth-api v4.1         - Pending load test            │  │
-│  │    • pricing-api v2.3      - Chaos test failures          │  │
-│  │    • notifications-api v1.5 - Missing baseline            │  │
-│  │                                                            │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-│  Performance Trends                                              │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │  p95 Latency (All APIs, 30 days)                          │  │
-│  │                                                            │  │
-│  │  150ms ┤                                                   │  │
-│  │        │      ╭─╮                                          │  │
-│  │  100ms ┤  ╭───╯ ╰──╮    ╭──╮                              │  │
-│  │        │ ─╯        ╰────╯  ╰─────────────────────────     │  │
-│  │   50ms ┤                                                   │  │
-│  │        │                                                   │  │
-│  │    0ms ┼────────────────────────────────────────────────  │  │
-│  │        Oct 25    Nov 1    Nov 8    Nov 15    Nov 22       │  │
-│  │                                                            │  │
-│  │  Trend: Stable (σ = 12ms)                                 │  │
-│  └────────────────────────────────────────────────────────────┘  │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
+<table>
+<tr><th colspan="4">API Testing Dashboard</th></tr>
+<tr><th colspan="4">Test Execution Summary (Last 7 Days)</th></tr>
+<tr><td colspan="2"><strong>Total Tests:</strong> 1,247</td><td colspan="2"><strong>Pass Rate:</strong> 94.2%</td></tr>
+<tr><th>Test Type</th><th>Count</th><th>Pass Rate</th><th></th></tr>
+<tr><td>Contract Tests</td><td>847</td><td>96%</td><td>████████████████░</td></tr>
+<tr><td>Performance Tests</td><td>234</td><td>91%</td><td>██████████████░░░</td></tr>
+<tr><td>Load Tests</td><td>98</td><td>89%</td><td>█████████████░░░░</td></tr>
+<tr><td>Chaos Tests</td><td>68</td><td>94%</td><td>███████████████░░</td></tr>
+<tr><th colspan="4">Quality Gate Status</th></tr>
+<tr><td colspan="4"><strong>APIs Ready for Production:</strong> 42/47</td></tr>
+<tr><th colspan="4">Blocked APIs</th></tr>
+<tr><td>inventory-api v3.2</td><td colspan="3">Performance regression</td></tr>
+<tr><td>shipping-api v2.0</td><td colspan="3">Contract test failures</td></tr>
+<tr><td>auth-api v4.1</td><td colspan="3">Pending load test</td></tr>
+<tr><td>pricing-api v2.3</td><td colspan="3">Chaos test failures</td></tr>
+<tr><td>notifications-api v1.5</td><td colspan="3">Missing baseline</td></tr>
+<tr><th colspan="4">Performance Trends</th></tr>
+<tr><td colspan="4"><strong>p95 Latency (All APIs, 30 days)</strong><br/>Trend: Stable (σ = 12ms)</td></tr>
+</table>
 
 ### Quality Gate Configuration
 

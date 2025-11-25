@@ -494,13 +494,21 @@ flowchart TB
 
 **Core Entities:**
 - **Application**: Consumer applications with owner, contacts, purpose
-- **APIVersion**: API specifications with major.minor.patch versioning
+- **APIVersion**: API specifications with major.minor.patch versioning and **protocol type** (openapi | graphql | asyncapi | grpc)
 - **Environment**: Dev, test, staging, production with separate configurations
-- **Subscription**: Links Application + APIVersion + Environment with credentials and policies
+- **Subscription**: Links Application + APIVersion + Environment with credentials, policies, and protocol-specific scope (endpoints for REST, operations for GraphQL, channels for AsyncAPI)
 - **Metrics**: Usage statistics aggregated from Gateway logs
 - **Errors**: Error patterns and troubleshooting data
 - **Policies**: Governance rules with evaluation logic
 - **Backend Services**: Service instances with health status
+
+**Protocol-Specific Storage:**
+| Protocol | Specification Format | Validation Tool | Schema Registry |
+|----------|---------------------|-----------------|-----------------|
+| REST | OpenAPI 3.x (YAML/JSON) | Spectral | Not required |
+| GraphQL | SDL schema | graphql-inspector | GraphQL schema registry |
+| AsyncAPI | AsyncAPI 2.x (YAML/JSON) | asyncapi-parser | Schema Registry (Avro/JSON Schema) |
+| gRPC | Protocol Buffers (.proto) | protoc compiler | Buf Schema Registry |
 
 **Database Design:**
 - Primary database: PostgreSQL for relational data integrity

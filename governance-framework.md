@@ -131,7 +131,7 @@ flowchart LR
 </pre>
 
 * **API Registry**: Source of truth for APIs, versions, documentation, ownership, and consumers
-  * **API Catalog** — Stores each API's business purpose, technical specs (OpenAPI/GraphQL schemas), and lifecycle state. One place to discover what exists.
+  * **API Catalog** — Stores each API's business purpose, technical specs (OpenAPI, GraphQL, or AsyncAPI specifications), and lifecycle state. One place to discover what exists.
   * **Version Management** — Tracks all versions with compatibility status, release notes, and migration guides. Shows which versions are current, deprecated, or scheduled for retirement.
   * **Ownership Records** — Lists who owns each API: primary and secondary contacts, team, on-call rotation, escalation paths. Clear accountability for support, features, and incidents.
   * **Documentation Hub** — Hosts getting started guides, authentication instructions, endpoint references, code samples, and integration patterns. Good documentation increases adoption and reduces support.
@@ -154,6 +154,24 @@ flowchart LR
   * **Anomaly Detection** — Flags unusual patterns: traffic spikes, new errors, behavior changes, degraded performance. Early detection prevents small problems becoming major incidents.
   * **Compliance & Security Reporting** — Shows who accessed what data and when. Tracks compliance with data policies. Flags security concerns like failed auth attempts or unusual access patterns.
 
+**Multi-Protocol Support:**
+
+The platform governs three first-class API protocols:
+
+| Protocol | Best For | Specification Format | Key Tooling |
+|----------|----------|---------------------|-------------|
+| **REST (OpenAPI)** | CRUD operations, simple request/response, caching | OpenAPI 3.x (YAML/JSON) | Spectral, Swagger UI |
+| **GraphQL** | Complex queries, mobile apps, aggregation layers | GraphQL Schema (SDL) | graphql-inspector, Apollo Studio |
+| **AsyncAPI** | Event-driven, streaming, pub/sub | AsyncAPI 2.x (YAML/JSON) | asyncapi-parser, Schema Registry |
+
+Each protocol flows through the same governance process (register → review → publish → deprecate) but with protocol-appropriate tooling:
+
+- **Registry** stores all three specification formats and tracks protocol-specific metadata
+- **Gateway** handles routing differently per protocol (HTTP verbs for REST, queries/mutations for GraphQL, message channels for AsyncAPI)
+- **Auditor** measures protocol-appropriate metrics (endpoint latency for REST, query complexity for GraphQL, message throughput for AsyncAPI)
+
+See the [technical design](technical-design.md) for detailed protocol handling and the [testing strategy](api-testing-strategy.md) for protocol-specific contract testing.
+
 ---
 
 #### **API Product Lifecycle**
@@ -169,7 +187,7 @@ Adopt --> Evolve
 Evolve --> Deprecate
 Deprecate --> Retire
 </pre>
-* **Idea → Design:** Define the API early in the registry — Before writing code, teams register their API concept: what problem it solves, what it does, who will use it. Early registration creates visibility. Other teams can discover the planned API, influence its design, or avoid duplicate work. Design includes the API spec (OpenAPI, GraphQL schema), data models, error handling, and auth requirements. Organizations shift from "build in secret, announce when done" to "design in public, get feedback early."
+* **Idea → Design:** Define the API early in the registry — Before writing code, teams register their API concept: what problem it solves, what it does, who will use it. Early registration creates visibility. Other teams can discover the planned API, influence its design, or avoid duplicate work. Design includes the API spec (OpenAPI for REST, GraphQL schema, or AsyncAPI for event-driven), data models, error handling, and auth requirements. Organizations shift from "build in secret, announce when done" to "design in public, get feedback early."
 
 * **Review:** Peer and architectural feedback improves quality — Domain experts, security teams, and API designers review the design. Does it align with standards? Follow naming conventions? Handle errors properly? Implement security correctly? Fit domain boundaries? This collaborative check catches issues before they become production contracts. Automated tools handle schema validation, naming patterns, and security scans. Human reviewers focus on business alignment, usability, and architecture. Goal: raise quality without bottlenecks.
 
@@ -177,7 +195,7 @@ Deprecate --> Retire
 
 * **Adopt:** Consumers onboard with approvals — Consumers discover the API, review docs, and submit subscription requests. Producers receive notifications and approve based on capacity, readiness, or business agreements. This creates a formal relationship between producer and consumer. Development approvals might be automatic; production approvals let producers understand dependencies and coordinate onboarding.
 
-* **Evolve:** Semantic versioning (Minor = compatible; Major = breaking) — APIs evolve while respecting existing consumers. Minor updates (v2.1 to v2.2) add capabilities, optional parameters, or response fields without breaking existing consumers. Major updates (v2.0 to v3.0) introduce breaking changes: removed fields, changed types, restructured endpoints. Major versions run in parallel. Consumers migrate on their schedule, not forced. This prevents "update and break everything" while allowing evolution.
+* **Evolve:** Semantic versioning (Minor = compatible; Major = breaking) — APIs evolve while respecting existing consumers. Minor updates (v2.1 to v2.2) add capabilities, optional parameters, or response fields without breaking existing consumers. Major updates (v2.0 to v3.0) introduce breaking changes: removed fields, changed types, restructured endpoints, or incompatible schema changes. Major versions run in parallel. Consumers migrate on their schedule, not forced. This prevents "update and break everything" while allowing evolution. Note that "breaking" varies by protocol — see the [testing strategy](api-testing-strategy.md) for protocol-specific breaking change rules.
 
 * **Deprecate & Retire:** Sunset gracefully — When an API version is no longer valuable or superseded, mark it deprecated. Stop new subscriptions. Tell existing consumers the timeline and migration path. Track remaining usage. Retire only after a waiting period (e.g., 90 days minimum) and when usage drops to zero or remaining consumers migrate. The Auditor shows who still uses the deprecated API for targeted outreach. Remove from routing but archive metadata. This prevents both premature retirement (breaking consumers) and eternal support (accumulating debt).
 
@@ -236,7 +254,7 @@ Effective organizations use two tiers:
 
 Building API expertise requires intentional investment in training and progression pathways. Organizations should establish a structured program:
 
-* **Training & Certification** — Candidates complete formal training covering OpenAPI specification, REST/GraphQL design principles, versioning strategies, security patterns, and organizational standards. Training concludes with a practical assessment: reviewing sample API designs and identifying issues. Only those who pass the assessment are eligible to become Departmental API Advisors.
+* **Training & Certification** — Candidates complete formal training covering OpenAPI, GraphQL, and AsyncAPI specifications, REST and event-driven design principles, versioning strategies, security patterns, and organizational standards. Training concludes with a practical assessment: reviewing sample API designs and identifying issues. Only those who pass the assessment are eligible to become Departmental API Advisors.
 
 * **Shadowing Period** — New advisors shadow experienced reviewers for 4-6 weeks, observing real reviews and learning to balance quality standards with pragmatic guidance. They practice giving feedback on draft APIs under supervision before advising independently. This apprenticeship model transfers tacit knowledge about common pitfalls, effective feedback techniques, and when to escalate.
 

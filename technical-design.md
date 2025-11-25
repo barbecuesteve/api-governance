@@ -113,6 +113,33 @@ flowchart LR
 
 This architecture makes APIs intentionally designed, discoverable, governed, and measurable.
 
+### Supported API Protocols
+
+The platform treats three API protocols as first-class citizens:
+
+| Protocol | Specification | Use Cases | Gateway Behavior |
+|----------|--------------|-----------|------------------|
+| **REST** | OpenAPI 3.x | Request/response, CRUD operations, resource-oriented | HTTP routing, request/response validation |
+| **GraphQL** | GraphQL SDL | Flexible queries, client-driven data fetching, aggregation | Query parsing, depth limiting, complexity analysis |
+| **Event-Driven** | AsyncAPI 2.x | Pub/sub, webhooks, streaming, event sourcing | Message broker routing, schema validation, delivery tracking |
+
+**Protocol Selection Guidance:**
+
+- **REST (OpenAPI)** — Default choice for CRUD operations, well-defined resources, cacheable responses, and when consumers are diverse (mobile, web, third-party). Best when operations map cleanly to HTTP verbs.
+
+- **GraphQL** — Preferred when consumers need flexible data fetching, when multiple resources are commonly fetched together, or when bandwidth is constrained (mobile). Requires investment in query complexity management.
+
+- **Event-Driven (AsyncAPI)** — Required for real-time notifications, system-to-system integration where eventual consistency is acceptable, audit trails, and workflows triggered by state changes. Essential for decoupled architectures.
+
+**Multi-Protocol APIs:**
+
+A single logical API can expose multiple protocols. For example, an Orders API might offer:
+- REST endpoints for synchronous order creation and queries
+- GraphQL for flexible order history exploration  
+- AsyncAPI events for order status change notifications
+
+These are registered as separate API versions in the Registry with relationships linking them, allowing consumers to subscribe to the protocols they need.
+
 ---
 
 ## 3. Core Data Model
@@ -143,6 +170,7 @@ erDiagram
         string id PK
         string api_name
         string version
+        string protocol
         string status
         int semver_major
         int semver_minor
@@ -196,7 +224,7 @@ erDiagram
 An internally registered software system that produces or consumes APIs. Each has an owning team and contact for operational communication. Applications can publish APIs (as producers) and consume APIs (as consumers). Keywords, description, and tags make applications searchable in the Registry.
 
 **API Version**  
-A specific version of an API using semantic versioning (SemVer). Each has a lifecycle state (Draft, Published, Deprecated, Retired) that determines availability and governance rules. Major and minor versions tracked separately for policy enforcement around breaking changes. Release date provides audit trail. Description and tags improve searchability. Multiple versions coexist, allowing producers to introduce breaking changes in new major versions while maintaining backward compatibility.
+A specific version of an API using semantic versioning (SemVer). The `protocol` field identifies the API type: `openapi` (REST), `graphql`, or `asyncapi` (event-driven). Each has a lifecycle state (Draft, Published, Deprecated, Retired) that determines availability and governance rules. Major and minor versions tracked separately for policy enforcement around breaking changes. Release date provides audit trail. Description and tags improve searchability. Multiple versions coexist, allowing producers to introduce breaking changes in new major versions while maintaining backward compatibility.
 
 **Environment**  
 A deployment target for API versions: development, testing, production. Each environment has different configurations, access controls, and quality gates. The attributes field stores environment-specific metadata (region, cluster, scaling policies). Subscriptions are scoped to environments, letting teams test integrations in non-production before requesting production access.
@@ -522,7 +550,7 @@ Schema linting, naming, version compatibility, documentation completeness automa
 | SDLC Stage | API Governance Touchpoint | How It Works |
 |-------------|-----------------------------|--------------| 
 | **Ideation** | API registered early for visibility | Teams register their API concept during planning, before implementation. Creates organization-wide visibility, prevents duplicate efforts, lets other teams discover planned capabilities they might consume or influence. Early registration encourages collaboration and shapes APIs based on anticipated consumer needs, not just producer assumptions. |
-| **Design** | Standards, templates, automated linting | Producers use standardized templates (OpenAPI, GraphQL) encoding organizational conventions: naming, error handling, authentication, data models. Departmental Advisors guide on domain boundaries and integration patterns. Registry runs automated linters validating specs against standards before human review, catching inconsistent naming, missing fields, security anti-patterns. This "shift left" approach catches design problems when they're cheapest to fix. |
+| **Design** | Standards, templates, automated linting | Producers use standardized templates (OpenAPI for REST, GraphQL SDL for queries/mutations, AsyncAPI for event-driven) encoding organizational conventions: naming, error handling, authentication, data models. Departmental Advisors guide on domain boundaries, integration patterns, and protocol selection. Registry runs automated linters validating specs against standards before human review, catching inconsistent naming, missing fields, security anti-patterns. This "shift left" approach catches design problems when they're cheapest to fix. |
 | **Build** | Mock/testing environments via Gateway | Gateway provides sandbox environments where consumers test against API mocks or dev instances without production access. Enables parallel development—consumers build integrations while producers finalize implementation. Mock servers based on registered specs allow early integration testing and validate that design meets consumer needs before production. |
 | **Test** | Compatibility testing across versions | Automated tests verify new versions maintain backward compatibility (minor) and identify breaking changes (major). Contract testing validates producer implementations match published specs and consumers don't rely on undocumented behavior. Gateway routes percentage-based traffic to new versions for canary testing while monitoring errors and latency before full rollout. |
 | **Release** | Registry + Gateway publish action | Publication is coordinated: Registry marks API "Published," Gateway receives routing config and policy rules, docs promoted to production portal, monitoring baselines established. Single action keeps all platform components synchronized. Automated deployment pipelines trigger publication as part of release, making governance a natural release step, not separate manual work. |
@@ -540,7 +568,7 @@ Tooling makes API governance seamless and sustainable. When embedded into develo
 <strong>Automated API Specification Validation</strong>
 
 <ul>
-<li>Pre-commit hooks validate OpenAPI/GraphQL schemas for syntax errors before code reaches CI</li>
+<li>Pre-commit hooks validate API schemas for syntax errors before code reaches CI (OpenAPI via Spectral, GraphQL via graphql-schema-linter, AsyncAPI via asyncapi-cli)</li>
 <li>CI pipeline runs linters checking naming conventions, required fields, security patterns, versioning rules</li>
 <li>Breaking change detection compares new spec against published versions, blocking merges that break compatibility without major version bump</li>
 <li>Documentation completeness checks ensure every endpoint has descriptions, examples, and error scenarios</li>
@@ -823,7 +851,7 @@ Governance checks are injected into existing pipelines to "shift left" on qualit
 
 | Stage | Trigger Condition | Action | Result |
 | :--- | :--- | :--- | :--- |
-| **1. Lint** | PR opened with changes to `openapi.yaml` | Run `spectral lint` against org ruleset | **Blocker:** PR cannot merge if style guide violations exist. |
+| **1. Lint** | PR opened with changes to API specs (`openapi.yaml`, `schema.graphql`, `asyncapi.yaml`) | Run protocol-specific linter (`spectral`, `graphql-schema-linter`, `asyncapi-cli`) against org ruleset | **Blocker:** PR cannot merge if style guide violations exist. |
 | **2. Register** | Merge to `main` branch | POST spec to `registry-api/versions` | **Draft Created:** New version (e.g., v1.2.0) appears in Registry as "Draft". |
 | **3. Deploy** | CD pipeline targets `production` | Query `registry-api/versions/{id}/status` | **Gatekeeper:** Deployment fails if API version is not "Published". |
 
@@ -837,7 +865,7 @@ sequenceDiagram
 
     Dev->>Git: Push Branch & Open PR
     Git->>CI: Trigger: "Lint Spec"
-    CI->>CI: Validate OpenAPI (Spectral)
+    CI->>CI: Validate spec (OpenAPI/GraphQL/AsyncAPI)
     CI-->>Git: Pass/Fail Status
 
     Dev->>Git: Merge to Main

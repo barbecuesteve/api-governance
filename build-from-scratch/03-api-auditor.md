@@ -199,12 +199,16 @@ flowchart LR
   - Error rates (4xx, 5xx) per API and per consumer
   - Data transfer volumes (request/response sizes) for cost attribution
   - Unique consumer counts (active users per API)
+- **Protocol-specific metrics**
+  - **REST (OpenAPI)**: Requests per endpoint, HTTP method distribution, cache hit rates
+  - **GraphQL**: Query complexity scores, most requested fields, average query depth, N+1 query detection
+  - **AsyncAPI**: Messages per channel, message delivery latency, consumer lag, dead letter counts
 - Time-series aggregation
   - Multiple granularities: 1-minute, 5-minute, 1-hour, 1-day rollups
   - Pre-aggregation for common queries (faster dashboard loads)
   - Retention tiers: 1-min data for 7 days, 1-hour data for 90 days, 1-day data for 2 years
 - Multi-dimensional metrics
-  - Slice by: API, version, environment, consumer, geography, time of day
+  - Slice by: API, version, environment, consumer, geography, time of day, **protocol**
   - Business dimensions: cost center, product line, customer segment
   - Comparison metrics: week-over-week, month-over-month growth
 - Custom metrics calculation
