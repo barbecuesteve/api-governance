@@ -210,7 +210,7 @@ Good governance only works when **developers want to use it**. That requires:
 
 * **Clear onboarding** — New consumers should go from discovery to first successful call in under 20 minutes. Provide a "Quick Start" guide: authentication setup, making a request, understanding the response. Assume no prior knowledge. Give step-by-step instructions with realistic examples. Interactive tutorials, sandbox environments with test data, and video walkthroughs reduce time-to-value. Early success builds confidence and encourages use.
 
-* **Good documentation and examples** — Good documentation separates adopted APIs from avoided ones. Provide: complete reference docs (auto-generated from schemas), guides for common use cases, troubleshooting for frequent issues, and FAQs from real questions. Include working code examples in languages developers actually use — not just curl. Show authentication, error handling, pagination, and complex queries. Version docs with the API. Make them searchable and navigable. Stale or wrong documentation destroys trust.
+* **Good documentation and examples** — Good documentation separates adopted APIs from avoided ones. Provide: complete reference docs (auto-generated from schemas), guides for common use cases, troubleshooting for frequent issues, and FAQs from real questions. Include working code examples in languages developers actually use. Show authentication, error handling, pagination, and complex queries. Version docs with the API. Make them searchable and navigable. Stale or wrong documentation destroys trust.
 
 * **Consistent design standards** — When every API follows the same patterns, developers gain transferable knowledge. Use the same auth across all APIs (OAuth2, JWT, or API keys), identical error structures with predictable codes, uniform pagination (cursor or offset, but consistent), standard query parameter naming, and common filtering and sorting. Developers integrate quickly because new APIs behave like ones they've used. Extend consistency to performance, timeouts, and retries. Inconsistency makes developers treat every API as unique, increasing cognitive load and integration time.
 
@@ -283,7 +283,7 @@ Organizations not ready for two tiers should designate **at least 2-3 API expert
 * Given dedicated time (10-20% of their role)
 * Recognized and rewarded for this contribution
 * Equipped with clear standards and review criteria
-* Accessible early in design, not just at the end
+* Accessible early in design when changes are cheap
 
 This investment pays through higher-quality APIs, fewer production issues, better developer experience, and increased reuse. A few expert reviewers cost less than poorly designed APIs maintained for years or duplicate work from teams who can't use existing APIs.
 
@@ -335,7 +335,7 @@ Introducing API governance requires careful change management. Force adoption to
 
 **Phase 3: Enforce Governance (Months 12-18)**
 
-* **Gateway becomes mandatory** — All production API traffic flows through the Gateway. Network policies prevent direct access. This is when governance becomes enforceable, not just encouraged.
+* **Gateway becomes mandatory** — All production API traffic flows through the Gateway. Network policies prevent direct access. This is when governance becomes enforced rather than encouraged.
 **IMPORTANT:** This is often the most contentious transition. Teams suddenly can't bypass governance, and any deployment or configuration issues become blockers. 
   - **Technical approach:** 
     1. Start by routing read-only/GET traffic through Gateway while leaving mutations direct—proves stability without risk. 
@@ -628,7 +628,7 @@ Based on industry studies and customer case studies:
 
 #### **What Executives Must Do for This to Succeed**
 
-API governance requires active executive leadership, not just budget approval.
+API governance requires active executive leadership. All the engineers need to see that executives care about this topic and that compliance is expected.
 
 **Executive Sponsor (CTO or VP Engineering):**
 

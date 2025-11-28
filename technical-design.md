@@ -551,7 +551,7 @@ Schema linting, naming, version compatibility, documentation completeness automa
 
 | SDLC Stage | API Governance Touchpoint | How It Works |
 |-------------|-----------------------------|--------------| 
-| **Ideation** | API registered early for visibility | Teams register their API concept during planning, before implementation. Creates organization-wide visibility, prevents duplicate efforts, lets other teams discover planned capabilities they might consume or influence. Early registration encourages collaboration and shapes APIs based on anticipated consumer needs, not just producer assumptions. |
+| **Ideation** | API registered early for visibility | Teams register their API concept during planning, before implementation. Creates organization-wide visibility, prevents duplicate efforts, lets other teams discover planned capabilities they might consume or influence. Early registration encourages collaboration and shapes APIs based on anticipated consumer needs as well as producer assumptions. |
 | **Design** | Standards, templates, automated linting | Producers use standardized templates (OpenAPI for REST, GraphQL SDL for queries/mutations, AsyncAPI for event-driven) encoding organizational conventions: naming, error handling, authentication, data models. Departmental Advisors guide on domain boundaries, integration patterns, and protocol selection. Registry runs automated linters validating specs against standards before human review, catching inconsistent naming, missing fields, security anti-patterns. This "shift left" approach catches design problems when they're cheapest to fix. |
 | **Build** | Mock/testing environments via Gateway | Gateway provides sandbox environments where consumers test against API mocks or dev instances without production access. Enables parallel development—consumers build integrations while producers finalize implementation. Mock servers based on registered specs allow early integration testing and validate that design meets consumer needs before production. |
 | **Test** | Compatibility testing across versions | Automated tests verify new versions maintain backward compatibility (minor) and identify breaking changes (major). Contract testing validates producer implementations match published specs and consumers don't rely on undocumented behavior. Gateway routes percentage-based traffic to new versions for canary testing while monitoring errors and latency before full rollout. |
@@ -1326,7 +1326,7 @@ Gateway and Auditor create tamper-proof audit trails for security investigations
 <ul>
 <li>Timestamp (microsecond precision), request ID (distributed tracing correlation)</li>
 <li>Consumer identity: application ID, subscription ID, owning team</li>
-<li>User identity: end-user ID if request is user-originated (not just service-to-service)</li>
+<li>User identity: end-user ID if request is user-originated</li>
 <li>API endpoint: method, path, version, query parameters (sanitized for sensitive data)</li>
 <li>Request size, content type, IP source address</li>
 </ul>

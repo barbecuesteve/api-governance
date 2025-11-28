@@ -30,7 +30,7 @@ When testing data flows through the same platform that manages API lifecycle:
 - **Test results block publication** — APIs cannot reach "Published" state without passing quality gates
 - **Performance baselines are enforced** — New versions must meet or exceed previous version's latency
 - **Consumer impact is visible** — Before deploying, see how changes affect actual consumers
-- **Historical trends inform decisions** — Auditor tracks performance over time, not just point-in-time snapshots
+- **Historical trends inform decisions** — Auditor tracks performance over time
 
 ### Shift Left, But Also Shift Right
 
