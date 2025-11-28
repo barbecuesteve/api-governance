@@ -15,8 +15,11 @@ Without a central system for managing these "order forms," chaos ensues. This is
 
 <ul>
 <li><strong>Wasted Effort:</strong> Teams build the same component multiple times because they don't know an "order form" already exists. This is like building a new engine factory when a perfectly good one is sitting idle.
+</li>
 <li><strong>Operational Failures:</strong> When the engine factory changes a bolt size without telling the assembly plant, the entire production line grinds to a halt. Similarly, when one software team changes its API without warning, other systems that depend on it break, causing outages.
+</li>
 <li><strong>Security & Compliance Risks:</strong> Without knowing who is ordering what, you can't track who is accessing sensitive data (like customer information or financial records). This creates massive security holes and makes compliance audits nearly impossible.
+</li>
 </ul>
 
 <strong>API governance</strong> is the framework for managing these internal software supply chains. It’s not about bureaucracy; it's about creating a well-organized system where high-quality components are easily discoverable, reliable, and secure. It turns chaos into a strategic advantage.
