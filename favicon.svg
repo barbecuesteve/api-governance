@@ -1,17 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="30" fill="#2563eb"/>
-  
-  <!-- API connection nodes -->
-  <circle cx="32" cy="16" r="6" fill="#ffffff"/>
-  <circle cx="16" cy="40" r="6" fill="#ffffff"/>
-  <circle cx="48" cy="40" r="6" fill="#ffffff"/>
-  
-  <!-- Connection lines -->
-  <line x1="32" y1="22" x2="20" y2="35" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-  <line x1="32" y1="22" x2="44" y2="35" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-  <line x1="22" y1="40" x2="42" y2="40" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-  
-  <!-- Center hub -->
-  <circle cx="32" cy="32" r="5" fill="#ffffff"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" viewBox="200 233 411 412" width="411" height="412">
+  <defs/>
+  <g id="Canvas_1" fill="none" stroke-opacity="1" stroke-dasharray="none" fill-opacity="1" stroke="none">
+    <title>Canvas 1</title>
+    <rect fill="white" x="200" y="233" width="411" height="412"/>
+    <g id="Canvas_1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_6">
+        <path d="M 550.72284 293.82794 C 630.9363 374.04096 630.9363 504.09185 550.72284 584.3049 C 470.5098 664.5183 340.45893 664.5183 260.2459 584.3049 C 180.03248 504.09185 180.03248 374.04096 260.2459 293.82794 C 340.45893 213.6145 470.5098 213.6145 550.72284 293.82794" fill="#0062ff"/>
+      </g>
+      <g id="Line_7">
+        <line x1="326.2616" y1="454.79744" x2="375.8751" y2="367.3265" stroke="white" stroke-linecap="square" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_8">
+        <line x1="435.3179" y1="367.1985" x2="485.57664" y2="454.92544" stroke="white" stroke-linecap="square" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Line_9">
+        <line x1="455.4101" y1="507" x2="356.65237" y2="507" stroke="white" stroke-linecap="square" stroke-linejoin="round" stroke-width="30"/>
+      </g>
+      <g id="Graphic_3">
+        <circle cx="296.65234" cy="507" r="60.0000958741138" fill="white"/>
+      </g>
+      <g id="Graphic_4">
+        <circle cx="405.48438" cy="315.12394" r="60.0000958741137" fill="white"/>
+      </g>
+      <g id="Graphic_5">
+        <circle cx="515.41016" cy="507" r="60.0000958741138" fill="white"/>
+      </g>
+      <g id="Graphic_10">
+        <circle cx="405.48438" cy="439.0664" r="29.9668447590016" fill="white"/>
+      </g>
+    </g>
+  </g>
 </svg>
