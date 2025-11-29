@@ -32,30 +32,6 @@ This site presents a practical framework for governing internal APIs at scale, t
 
 For executives, this represents a systematic approach to reducing the 30-40% of engineering capacity currently wasted on rebuilding capabilities that already exist, while mitigating operational, compliance, and competitive risks. For technical leaders, it provides detailed implementation guidance—from data models and lifecycle workflows to security controls and SDLC integration—that can be adopted incrementally without disrupting existing systems. Whether building from scratch or composing from existing tools, this framework offers a proven path from API chaos to governed, product-centric API ecosystems.
 
----
-
-## Documentation
-
-### For Executives
-- **[Executive Summary](exec-summary.md)** — Risk-focused overview: financial, operational, compliance, and competitive risks of ungoverned APIs with ROI analysis
-
-### Core Framework
-- **[Governance Framework Overview](governance-framework.md)** — Comprehensive guide covering platform components, organizational structure, adoption strategy, and success metrics for Directors, VPs, and CTOs
-
-### Technical Implementation
-- **[Technical Design](technical-design.md)** — Detailed technical appendix with reference architecture, data models, lifecycle flows, security controls, and SDLC integration for engineering teams
-- **[API Testing Strategy](api-testing-strategy.md)** — Contract testing, automated performance testing, load testing integration, chaos engineering, and quality gates
-
-### Implementation Paths
-- **[Build from Scratch](build-from-scratch/README.md)** — Step-by-step guide for building custom API governance platform components
-- **[Build from Composition](build-from-composition/README.md)** — Guide for assembling governance platform from existing tools and services
-
-### Compliance Examples
-- **[PCI-DSS Compliance](compliance-example-pci-dss.md)** — Payment processing compliance implementation including GDPR, SOC 2, and regional financial regulations
-- **[HIPAA & Healthcare](compliance-example-hipaa-healthcare.md)** — Healthcare compliance with HIPAA Security Rule, HITECH Act, HL7 FHIR integration, and patient rights
-- **[FedRAMP & Government](compliance-example-fedramp-government.md)** — Government and defense compliance with FedRAMP, CMMC, ITAR, classification enforcement, and zero trust
-
----
 
 ## Quick Start
 
@@ -64,6 +40,21 @@ For executives, this represents a systematic approach to reducing the 30-40% of 
 **For Technical Leaders:** Begin with the [Governance Framework Overview](governance-framework.md) to understand the complete system, then dive into [Technical Design](technical-design.md) for implementation details.
 
 **For Implementation Teams:** Review the framework documents, then choose your path: [Build from Scratch](build-from-scratch/README.md) for custom solutions or [Build from Composition](build-from-composition/README.md) for integrated platform approach.
+
+---
+- **[Executive Summary](exec-summary.md)** — Risk-focused overview: financial, operational, compliance, and competitive risks of ungoverned APIs with ROI analysis
+- **[Governance Framework Overview](governance-framework.md)** — Comprehensive guide covering platform components, organizational structure, adoption strategy, and success metrics for Directors, VPs, and CTOs
+- **[Technical Design](technical-design.md)** — Detailed technical appendix with reference architecture, data models, lifecycle flows, security controls, and SDLC integration for engineering teams
+
+- **[API Testing Strategy](api-testing-strategy.md)** — Contract testing, automated performance testing, load testing integration, chaos engineering, and quality gates
+
+- **[Build from Scratch](build-from-scratch/README.md)** — Step-by-step guide for building custom API governance platform components
+- **[Build from Composition](build-from-composition/README.md)** — Guide for assembling governance platform from existing tools and services
+
+### Compliance Examples
+- **[PCI-DSS Compliance](compliance-example-pci-dss.md)** — Payment processing compliance implementation including GDPR, SOC 2, and regional financial regulations
+- **[HIPAA & Healthcare](compliance-example-hipaa-healthcare.md)** — Healthcare compliance with HIPAA Security Rule, HITECH Act, HL7 FHIR integration, and patient rights
+- **[FedRAMP & Government](compliance-example-fedramp-government.md)** — Government and defense compliance with FedRAMP, CMMC, ITAR, classification enforcement, and zero trust
 
 ---
 
