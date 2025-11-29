@@ -64,7 +64,7 @@ Testing integrates at every lifecycle stage:
 | **Production** | Continuous performance monitoring | Auditor tracks SLO compliance in real-time |
 | **Deprecation** | Consumer migration verification | Auditor confirms consumers moved to new version |
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
     subgraph Design
         D1[Schema Validation]
@@ -87,7 +87,7 @@ flowchart LR
     end
     
     Design --> Review --> Build --> Staging --> Prod
-```
+</pre>
 
 ---
 
@@ -534,7 +534,7 @@ Performance tests run automatically at key lifecycle points:
 
 The Gateway and Auditor provide natural infrastructure for load testing:
 
-```mermaid
+<pre class="mermaid">
 flowchart TB
     subgraph Orchestration
         Scheduler[Test Scheduler<br/>Registry]
@@ -572,7 +572,7 @@ flowchart TB
     A --> Auditor
     B --> Auditor
     C --> Auditor
-```
+</pre>
 
 ### Load Test Specification
 
@@ -685,7 +685,7 @@ load_test:
 
 The Auditor captures production traffic patterns that can be replayed for realistic load testing:
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
     subgraph Production
         Logs[Auditor Logs]
@@ -703,8 +703,7 @@ flowchart LR
     Logs -->|Raw traffic| Redactor
     Redactor -->|Sanitized| Replay
     Redactor --> Redacts
-```
-
+</pre>
 **Benefits of Traffic Replay:**
 - **Realistic workload distribution** — Actual endpoint usage patterns, not guesses
 - **Edge cases included** — Real requests include unusual parameters synthetic tests miss
@@ -715,7 +714,7 @@ flowchart LR
 
 For high-confidence pre-production validation, mirror production traffic to the new version:
 
-```mermaid
+<pre class="mermaid">
 flowchart TB
     Request[Production Request]
     Gateway[Gateway - Production]
@@ -731,7 +730,7 @@ flowchart TB
     V21 --> Response
     V22 --> Compare
     Compare --> Comparator
-```
+</pre>
 
 **Shadow Traffic Comparison Report:**
 
@@ -856,7 +855,7 @@ The Auditor calculates a resilience score based on chaos experiment results:
 
 The platform provides isolated test environments that mirror production:
 
-```mermaid
+<pre class="mermaid">
 flowchart TB
     subgraph Production
         PGW[Gateway - prod]
@@ -886,7 +885,7 @@ flowchart TB
     
     Production -->|Config Mirror| Staging
     Staging -->|On-Demand Envs| Ephemeral
-```
+</pre>
 
 ### Test Data Management
 
