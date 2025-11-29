@@ -535,6 +535,7 @@ Performance tests run automatically at key lifecycle points:
 The Gateway and Auditor provide natural infrastructure for load testing:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TB
     subgraph Orchestration
         Scheduler[Test Scheduler<br/>Registry]
@@ -686,6 +687,7 @@ load_test:
 The Auditor captures production traffic patterns that can be replayed for realistic load testing:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart LR
     subgraph Production
         Logs[Auditor Logs]
@@ -715,6 +717,7 @@ flowchart LR
 For high-confidence pre-production validation, mirror production traffic to the new version:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TB
     Request[Production Request]
     Gateway[Gateway - Production]
@@ -856,6 +859,7 @@ The Auditor calculates a resilience score based on chaos experiment results:
 The platform provides isolated test environments that mirror production:
 
 <pre class="mermaid">
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#000','lineColor':'#333'}}}%%
 flowchart TB
     subgraph Production
         PGW[Gateway - prod]
