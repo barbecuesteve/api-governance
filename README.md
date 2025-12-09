@@ -62,7 +62,7 @@ For executives, this represents a systematic approach to reducing the 30-40% of 
 
 
 Over 15+ years, I've seen API governance fail at dozens of organizations. 
-One came closest to solving it—they had registry, gateway, and 
+One came close to solving it—they had registry, gateway, and 
 auditing components that actually worked at scale. It wasn't perfect but it 
 was close enough to be astonishing.
 
