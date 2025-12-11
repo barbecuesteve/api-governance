@@ -62,8 +62,8 @@ For executives, this represents a systematic approach to reducing the 30-40% of 
 
 
 Over 15+ years, I've seen API governance fail at dozens of organizations. 
-One came close to solving it—they had registry, gateway, and 
-auditing components that actually worked at scale. It wasn't perfect but it 
+One came close to solving it — they had cobbled together a set of components that provided 
+all these functions and actually worked at scale. It wasn't perfect but it 
 was close enough to be astonishing.
 
 As a team lead managing a dozen APIs in their system, I experienced both 
