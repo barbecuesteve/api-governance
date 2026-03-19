@@ -143,6 +143,7 @@ flowchart LR
     subgraph Data["Data Layer"]
         Redis[Redis<br/>Cache & Counters]
         Registry[API Registry<br/>Config]
+        IDP[Registry Subscription DB]
     end
     
     subgraph External["External Systems"]
@@ -150,13 +151,10 @@ flowchart LR
         MonitoringPlatform[Monitoring Platform<br/>Prometheus/Datadog]
     end
     
-    subgraph Registry["API Registry"]
-        IDP[Subscription DB]
-    end
-
     Core --> Redis
     Core <--> Registry
     Auth <--> IDP
+    Registry <--> IDP
     Logging --> LogInfra
     Metrics --> MonitoringPlatform
     Core -.-> Logging
