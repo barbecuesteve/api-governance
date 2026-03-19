@@ -146,11 +146,14 @@ flowchart LR
     end
     
     subgraph External["External Systems"]
-        IDP[Identity Provider<br/>OAuth/OIDC]
         LogInfra[Log Infrastructure<br/>Splunk/ELK]
         MonitoringPlatform[Monitoring Platform<br/>Prometheus/Datadog]
     end
     
+    subgraph Registry["API Registry"]
+        IDP[Subscription DB]
+    end
+
     Core --> Redis
     Core <--> Registry
     Auth <--> IDP
