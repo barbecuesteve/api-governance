@@ -28,7 +28,7 @@ Without a central system for managing these "order forms," chaos ensues. This is
 
 ---
 
-This site presents a practical framework for governing internal APIs at scale, treating them as products rather than implementation details. It addresses the chronic problem of API chaos: duplicate work, security blind spots, compliance gaps, and slowing development velocity. The framework centers on three integrated platform components (Registry, Gateway, and Auditor) that provide discoverability, enforce access control, and measure quality, supported by organizational practices that balance developer autonomy with architectural consistency.
+This site presents a practical framework for governing internal APIs at scale, treating them as products rather than implementation details. It addresses the chronic problem of API chaos: duplicate work, security blind spots, compliance gaps, poor observability, and slowing development velocity. The framework centers on three integrated platform components (Registry, Gateway, and Auditor) that provide discoverability, enforce access control, and create operational observability through telemetry, dependency visibility, and quality measurement, supported by organizational practices that balance developer autonomy with architectural consistency.
 
 For executives, this represents a systematic approach to reducing the 30-40% of engineering capacity currently wasted on rebuilding capabilities that already exist, while mitigating operational, compliance, and competitive risks. For technical leaders, it provides detailed implementation guidance—from data models and lifecycle workflows to security controls and SDLC integration—that can be adopted incrementally without disrupting existing systems. Whether building from scratch or composing from existing tools, this framework offers a proven path from API chaos to governed, product-centric API ecosystems.
 
@@ -55,6 +55,7 @@ For executives, this represents a systematic approach to reducing the 30-40% of 
 - **[PCI-DSS Compliance](compliance-example-pci-dss.md)** — Payment processing compliance implementation including GDPR, SOC 2, and regional financial regulations
 - **[HIPAA & Healthcare](compliance-example-hipaa-healthcare.md)** — Healthcare compliance with HIPAA Security Rule, HITECH Act, HL7 FHIR integration, and patient rights
 - **[FedRAMP & Government](compliance-example-fedramp-government.md)** — Government and defense compliance with FedRAMP, CMMC, ITAR, classification enforcement, and zero trust
+- **[Regulated Utility](compliance-example-regulated-utility.md)** — Power utility compliance and modernization patterns for segmented networks, critical infrastructure, and z/OS integration
 
 ---
 

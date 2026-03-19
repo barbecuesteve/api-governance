@@ -83,13 +83,13 @@ This document provides a high-level overview of API governance for Directors, VP
 
 Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
 
-This paper proposes treating internal APIs as products to improve developer experience, speed delivery, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
+This paper proposes treating internal APIs as products to improve developer experience, speed delivery, strengthen observability, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
 
 ---
 
 ### **Technical Implementation**
 
-The technical foundation consists of integrated platform components and clear lifecycle management.
+The technical foundation consists of integrated platform components and clear lifecycle management. Just as importantly, it creates a shared observability layer for internal APIs: who depends on what, what traffic is flowing, where failures originate, which versions remain in use, and how risk is changing over time.
 
 #### **Platform Components**
 
@@ -154,6 +154,18 @@ flowchart LR
   * **Lifecycle Health Indicators** — Monitors: APIs with zero consumers (retire immediately), deprecated APIs with high traffic (migration blocked), APIs near capacity (need scaling).
   * **Anomaly Detection** — Flags unusual patterns: traffic spikes, new errors, behavior changes, degraded performance. Early detection prevents small problems becoming major incidents.
   * **Compliance & Security Reporting** — Shows who accessed what data and when. Tracks compliance with data policies. Flags security concerns like failed auth attempts or unusual access patterns.
+
+**Observability as a Governance Capability:**
+
+In practice, the Gateway and Auditor together form an observability layer for the internal API estate. They provide:
+
+- **Traffic visibility** — Which systems are calling which APIs, at what rates, and in which environments
+- **Dependency visibility** — Which downstream consumers will be affected by incidents, breaking changes, or retirement plans
+- **Reliability visibility** — Latency, error rates, saturation indicators, and SLO performance by API and by consumer
+- **Change visibility** — Whether a newly published version is being adopted cleanly or causing regressions
+- **Compliance visibility** — Which regulated interfaces are being accessed, by whom, and for what approved purpose
+
+This is one of the practical reasons governance matters: it turns internal APIs from a black box into an observable operating surface.
 
 **Multi-Protocol Support:**
 

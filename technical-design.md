@@ -1709,6 +1709,17 @@ This example covers:
 - **Continuous Monitoring** (Real-time security posture, CDM, SIEM integration, automated ATO evidence)
 - **Supply Chain Security** (SBOM generation, provenance verification, vulnerability tracking)
 
+### D. Regulated Utility (Segmented Networks & Mainframe Modernization)
+
+For a detailed example of how this API governance platform supports power utilities and similar critical-infrastructure operators, see the [Regulated Utility Compliance Framework Example](compliance-example-regulated-utility.md).
+
+This example covers:
+- **Segmented / Non-Internet-Connected Environments** (private deployment, zone-aware subscriptions, controlled cross-boundary access)
+- **Critical Infrastructure Cyber Controls** (network segmentation, gateway-mediated enforcement, audit evidence, operational resilience)
+- **Mainframe Modernization** (facades, event publication, dependency tracking, strangler migrations)
+- **Cross-Team Coordination** (modernization, security, platform, and business teams using shared lifecycle and approval workflows)
+- **Customer, Billing, and Operational Data Governance** (purpose-based access, traceability, and controlled exposure of sensitive utility interfaces)
+
 ---
     
 Here you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
