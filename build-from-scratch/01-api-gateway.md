@@ -154,7 +154,6 @@ flowchart LR
     Core --> Redis
     Core <--> Registry
     Auth <--> IDP
-    Registry <--> IDP
     Logging --> LogInfra
     Metrics --> MonitoringPlatform
     Core -.-> Logging
