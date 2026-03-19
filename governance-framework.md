@@ -8,7 +8,11 @@
 
 [Back to API Governance Framework](README.md)
 
-This document provides a high-level overview of API governance for Directors, VPs, and CTOs, covering both technical and organizational components. For executive context on why this matters to your organization, see the [this summary](exec-summary.md). For detailed technical specifications, see the [technical implementation plan](technical-design.md).
+This document provides a high-level overview of API governance for Directors,
+VPs, and CTOs, covering both technical and organizational components. For
+executive context on why this matters to your organization, see the [this
+summary](exec-summary.md). For detailed technical specifications, see the
+[technical implementation plan](technical-design.md).
 
 --- 
 <table style="background-color: #f0f8ff; border: 2px solid #4a90e2; padding: 15px; margin: 20px 0; width: 100%;">
@@ -81,15 +85,25 @@ This document provides a high-level overview of API governance for Directors, VP
 
 ### **Overview**
 
-Internal APIs now power nearly every business capability in modern companies. External APIs get roadmaps, documentation, and attention to user experience. Internal APIs get created as implementation details — poorly documented, inconsistently designed, rarely governed. 
+Internal APIs now power nearly every business capability in modern companies.
+External APIs get roadmaps, documentation, and attention to user experience.
+Internal APIs get created as implementation details — poorly documented,
+inconsistently designed, rarely governed. 
 
-This paper proposes treating internal APIs as products to improve developer experience, speed delivery, strengthen observability, and stop duplicate work. It describes a lightweight governance model for organizations with hundreds or thousands of microservices.
+This paper proposes treating internal APIs as products to improve developer
+experience, speed delivery, strengthen observability, and stop duplicate work.
+It describes a lightweight governance model for organizations with hundreds or
+thousands of microservices.
 
 ---
 
 ### **Technical Implementation**
 
-The technical foundation consists of integrated platform components and clear lifecycle management. Just as importantly, it creates a shared observability layer for internal APIs: who depends on what, what traffic is flowing, where failures originate, which versions remain in use, and how risk is changing over time.
+The technical foundation consists of integrated platform components and clear
+lifecycle management. Just as importantly, it creates a shared observability
+layer for internal APIs: who depends on what, what traffic is flowing, where
+failures originate, which versions remain in use, and how risk is changing over
+time.
 
 #### **Platform Components**
 
@@ -131,41 +145,86 @@ flowchart LR
     style Implementations fill:#E0D0E0
 </pre>
 
-* **API Registry**: Source of truth for APIs, versions, documentation, ownership, and consumers
-  * **API Catalog** — Stores each API's business purpose, technical specs (OpenAPI, GraphQL, or AsyncAPI specifications), and lifecycle state. One place to discover what exists.
-  * **Version Management** — Tracks all versions with compatibility status, release notes, and migration guides. Shows which versions are current, deprecated, or scheduled for retirement.
-  * **Ownership Records** — Lists who owns each API: primary and secondary contacts, team, on-call rotation, escalation paths. Clear accountability for support, features, and incidents.
-  * **Documentation Hub** — Hosts getting started guides, authentication instructions, endpoint references, code samples, and integration patterns. Good documentation increases adoption and reduces support.
-  * **Consumer Relationships** — Lists all approved consumers and their subscriptions. Shows who depends on each API for impact analysis, incident communication, and deprecation decisions.
+* **API Registry**: Source of truth for APIs, versions, documentation,
+  ownership, and consumers
+  * **API Catalog** — Stores each API's business purpose, technical specs
+    (OpenAPI, GraphQL, or AsyncAPI specifications), and lifecycle state. One
+    place to discover what exists.
+  * **Version Management** — Tracks all versions with compatibility status,
+    release notes, and migration guides. Shows which versions are current,
+    deprecated, or scheduled for retirement.
+  * **Ownership Records** — Lists who owns each API: primary and secondary
+    contacts, team, on-call rotation, escalation paths. Clear accountability for
+    support, features, and incidents.
+  * **Documentation Hub** — Hosts getting started guides, authentication
+    instructions, endpoint references, code samples, and integration patterns.
+    Good documentation increases adoption and reduces support.
+  * **Consumer Relationships** — Lists all approved consumers and their
+    subscriptions. Shows who depends on each API for impact analysis, incident
+    communication, and deprecation decisions.
 
 * **API Gateway**: Enforces access control, version rules, and gathers telemetry
-  * **Authentication & Authorization** — Validates consumer identity and enforces access policies. Only approved applications call specific APIs. Consistent security across all APIs without each service implementing its own auth.
-  * **Subscription Enforcement** — Verifies every request comes from an application with an active subscription for that API version and environment. Prevents unauthorized usage.
-  * **Version Routing** — Routes requests to the right API version based on subscription and request headers. Multiple versions run in parallel during transitions. Teams migrate at their own pace.
-  * **Policy Application** — Applies central policies for rate limiting, size limits, timeouts, and retries. Consistent policies protect backends and create predictable performance.
-  * **Telemetry Collection** — Captures metrics on every call: latency, errors, sizes, consumer identity, and endpoints. Data flows to the Auditor for analysis and dashboards for monitoring.
-  * **Request/Response Transformation** — Optionally translates protocols, converts formats, or enriches responses to maintain backward compatibility when APIs evolve.
+  * **Authentication & Authorization** — Validates consumer identity and
+    enforces access policies. Only approved applications call specific APIs.
+    Consistent security across all APIs without each service implementing its
+    own auth.
+  * **Subscription Enforcement** — Verifies every request comes from an
+    application with an active subscription for that API version and
+    environment. Prevents unauthorized usage.
+  * **Version Routing** — Routes requests to the right API version based on
+    subscription and request headers. Multiple versions run in parallel during
+    transitions. Teams migrate at their own pace.
+  * **Policy Application** — Applies central policies for rate limiting, size
+    limits, timeouts, and retries. Consistent policies protect backends and
+    create predictable performance.
+  * **Telemetry Collection** — Captures metrics on every call: latency, errors,
+    sizes, consumer identity, and endpoints. Data flows to the Auditor for
+    analysis and dashboards for monitoring.
+  * **Request/Response Transformation** — Optionally translates protocols,
+    converts formats, or enriches responses to maintain backward compatibility
+    when APIs evolve.
 
 * **API Auditor**: Shows usage, reliability, cost, and lifecycle health
-  * **Usage Analytics** — Analyzes call patterns: top consumers, most-used endpoints, peak times, adoption trends. Shows producers how teams actually use their API versus expectations. Informs roadmap priorities.
-  * **Reliability Metrics** — Tracks error rates, latency, availability, and SLO compliance for each API and version. Producers maintain quality and spot degradation before it impacts consumers.
-  * **Consumer Impact Assessment** — Lists which applications depend on specific API versions and endpoints, call frequency, and error patterns. Essential for planning breaking changes, deprecations, and incident communication.
-  * **Cost Attribution** — Calculates infrastructure and operational costs per API, consumer, and environment. Supports chargeback and investment decisions. Shows true operating costs.
-  * **Lifecycle Health Indicators** — Monitors: APIs with zero consumers (retire immediately), deprecated APIs with high traffic (migration blocked), APIs near capacity (need scaling).
-  * **Anomaly Detection** — Flags unusual patterns: traffic spikes, new errors, behavior changes, degraded performance. Early detection prevents small problems becoming major incidents.
-  * **Compliance & Security Reporting** — Shows who accessed what data and when. Tracks compliance with data policies. Flags security concerns like failed auth attempts or unusual access patterns.
+  * **Usage Analytics** — Analyzes call patterns: top consumers, most-used
+    endpoints, peak times, adoption trends. Shows producers how teams actually
+    use their API versus expectations. Informs roadmap priorities.
+  * **Reliability Metrics** — Tracks error rates, latency, availability, and SLO
+    compliance for each API and version. Producers maintain quality and spot
+    degradation before it impacts consumers.
+  * **Consumer Impact Assessment** — Lists which applications depend on specific
+    API versions and endpoints, call frequency, and error patterns. Essential
+    for planning breaking changes, deprecations, and incident communication.
+  * **Cost Attribution** — Calculates infrastructure and operational costs per
+    API, consumer, and environment. Supports chargeback and investment
+    decisions. Shows true operating costs.
+  * **Lifecycle Health Indicators** — Monitors: APIs with zero consumers (retire
+    immediately), deprecated APIs with high traffic (migration blocked), APIs
+    near capacity (need scaling).
+  * **Anomaly Detection** — Flags unusual patterns: traffic spikes, new errors,
+    behavior changes, degraded performance. Early detection prevents small
+    problems becoming major incidents.
+  * **Compliance & Security Reporting** — Shows who accessed what data and when.
+    Tracks compliance with data policies. Flags security concerns like failed
+    auth attempts or unusual access patterns.
 
 **Observability as a Governance Capability:**
 
-In practice, the Gateway and Auditor together form an observability layer for the internal API estate. They provide:
+In practice, the Gateway and Auditor together form an observability layer for
+the internal API estate. They provide:
 
-- **Traffic visibility** — Which systems are calling which APIs, at what rates, and in which environments
-- **Dependency visibility** — Which downstream consumers will be affected by incidents, breaking changes, or retirement plans
-- **Reliability visibility** — Latency, error rates, saturation indicators, and SLO performance by API and by consumer
-- **Change visibility** — Whether a newly published version is being adopted cleanly or causing regressions
-- **Compliance visibility** — Which regulated interfaces are being accessed, by whom, and for what approved purpose
+- **Traffic visibility** — Which systems are calling which APIs, at what rates,
+  and in which environments
+- **Dependency visibility** — Which downstream consumers will be affected by
+  incidents, breaking changes, or retirement plans
+- **Reliability visibility** — Latency, error rates, saturation indicators, and
+  SLO performance by API and by consumer
+- **Change visibility** — Whether a newly published version is being adopted
+  cleanly or causing regressions
+- **Compliance visibility** — Which regulated interfaces are being accessed, by
+  whom, and for what approved purpose
 
-This is one of the practical reasons governance matters: it turns internal APIs from a black box into an observable operating surface.
+This is one of the practical reasons governance matters: it turns internal APIs
+from a black box into an observable operating surface.
 
 **Multi-Protocol Support:**
 
@@ -177,13 +236,19 @@ The platform governs three first-class API protocols:
 | **GraphQL** | Complex queries, mobile apps, aggregation layers | GraphQL Schema (SDL) | graphql-inspector, Apollo Studio |
 | **AsyncAPI** | Event-driven, streaming, pub/sub | AsyncAPI 2.x (YAML/JSON) | asyncapi-parser, Schema Registry |
 
-Each protocol flows through the same governance process (register → review → publish → deprecate) but with protocol-appropriate tooling:
+Each protocol flows through the same governance process (register → review →
+publish → deprecate) but with protocol-appropriate tooling:
 
-- **Registry** stores all three specification formats and tracks protocol-specific metadata
-- **Gateway** handles routing differently per protocol (HTTP verbs for REST, queries/mutations for GraphQL, message channels for AsyncAPI)
-- **Auditor** measures protocol-appropriate metrics (endpoint latency for REST, query complexity for GraphQL, message throughput for AsyncAPI)
+- **Registry** stores all three specification formats and tracks
+  protocol-specific metadata
+- **Gateway** handles routing differently per protocol (HTTP verbs for REST,
+  queries/mutations for GraphQL, message channels for AsyncAPI)
+- **Auditor** measures protocol-appropriate metrics (endpoint latency for REST,
+  query complexity for GraphQL, message throughput for AsyncAPI)
 
-See the [technical design](technical-design.md) for detailed protocol handling and the [testing strategy](api-testing-strategy.md) for protocol-specific contract testing.
+See the [technical design](technical-design.md) for detailed protocol handling
+and the [testing strategy](api-testing-strategy.md) for protocol-specific
+contract testing.
 
 ---
 
@@ -200,17 +265,58 @@ Adopt --> Evolve
 Evolve --> Deprecate
 Deprecate --> Retire
 </pre>
-* **Idea → Design:** Define the API early in the registry — Before writing code, teams register their API concept: what problem it solves, what it does, who will use it. Early registration creates visibility. Other teams can discover the planned API, influence its design, or avoid duplicate work. Design includes the API spec (OpenAPI for REST, GraphQL schema, or AsyncAPI for event-driven), data models, error handling, and auth requirements. Organizations shift from "build in secret, announce when done" to "design in public, get feedback early."
+* **Idea → Design:** Define the API early in the registry — Before writing code,
+  teams register their API concept: what problem it solves, what it does, who
+  will use it. Early registration creates visibility. Other teams can discover
+  the planned API, influence its design, or avoid duplicate work. Design
+  includes the API spec (OpenAPI for REST, GraphQL schema, or AsyncAPI for
+  event-driven), data models, error handling, and auth requirements.
+  Organizations shift from "build in secret, announce when done" to "design in
+  public, get feedback early."
 
-* **Review:** Peer and architectural feedback improves quality — Domain experts, security teams, and API designers review the design. Does it align with standards? Follow naming conventions? Handle errors properly? Implement security correctly? Fit domain boundaries? This collaborative check catches issues before they become production contracts. Automated tools handle schema validation, naming patterns, and security scans. Human reviewers focus on business alignment, usability, and architecture. Goal: raise quality without bottlenecks.
+* **Review:** Peer and architectural feedback improves quality — Domain experts,
+  security teams, and API designers review the design. Does it align with
+  standards? Follow naming conventions? Handle errors properly? Implement
+  security correctly? Fit domain boundaries? This collaborative check catches
+  issues before they become production contracts. Automated tools handle schema
+  validation, naming patterns, and security scans. Human reviewers focus on
+  business alignment, usability, and architecture. Goal: raise quality without
+  bottlenecks.
 
-* **Publish:** Ready for production, discoverable — After passing review, the API is marked "Published" and available for production. The Gateway receives routing config, documentation goes to the developer portal, the API appears in search as production-ready, and monitoring starts. Publishing is a contract commitment: maintain backward compatibility, support consumers, honor SLOs, follow lifecycle rules. The API transitions from project artifact to supported product.
+* **Publish:** Ready for production, discoverable — After passing review, the
+  API is marked "Published" and available for production. The Gateway receives
+  routing config, documentation goes to the developer portal, the API appears in
+  search as production-ready, and monitoring starts. Publishing is a contract
+  commitment: maintain backward compatibility, support consumers, honor SLOs,
+  follow lifecycle rules. The API transitions from project artifact to supported
+  product.
 
-* **Adopt:** Consumers onboard with approvals — Consumers discover the API, review docs, and submit subscription requests. Producers receive notifications and approve based on capacity, readiness, or business agreements. This creates a formal relationship between producer and consumer. Development approvals might be automatic; production approvals let producers understand dependencies and coordinate onboarding.
+* **Adopt:** Consumers onboard with approvals — Consumers discover the API,
+  review docs, and submit subscription requests. Producers receive notifications
+  and approve based on capacity, readiness, or business agreements. This creates
+  a formal relationship between producer and consumer. Development approvals
+  might be automatic; production approvals let producers understand dependencies
+  and coordinate onboarding.
 
-* **Evolve:** Semantic versioning (Minor = compatible; Major = breaking) — APIs evolve while respecting existing consumers. Minor updates (v2.1 to v2.2) add capabilities, optional parameters, or response fields without breaking existing consumers. Major updates (v2.0 to v3.0) introduce breaking changes: removed fields, changed types, restructured endpoints, or incompatible schema changes. Major versions run in parallel. Consumers migrate on their schedule, not forced. This prevents "update and break everything" while allowing evolution. Note that "breaking" varies by protocol — see the [testing strategy](api-testing-strategy.md) for protocol-specific breaking change rules.
+* **Evolve:** Semantic versioning (Minor = compatible; Major = breaking) — APIs
+  evolve while respecting existing consumers. Minor updates (v2.1 to v2.2) add
+  capabilities, optional parameters, or response fields without breaking
+  existing consumers. Major updates (v2.0 to v3.0) introduce breaking changes:
+  removed fields, changed types, restructured endpoints, or incompatible schema
+  changes. Major versions run in parallel. Consumers migrate on their schedule,
+  not forced. This prevents "update and break everything" while allowing
+  evolution. Note that "breaking" varies by protocol — see the [testing
+  strategy](api-testing-strategy.md) for protocol-specific breaking change
+  rules.
 
-* **Deprecate & Retire:** Sunset gracefully — When an API version is no longer valuable or superseded, mark it deprecated. Stop new subscriptions. Tell existing consumers the timeline and migration path. Track remaining usage. Retire only after a waiting period (e.g., 90 days minimum) and when usage drops to zero or remaining consumers migrate. The Auditor shows who still uses the deprecated API for targeted outreach. Remove from routing but archive metadata. This prevents both premature retirement (breaking consumers) and eternal support (accumulating debt).
+* **Deprecate & Retire:** Sunset gracefully — When an API version is no longer
+  valuable or superseded, mark it deprecated. Stop new subscriptions. Tell
+  existing consumers the timeline and migration path. Track remaining usage.
+  Retire only after a waiting period (e.g., 90 days minimum) and when usage
+  drops to zero or remaining consumers migrate. The Auditor shows who still uses
+  the deprecated API for targeted outreach. Remove from routing but archive
+  metadata. This prevents both premature retirement (breaking consumers) and
+  eternal support (accumulating debt).
 
 This keeps APIs fit for purpose, safe to evolve, and easy to use.
 
@@ -220,66 +326,147 @@ This keeps APIs fit for purpose, safe to evolve, and easy to use.
 
 Good governance only works when **developers want to use it**. That requires:
 
-* **Clear onboarding** — New consumers should go from discovery to first successful call in under 20 minutes. Provide a "Quick Start" guide: authentication setup, making a request, understanding the response. Assume no prior knowledge. Give step-by-step instructions with realistic examples. Interactive tutorials, sandbox environments with test data, and video walkthroughs reduce time-to-value. Early success builds confidence and encourages use.
+* **Clear onboarding** — New consumers should go from discovery to first
+  successful call in under 20 minutes. Provide a "Quick Start" guide:
+  authentication setup, making a request, understanding the response. Assume no
+  prior knowledge. Give step-by-step instructions with realistic examples.
+  Interactive tutorials, sandbox environments with test data, and video
+  walkthroughs reduce time-to-value. Early success builds confidence and
+  encourages use.
 
-* **Good documentation and examples** — Good documentation separates adopted APIs from avoided ones. Provide: complete reference docs (auto-generated from schemas), guides for common use cases, troubleshooting for frequent issues, and FAQs from real questions. Include working code examples in languages developers actually use. Show authentication, error handling, pagination, and complex queries. Version docs with the API. Make them searchable and navigable. Stale or wrong documentation destroys trust.
+* **Good documentation and examples** — Good documentation separates adopted
+  APIs from avoided ones. Provide: complete reference docs (auto-generated from
+  schemas), guides for common use cases, troubleshooting for frequent issues,
+  and FAQs from real questions. Include working code examples in languages
+  developers actually use. Show authentication, error handling, pagination, and
+  complex queries. Version docs with the API. Make them searchable and
+  navigable. Stale or wrong documentation destroys trust.
 
-* **Consistent design standards** — When every API follows the same patterns, developers gain transferable knowledge. Use the same auth across all APIs (OAuth2, JWT, or API keys), identical error structures with predictable codes, uniform pagination (cursor or offset, but consistent), standard query parameter naming, and common filtering and sorting. Developers integrate quickly because new APIs behave like ones they've used. Extend consistency to performance, timeouts, and retries. Inconsistency makes developers treat every API as unique, increasing cognitive load and integration time.
+* **Consistent design standards** — When every API follows the same patterns,
+  developers gain transferable knowledge. Use the same auth across all APIs
+  (OAuth2, JWT, or API keys), identical error structures with predictable codes,
+  uniform pagination (cursor or offset, but consistent), standard query
+  parameter naming, and common filtering and sorting. Developers integrate
+  quickly because new APIs behave like ones they've used. Extend consistency to
+  performance, timeouts, and retries. Inconsistency makes developers treat every
+  API as unique, increasing cognitive load and integration time.
 
-* **Easy self-service** — Developers shouldn't email, ticket, or meet to find APIs or request access. Provide powerful search: by business capability ("customer address lookup"), technical characteristic ("real-time stream"), data type ("product catalog"), or domain ("payments"). Show what each API does, who owns it, its SLOs, and how to start. One-click subscription requests, auto-routed to approvers, with clear status. Auto-approve in non-production. The workflow should feel like an app store, not bureaucracy.
+* **Easy self-service** — Developers shouldn't email, ticket, or meet to find
+  APIs or request access. Provide powerful search: by business capability
+  ("customer address lookup"), technical characteristic ("real-time stream"),
+  data type ("product catalog"), or domain ("payments"). Show what each API
+  does, who owns it, its SLOs, and how to start. One-click subscription
+  requests, auto-routed to approvers, with clear status. Auto-approve in
+  non-production. The workflow should feel like an app store, not bureaucracy.
 
-* **Fast approvals** — Waiting days or weeks for approval kills momentum. Review and approve production requests within one business day, most in hours. Give approvers context: what the consumer wants, which endpoints, expected volume, whether they've integrated in lower environments. Automate checks: application registered, security training complete, rate limits understood. Human approvers focus on capacity and business alignment. Auto-approve routine cases. Make "yes" fast and "no" clear with actionable feedback. Never leave requests in limbo.
+* **Fast approvals** — Waiting days or weeks for approval kills momentum. Review
+  and approve production requests within one business day, most in hours. Give
+  approvers context: what the consumer wants, which endpoints, expected volume,
+  whether they've integrated in lower environments. Automate checks: application
+  registered, security training complete, rate limits understood. Human
+  approvers focus on capacity and business alignment. Auto-approve routine
+  cases. Make "yes" fast and "no" clear with actionable feedback. Never leave
+  requests in limbo.
 
-This approach guides behavior without forcing it. Good internal developer experience is the best enforcement.
+This approach guides behavior without forcing it. Good internal developer
+experience is the best enforcement.
 
 ---
 
 
 ### **Organizational Implementation**
 
-Technical platforms only succeed with the right organizational structure, governance, and change management.
+Technical platforms only succeed with the right organizational structure,
+governance, and change management.
 
 #### **Required Resources & Team Structure**
 
-Successful API governance requires dedicated teams and clear roles. The investment scales with organization size.
+Successful API governance requires dedicated teams and clear roles. The
+investment scales with organization size.
 
 **Core Platform Team:**
 
-* **Platform Engineers** (3-8 FTEs depending on scale) — Build and operate the Registry, Gateway, and Auditor infrastructure. Maintain integrations, ensure reliability, provide developer support. Small orgs (<300 APIs) may start with 2-3 engineers; large orgs (1000+ APIs) need 6-8.
+* **Platform Engineers** (3-8 FTEs depending on scale) — Build and operate the
+  Registry, Gateway, and Auditor infrastructure. Maintain integrations, ensure
+  reliability, provide developer support. Small orgs (<300 APIs) may start with
+  2-3 engineers; large orgs (1000+ APIs) need 6-8.
 
-* **Developer Experience Lead** (1 FTE) — Owns documentation standards, onboarding flows, and feedback loops. Measures developer satisfaction and reduces friction. Critical role often underestimated.
+* **Developer Experience Lead** (1 FTE) — Owns documentation standards,
+  onboarding flows, and feedback loops. Measures developer satisfaction and
+  reduces friction. Critical role often underestimated.
 
-* **Product Manager** (0.5-1 FTE) — Defines platform roadmap based on producer and consumer needs. Prioritizes features, manages stakeholder expectations, communicates value. Can be shared role initially.
+* **Product Manager** (0.5-1 FTE) — Defines platform roadmap based on producer
+  and consumer needs. Prioritizes features, manages stakeholder expectations,
+  communicates value. Can be shared role initially.
 
 **API Governance Experts:**
 
-Automation and self-service handle routine tasks, but human experts ensure quality and consistency.
+Automation and self-service handle routine tasks, but human experts ensure
+quality and consistency.
 
 **Two-Tier Expert Model:**
 
 Effective organizations use two tiers:
 
-* **Departmental API Advisors** — Each department designates experienced engineers as local API champions. They help during initial design: API shape, naming, domain boundaries, integration patterns. They answer questions, share practices, review drafts, and navigate governance. This early guidance improves quality before formal review, catching issues when they're easy to fix. Departmental advisors know local business context and organizational standards, translating between domain needs and platform requirements.
+* **Departmental API Advisors** — Each department designates experienced
+  engineers as local API champions. They help during initial design: API shape,
+  naming, domain boundaries, integration patterns. They answer questions, share
+  practices, review drafts, and navigate governance. This early guidance
+  improves quality before formal review, catching issues when they're easy to
+  fix. Departmental advisors know local business context and organizational
+  standards, translating between domain needs and platform requirements.
 
-* **Central API Review Panel** — A rotating panel of 5-12 senior experts reviews all APIs before publication. Members rotate weekly or bi-weekly to distribute work and prevent bottlenecks. Fresh perspectives while maintaining consistency through shared standards. The panel checks architectural alignment, security, usability, scalability, and maintainability. This is **collaborative review**, not gatekeeping — the role is to improve quality through feedback, not prevent progress. Approval means the API meets standards and is ready to become a supported product.
+* **Central API Review Panel** — A rotating panel of 5-12 senior experts reviews
+  all APIs before publication. Members rotate weekly or bi-weekly to distribute
+  work and prevent bottlenecks. Fresh perspectives while maintaining consistency
+  through shared standards. The panel checks architectural alignment, security,
+  usability, scalability, and maintainability. This is **collaborative review**,
+  not gatekeeping — the role is to improve quality through feedback, not prevent
+  progress. Approval means the API meets standards and is ready to become a
+  supported product.
 
 **Cultivating an API Expert Community of Practice:**
 
-Building API expertise requires intentional investment in training and progression pathways. Organizations should establish a structured program:
+Building API expertise requires intentional investment in training and
+progression pathways. Organizations should establish a structured program:
 
-* **Training & Certification** — Candidates complete formal training covering OpenAPI, GraphQL, and AsyncAPI specifications, REST and event-driven design principles, versioning strategies, security patterns, and organizational standards. Training concludes with a practical assessment: reviewing sample API designs and identifying issues. Only those who pass the assessment are eligible to become Departmental API Advisors.
+* **Training & Certification** — Candidates complete formal training covering
+  OpenAPI, GraphQL, and AsyncAPI specifications, REST and event-driven design
+  principles, versioning strategies, security patterns, and organizational
+  standards. Training concludes with a practical assessment: reviewing sample
+  API designs and identifying issues. Only those who pass the assessment are
+  eligible to become Departmental API Advisors.
 
-* **Shadowing Period** — New advisors shadow experienced reviewers for 4-6 weeks, observing real reviews and learning to balance quality standards with pragmatic guidance. They practice giving feedback on draft APIs under supervision before advising independently. This apprenticeship model transfers tacit knowledge about common pitfalls, effective feedback techniques, and when to escalate.
+* **Shadowing Period** — New advisors shadow experienced reviewers for 4-6
+  weeks, observing real reviews and learning to balance quality standards with
+  pragmatic guidance. They practice giving feedback on draft APIs under
+  supervision before advising independently. This apprenticeship model transfers
+  tacit knowledge about common pitfalls, effective feedback techniques, and when
+  to escalate.
 
-* **Progression to Review Panel** — After 6-12 months successfully coaching teams as a Departmental API Advisor, individuals become eligible for election to the Central API Review Panel. Progression is based on demonstrated expertise: quality of guidance, peer recommendations, consistency in applying standards, and mentorship effectiveness. Panel membership represents recognition of mastery and contribution to platform quality.
+* **Progression to Review Panel** — After 6-12 months successfully coaching
+  teams as a Departmental API Advisor, individuals become eligible for election
+  to the Central API Review Panel. Progression is based on demonstrated
+  expertise: quality of guidance, peer recommendations, consistency in applying
+  standards, and mentorship effectiveness. Panel membership represents
+  recognition of mastery and contribution to platform quality.
 
-* **Continuous Learning** — The community of practice meets monthly to share lessons learned, discuss challenging cases, calibrate standards interpretation, and evolve best practices. This forum keeps expertise current and maintains consistency across advisors and panel members.
+* **Continuous Learning** — The community of practice meets monthly to share
+  lessons learned, discuss challenging cases, calibrate standards
+  interpretation, and evolve best practices. This forum keeps expertise current
+  and maintains consistency across advisors and panel members.
 
-This progression creates a sustainable pipeline of expertise while ensuring reviewers have proven capability and organizational credibility. It makes the expert role aspirational—something engineers earn through demonstrated skill—rather than appointed authority.
+This progression creates a sustainable pipeline of expertise while ensuring
+reviewers have proven capability and organizational credibility. It makes the
+expert role aspirational—something engineers earn through demonstrated
+skill—rather than appointed authority.
 
 **Why Human Review Matters:**
 
-Automated linting catches schema errors and naming violations. It cannot assess whether an API solves the right problem, whether abstractions make sense, whether it will scale, or whether it integrates well with existing services. Human experts bring:
+Automated linting catches schema errors and naming violations. It cannot assess
+whether an API solves the right problem, whether abstractions make sense,
+whether it will scale, or whether it integrates well with existing services.
+Human experts bring:
 
 * **Pattern recognition** from hundreds of API designs
 * **Business context** that shapes APIs to actual needs, not theory
@@ -289,7 +476,8 @@ Automated linting catches schema errors and naming violations. It cannot assess 
 
 **Minimum Viable Approach:**
 
-Organizations not ready for two tiers should designate **at least 2-3 API experts**. These experts should be:
+Organizations not ready for two tiers should designate **at least 2-3 API
+experts**. These experts should be:
 
 * Empowered to give binding feedback
 * Given dedicated time (10-20% of their role)
@@ -297,7 +485,10 @@ Organizations not ready for two tiers should designate **at least 2-3 API expert
 * Equipped with clear standards and review criteria
 * Accessible early in design when changes are cheap
 
-This investment pays through higher-quality APIs, fewer production issues, better developer experience, and increased reuse. A few expert reviewers cost less than poorly designed APIs maintained for years or duplicate work from teams who can't use existing APIs.
+This investment pays through higher-quality APIs, fewer production issues,
+better developer experience, and increased reuse. A few expert reviewers cost
+less than poorly designed APIs maintained for years or duplicate work from teams
+who can't use existing APIs.
 
 **Making Review Scalable:**
 
@@ -315,62 +506,104 @@ Done well, expert review becomes a service teams seek, not a hurdle they avoid.
 
 **Governance Group:**
 
-* **Composition** — 5-8 senior leaders: Head of Platform Engineering, Principal Architect, Security Lead, 1-2 representatives from major product areas, optional Compliance/Legal representation.
+* **Composition** — 5-8 senior leaders: Head of Platform Engineering, Principal
+  Architect, Security Lead, 1-2 representatives from major product areas,
+  optional Compliance/Legal representation.
 
-* **Responsibilities** — Set API standards and policies. Resolve cross-domain disputes. Approve exceptions. Track ecosystem health metrics. Escalation point for complex cases.
+* **Responsibilities** — Set API standards and policies. Resolve cross-domain
+  disputes. Approve exceptions. Track ecosystem health metrics. Escalation point
+  for complex cases.
 
-* **Meeting Cadence** — Quarterly for strategy; monthly for operational review. Not involved in day-to-day API approvals—that's handled by the Review Panel.
+* **Meeting Cadence** — Quarterly for strategy; monthly for operational review.
+  Not involved in day-to-day API approvals—that's handled by the Review Panel.
 
-* **Decision Authority** — Final arbiter on: API standards, version policies, deprecation rules, domain ownership conflicts, platform investment priorities.
+* **Decision Authority** — Final arbiter on: API standards, version policies,
+  deprecation rules, domain ownership conflicts, platform investment priorities.
 
 ---
 
 #### **Adoption Strategy & Change Management**
 
-Introducing API governance requires careful change management. Force adoption too quickly and teams bypass the system. Move too slowly and chaos persists.
+Introducing API governance requires careful change management. Force adoption
+too quickly and teams bypass the system. Move too slowly and chaos persists.
 
 **Phase 1: Build Credibility (Months 1-6)**
 
-* **Start with volunteers** — Find 2-3 product teams willing to pilot the platform. Successful early adopters become advocates. Their feedback shapes the platform before broader rollout.
-* **Show quick wins** — Demonstrate value fast: "Team X found Team Y's customer API, avoiding 3 months of duplicate work." Measure time-to-first-call improvements. Highlight cost savings from reuse.
-* **Make it optional but attractive** — Don't mandate initially. Make the platform so good that teams want to use it. When early adopters show success, others will follow.
-* **Invest heavily in DX** — First impressions matter. Documentation must be excellent. Onboarding must be smooth. Approvals must be fast. One bad experience spreads quickly.
-* **Decision Point (Month 3)** — Review pilot results. Go/no-go decision on broader rollout.
+* **Start with volunteers** — Find 2-3 product teams willing to pilot the
+  platform. Successful early adopters become advocates. Their feedback shapes
+  the platform before broader rollout.
+* **Show quick wins** — Demonstrate value fast: "Team X found Team Y's customer
+  API, avoiding 3 months of duplicate work." Measure time-to-first-call
+  improvements. Highlight cost savings from reuse.
+* **Make it optional but attractive** — Don't mandate initially. Make the
+  platform so good that teams want to use it. When early adopters show success,
+  others will follow.
+* **Invest heavily in DX** — First impressions matter. Documentation must be
+  excellent. Onboarding must be smooth. Approvals must be fast. One bad
+  experience spreads quickly.
+* **Decision Point (Month 3)** — Review pilot results. Go/no-go decision on
+  broader rollout.
 
 **Phase 2: Expand Adoption (Months 6-12)**
 
-* **Celebrate successes publicly** — Showcase reuse stories in engineering all-hands. Recognize teams that publish well-designed APIs. Create cultural momentum.
-* **Require for new APIs** — Once the platform proves value, make it mandatory for new APIs. Grandfather existing APIs with a migration timeline.
-* **Provide migration support** — Assign platform team members to help existing teams onboard their APIs. Don't expect teams to figure it out alone.
-* **Track and communicate metrics** — Share dashboard showing API adoption, reuse rates, time savings. Make the impact visible to leadership and teams.
-* **Decision Point (Month 6)** — Approve mandatory adoption for new APIs. Confirm resource allocation.
+* **Celebrate successes publicly** — Showcase reuse stories in engineering
+  all-hands. Recognize teams that publish well-designed APIs. Create cultural
+  momentum.
+* **Require for new APIs** — Once the platform proves value, make it mandatory
+  for new APIs. Grandfather existing APIs with a migration timeline.
+* **Provide migration support** — Assign platform team members to help existing
+  teams onboard their APIs. Don't expect teams to figure it out alone.
+* **Track and communicate metrics** — Share dashboard showing API adoption,
+  reuse rates, time savings. Make the impact visible to leadership and teams.
+* **Decision Point (Month 6)** — Approve mandatory adoption for new APIs.
+  Confirm resource allocation.
 
 **Phase 3: Enforce Governance (Months 12-18)**
 
-* **Gateway becomes mandatory** — All production API traffic flows through the Gateway. Network policies prevent direct access. This is when governance becomes enforced rather than encouraged.
-**IMPORTANT:** This is often the most contentious transition. Teams suddenly can't bypass governance, and any deployment or configuration issues become blockers. 
+* **Gateway becomes mandatory** — All production API traffic flows through the
+Gateway. Network policies prevent direct access. This is when governance becomes
+enforced rather than encouraged. **IMPORTANT:** This is often the most
+contentious transition. Teams suddenly can't bypass governance, and any
+deployment or configuration issues become blockers. 
   - **Technical approach:** 
-    1. Start by routing read-only/GET traffic through Gateway while leaving mutations direct—proves stability without risk. 
-    2. Gradually shift remaining traffic API-by-API over 4-8 weeks, prioritizing low-risk services first. 
-    3. Monitor error rates, latency, and throughput obsessively—any degradation gets immediate attention. 
-    4. Keep "emergency bypass" capability for 30 days in case of critical issues. 
-    5. Only after 95%+ traffic flows through Gateway successfully do you implement network policies (security groups, firewall rules) that block direct access. 
+    1. Start by routing read-only/GET traffic through Gateway while leaving
+       mutations direct—proves stability without risk. 
+    2. Gradually shift remaining traffic API-by-API over 4-8 weeks, prioritizing
+       low-risk services first. 
+    3. Monitor error rates, latency, and throughput obsessively—any degradation
+       gets immediate attention. 
+    4. Keep "emergency bypass" capability for 30 days in case of critical
+       issues. 
+    5. Only after 95%+ traffic flows through Gateway successfully do you
+       implement network policies (security groups, firewall rules) that block
+       direct access. 
   - **Expected resistance and responses:** 
     - "Gateway will slow us down" → Show latency data proving <2ms overhead. 
-    - "What if Gateway goes down?" → Demonstrate multi-region HA setup with 99.99% uptime SLA. 
-    - "We have a special case" → Offer 30-day exception with mandatory migration plan. 
-    - "This breaks our deployment pipeline" → Platform team provides hands-on migration support. 
+    - "What if Gateway goes down?" → Demonstrate multi-region HA setup with
+      99.99% uptime SLA. 
+    - "We have a special case" → Offer 30-day exception with mandatory migration
+      plan. 
+    - "This breaks our deployment pipeline" → Platform team provides hands-on
+      migration support. 
 
 
-* **Deprecate shadow APIs** — Identify APIs operating outside governance. Work with owners to bring them into the platform or sunset them. Offer support, not punishment.
-* **Establish SLAs** — Review approvals within 3 business days. Support tickets responded to within 4 hours. Platform uptime 99.9%. Hold platform team accountable.
-* **Decision Point (Month 12)** — Review ROI against projections. Adjust investment if needed.
+* **Deprecate shadow APIs** — Identify APIs operating outside governance. Work
+  with owners to bring them into the platform or sunset them. Offer support, not
+  punishment.
+* **Establish SLAs** — Review approvals within 3 business days. Support tickets
+  responded to within 4 hours. Platform uptime 99.9%. Hold platform team
+  accountable.
+* **Decision Point (Month 12)** — Review ROI against projections. Adjust
+  investment if needed.
 
 **Phase 4: Optimize & Scale (Months 18-24)**
 
-* **Continuous improvement** — Regular retrospectives with producers and consumers. What's working? What's frustrating? Iterate based on feedback.
-* **Automate more** — As patterns emerge, automate approvals for routine cases. Use AI to suggest similar APIs during design. Reduce manual overhead.
-* **Expand expert network** — Grow the pool of API Advisors and Review Panel members. Rotate assignments to prevent burnout and spread expertise.
+* **Continuous improvement** — Regular retrospectives with producers and
+  consumers. What's working? What's frustrating? Iterate based on feedback.
+* **Automate more** — As patterns emerge, automate approvals for routine cases.
+  Use AI to suggest similar APIs during design. Reduce manual overhead.
+* **Expand expert network** — Grow the pool of API Advisors and Review Panel
+  members. Rotate assignments to prevent burnout and spread expertise.
 
 **Common Resistance & How to Address It:**
 
@@ -385,11 +618,13 @@ Introducing API governance requires careful change management. Force adoption to
 
 Track these indicators to gauge organizational acceptance:
 
-* % of APIs registered in platform (target: 100% of new, 80%+ of existing by Month 18)
+* % of APIs registered in platform (target: 100% of new, 80%+ of existing by
+  Month 18)
 * % of production traffic through Gateway (target: 95%+ by Month 18)
 * Average API approval time (target: <2 days)
 * Developer satisfaction score with platform (target: 4/5 or higher)
-* API reuse rate: new projects using existing APIs vs. building new (target: increasing quarterly)
+* API reuse rate: new projects using existing APIs vs. building new (target:
+  increasing quarterly)
 
 ---
 
@@ -430,13 +665,22 @@ Organizations without API governance face compounding costs:
 
 **Wasted Engineering Capacity:**
 * 30-40% of engineering time spent rebuilding capabilities that already exist
-* For a 200-engineer organization, that's 60-80 engineers worth of duplicate work annually
-* Estimated opportunity cost: 9-20 million dollars per year in lost productivity[^1]
+* For a 200-engineer organization, that's 60-80 engineers worth of duplicate
+  work annually
+* Estimated opportunity cost: 9-20 million dollars per year in lost
+  productivity[^1]
 
-[^1]: **Lost productivity calculation:** Assumes fully-loaded cost per engineer of $150K-250K/year (salary + benefits + overhead). For 200 engineers with 30-40% spending time on duplicate work: 60-80 FTE × $150K-250K = $9M-20M annually. This represents opportunity cost—work that could be redirected to new features, customer value, or innovation rather than rebuilding existing capabilities.
+[^1]: **Lost productivity calculation:** Assumes fully-loaded cost per engineer
+    of $150K-250K/year (salary + benefits + overhead). For 200 engineers with
+    30-40% spending time on duplicate work: 60-80 FTE × $150K-250K = $9M-20M
+    annually. This represents opportunity cost—work that could be redirected to
+    new features, customer value, or innovation rather than rebuilding existing
+    capabilities.
 
 
-**Critical success factor:** Executive sponsorship to hold the line. Teams will test boundaries. If exceptions become routine, enforcement fails and governance becomes optional again.
+**Critical success factor:** Executive sponsorship to hold the line. Teams will
+test boundaries. If exceptions become routine, enforcement fails and governance
+becomes optional again.
 
 **Technical Debt Accumulation:**
 * Uncontrolled version sprawl creates maintenance burden (v1, v2, v1.1, v2-beta, v2-internal...)
@@ -519,19 +763,25 @@ Clear authority prevents gridlock and ensures accountability.
 #### **After 6 Months:**
 
 **For a Developer:**
-* Searches registry and finds the customer address API immediately, avoiding the need to build from scratch.
-* Requests dev access and gets approved automatically, making their first successful call in minutes.
-* Integrates with confidence knowing the API follows familiar patterns (same auth, errors, pagination).
-* Deploys to production weeks earlier than expected, using a tested, production-ready API.
+* Searches registry and finds the customer address API immediately, avoiding the
+  need to build from scratch.
+* Requests dev access and gets approved automatically, making their first
+  successful call in minutes.
+* Integrates with confidence knowing the API follows familiar patterns (same
+  auth, errors, pagination).
+* Deploys to production weeks earlier than expected, using a tested,
+  production-ready API.
 
 **For a Tech Lead:**
 * Sees a dashboard showing exactly which APIs their team produces and consumes.
 * Understands their team's API dependencies before deploying breaking changes.
-* Receives proactive alerts when APIs they depend on are deprecated with a clear migration path.
+* Receives proactive alerts when APIs they depend on are deprecated with a clear
+  migration path.
 * Confidently deprecates old API versions knowing exactly who is impacted.
 
 **For a Director:**
-* Reviews monthly metrics and sees the adoption curve trending up without having to mandate usage.
+* Reviews monthly metrics and sees the adoption curve trending up without having
+  to mandate usage.
 * Sees a reduction in duplicate work as teams discover and reuse existing APIs.
 * Notes that approval times are fast, not the feared bottleneck.
 * Observes early adoption momentum with positive developer feedback.
@@ -539,36 +789,47 @@ Clear authority prevents gridlock and ensures accountability.
 #### **After 12 Months:**
 
 **For a Developer:**
-* Every new API they encounter feels familiar—same patterns, consistent experience.
+* Every new API they encounter feels familiar—same patterns, consistent
+  experience.
 * API onboarding is so smooth they rarely need support tickets.
 * Can discover, evaluate, and integrate a new API in a single day.
-* Spends significantly more time building features and less time on integration plumbing.
+* Spends significantly more time building features and less time on integration
+  plumbing.
 
 **For a Tech Lead:**
-* Deprecates APIs safely with the Auditor showing zero consumers before shutdown.
+* Deprecates APIs safely with the Auditor showing zero consumers before
+  shutdown.
 * Plans breaking changes informed by actual usage data, not guesswork.
 * Team velocity improves noticeably through API reuse.
-* Security and compliance "just works"—gateway handles authentication, audit logs are automatic.
+* Security and compliance "just works"—gateway handles authentication, audit
+  logs are automatic.
 
 **For a Director:**
-* Has clear visibility into the API ecosystem health and dependencies across the entire organization.
+* Has clear visibility into the API ecosystem health and dependencies across the
+  entire organization.
 * Sees measurable productivity gains and faster feature delivery.
 * Fewer production incidents occur from API changes.
-* Compliance audits are easier with automated API access logs and policy enforcement.
+* Compliance audits are easier with automated API access logs and policy
+  enforcement.
 
 **For a VP/CTO:**
-* Data-driven decisions about platform investment and team priorities are now possible.
+* Data-driven decisions about platform investment and team priorities are now
+  possible.
 * Reduced cloud costs from retiring zombie APIs and optimized gateway routing.
-* Competitive advantage: shipping features faster than before through systematic reuse.
+* Competitive advantage: shipping features faster than before through systematic
+  reuse.
 
 #### **After 24 Months:**
 
 **Organization-Wide:**
 * API governance is simply "how we work."
 * Shadow APIs are effectively eliminated.
-* Engineering culture has shifted: teams proactively search for reuse before building.
-* API design quality has improved through consistent expert review and mentorship.
-* Security and compliance posture is dramatically improved with automated controls.
+* Engineering culture has shifted: teams proactively search for reuse before
+  building.
+* API design quality has improved through consistent expert review and
+  mentorship.
+* Security and compliance posture is dramatically improved with automated
+  controls.
 * Platform ROI is clear: break-even achieved, ongoing value compounding.
 
 ---
@@ -577,15 +838,22 @@ Clear authority prevents gridlock and ensures accountability.
 
 #### **Budget Considerations**
 
-API governance requires investment in platform, people, and process. Budget varies by organization size and ambition.
+API governance requires investment in platform, people, and process. Budget
+varies by organization size and ambition.
 
 **Technology Costs:**
 
-* **Commercial API Platform** — $100K-500K/year depending on scale and vendor (Apigee, Kong, AWS API Gateway, Azure APIM, MuleSoft). Includes Gateway, some registry features, and basic analytics.
+* **Commercial API Platform** — $100K-500K/year depending on scale and vendor
+  (Apigee, Kong, AWS API Gateway, Azure APIM, MuleSoft). Includes Gateway, some
+  registry features, and basic analytics.
 
-* **Build Custom Platform** — $500K-2M over 18-24 months for engineering time (6-8 engineers × 18 months). Ongoing maintenance 2-4 engineers. Consider only if commercial solutions don't fit unique requirements.
+* **Build Custom Platform** — $500K-2M over 18-24 months for engineering time
+  (6-8 engineers × 18 months). Ongoing maintenance 2-4 engineers. Consider only
+  if commercial solutions don't fit unique requirements.
 
-* **Supporting Tools** — Documentation portal ($20-50K/year), monitoring/analytics ($30-100K/year), CI/CD integrations (usually covered by existing tools).
+* **Supporting Tools** — Documentation portal ($20-50K/year),
+  monitoring/analytics ($30-100K/year), CI/CD integrations (usually covered by
+  existing tools).
 
 **People Costs:**
 
@@ -609,17 +877,28 @@ API governance requires investment in platform, people, and process. Budget vari
 
 Based on industry studies and customer case studies:
 
-* **Reduced duplication** — 15-25% reduction in duplicate development (teams reuse vs. rebuild). For a 200-engineer org, that's 30-50 engineers' worth of work redirected to new features. Value: 4.5-12.5 million dollars per year.
+* **Reduced duplication** — 15-25% reduction in duplicate development (teams
+  reuse vs. rebuild). For a 200-engineer org, that's 30-50 engineers' worth of
+  work redirected to new features. Value: 4.5-12.5 million dollars per year.
 
-* **Faster development** — 20-30% faster time-to-market for features using existing APIs. Competitive advantage difficult to quantify but significant.
+* **Faster development** — 20-30% faster time-to-market for features using
+  existing APIs. Competitive advantage difficult to quantify but significant.
 
-* **Fewer outages** — Standardized error handling, rate limiting, and circuit breakers reduce production incidents 30-50%. Each major incident costs 100K-1M+ dollars in lost revenue and engineering time.
+* **Fewer outages** — Standardized error handling, rate limiting, and circuit
+  breakers reduce production incidents 30-50%. Each major incident costs
+  100K-1M+ dollars in lost revenue and engineering time.
 
-* **Improved compliance** — Automated audit trails and policy enforcement reduce compliance violations and audit preparation time. Avoid fines and reduce audit costs 40-60%.
+* **Improved compliance** — Automated audit trails and policy enforcement reduce
+  compliance violations and audit preparation time. Avoid fines and reduce audit
+  costs 40-60%.
 
-* **Lower infrastructure costs** — Consolidated gateway infrastructure and retired zombie APIs reduce cloud spend 10-20%. For 10 million dollars per year cloud bill, that's 1-2 million dollars in savings.
+* **Lower infrastructure costs** — Consolidated gateway infrastructure and
+  retired zombie APIs reduce cloud spend 10-20%. For 10 million dollars per year
+  cloud bill, that's 1-2 million dollars in savings.
 
-**Break-even typically occurs in 12-18 months** for medium-to-large organizations. Small organizations see longer payback (18-24 months) but still positive ROI.
+**Break-even typically occurs in 12-18 months** for medium-to-large
+organizations. Small organizations see longer payback (18-24 months) but still
+positive ROI.
 
 **Build vs. Buy Decision:**
 
@@ -632,7 +911,9 @@ Based on industry studies and customer case studies:
 | Risk | Vendor dependency | Engineering capacity |
 | Best for | Standard use cases, faster launch | Unique requirements, long-term |
 
-**Recommendation:** Start with commercial platform unless you have highly specialized requirements or massive scale (10,000+ APIs) where custom makes economic sense.
+**Recommendation:** Start with commercial platform unless you have highly
+specialized requirements or massive scale (10,000+ APIs) where custom makes
+economic sense.
 
 ---
 
@@ -640,35 +921,57 @@ Based on industry studies and customer case studies:
 
 #### **What Executives Must Do for This to Succeed**
 
-API governance requires active executive leadership. All the engineers need to see that executives care about this topic and that compliance is expected.
+API governance requires active executive leadership. All the engineers need to
+see that executives care about this topic and that compliance is expected.
 
 **Executive Sponsor (CTO or VP Engineering):**
 
-* **Champion the initiative** — Communicate why this matters in all-hands, leadership meetings, and team interactions. API governance must be a visible priority, not a "nice to have."
+* **Champion the initiative** — Communicate why this matters in all-hands,
+  leadership meetings, and team interactions. API governance must be a visible
+  priority, not a "nice to have."
 
-* **Make governance non-negotiable** — After pilot phase proves value (Month 6), mandate that all new APIs use the platform. Grandfather existing APIs with clear migration timeline. No exceptions without Governance Group approval.
+* **Make governance non-negotiable** — After pilot phase proves value (Month 6),
+  mandate that all new APIs use the platform. Grandfather existing APIs with
+  clear migration timeline. No exceptions without Governance Group approval.
 
-* **Protect expert reviewer time** — API Advisors and Review Panel members need 10-20% dedicated time. Explicitly allocate this in performance goals and project planning. Don't treat it as "extra" work.
+* **Protect expert reviewer time** — API Advisors and Review Panel members need
+  10-20% dedicated time. Explicitly allocate this in performance goals and
+  project planning. Don't treat it as "extra" work.
 
-* **Remove organizational barriers** — When teams push back, understand their concerns but hold the line. Address platform issues (slow approvals, poor DX) immediately, but don't let teams bypass governance.
+* **Remove organizational barriers** — When teams push back, understand their
+  concerns but hold the line. Address platform issues (slow approvals, poor DX)
+  immediately, but don't let teams bypass governance.
 
-* **Review metrics quarterly** — Attend governance steering meetings. Hold platform team accountable to SLAs. Celebrate successes publicly. Intervene when red flags appear.
+* **Review metrics quarterly** — Attend governance steering meetings. Hold
+  platform team accountable to SLAs. Celebrate successes publicly. Intervene
+  when red flags appear.
 
 **Product/Engineering Leadership:**
 
-* **Allocate team capacity** — Building and migrating APIs to the platform requires time. Factor this into sprint planning and roadmaps. API quality is not optional.
+* **Allocate team capacity** — Building and migrating APIs to the platform
+  requires time. Factor this into sprint planning and roadmaps. API quality is
+  not optional.
 
-* **Support your API producers** — When producer teams need to deprecate APIs, back them up. Consumers must migrate; this isn't negotiable after the published timeline.
+* **Support your API producers** — When producer teams need to deprecate APIs,
+  back them up. Consumers must migrate; this isn't negotiable after the
+  published timeline.
 
-* **Measure and reward reuse** — Track which teams effectively reuse vs. rebuild. Recognize teams with high-quality, well-adopted APIs. Make API citizenship part of engineering culture.
+* **Measure and reward reuse** — Track which teams effectively reuse vs.
+  rebuild. Recognize teams with high-quality, well-adopted APIs. Make API
+  citizenship part of engineering culture.
 
 **Security/Compliance Leadership:**
 
-* **Define requirements clearly** — Work with platform team to codify security and compliance policies as automated rules. What data classifications require what controls?
+* **Define requirements clearly** — Work with platform team to codify security
+  and compliance policies as automated rules. What data classifications require
+  what controls?
 
-* **Audit through the platform** — Use Auditor for compliance reporting, not ad-hoc spreadsheets. Trust the platform data; make it the authoritative source.
+* **Audit through the platform** — Use Auditor for compliance reporting, not
+  ad-hoc spreadsheets. Trust the platform data; make it the authoritative
+  source.
 
-* **Participate in Governance Group** — Ensure security perspective is represented in standards and exception decisions.
+* **Participate in Governance Group** — Ensure security perspective is
+  represented in standards and exception decisions.
 
 **Communication Expectations:**
 
@@ -692,9 +995,14 @@ API governance requires active executive leadership. All the engineers need to s
 
 ### **Conclusion**
 
-Internal APIs are valuable assets in modern companies — but only when treated as **products**, not project artifacts. Product mindset paired with light but effective governance creates an ecosystem where teams move quickly, reuse grows naturally, and systems evolve safely.
+Internal APIs are valuable assets in modern companies — but only when treated as
+**products**, not project artifacts. Product mindset paired with light but
+effective governance creates an ecosystem where teams move quickly, reuse grows
+naturally, and systems evolve safely.
 
-This approach empowers developers, improves platform ROI, and reduces complexity. Organizations that adopt it now will innovate faster as automation, AI-driven development, and platform engineering accelerate.
+This approach empowers developers, improves platform ROI, and reduces
+complexity. Organizations that adopt it now will innovate faster as automation,
+AI-driven development, and platform engineering accelerate.
 
 ---
 [Technical Appendix: API Governance and Platform Model](technical-design.md) Also you can find plans to build it [from scratch](build-from-scratch/README.md) or [by composition](build-from-composition/README.md).
