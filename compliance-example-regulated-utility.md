@@ -1,3 +1,10 @@
+<script type="module">
+	import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+	mermaid.initialize({
+		startOnLoad: true,
+		theme: 'dark'
+	});
+</script>
 [Back to API Governance Framework](README.md)
 
 # Compliance Framework Example: Regulated Utility 
