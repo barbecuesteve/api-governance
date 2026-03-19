@@ -30,9 +30,15 @@ This architecture balances off-the-shelf components with custom governance logic
 
 **Key Principles:**
 - **Subscriptions drive policy**: All authorization, rate limiting, and auditing decisions derive from subscription metadata
-- **Build vs. buy**: Leverage proven tools (Kong, Backstage, Prometheus) while building custom governance logic where needed
+- **Build vs. buy**: Leverage proven portal, gateway, and observability tools while building custom governance logic where needed
 - **Single source of truth**: Registry owns all governance data; other components read from it via APIs
 - **Policy as code**: Externalize business rules to OPA for flexibility and auditability
+
+The concrete examples in this document use one reference stack to make
+the interfaces and control boundaries explicit. The model itself is
+vendor-agnostic: any portal/catalog, gateway, and telemetry platform can
+fit as long as the Registry remains the policy authority and the runtime
+layer can enforce subscription-derived decisions.
 
 #### Why Subscriptions Matter (The "Aha!" Moment)
 
@@ -55,8 +61,8 @@ By making the **Subscription** the atomic unit of governance, we solve multiple 
 <pre class="mermaid">
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e8f4f8','primaryTextColor':'#000','primaryBorderColor':'#2c5aa0','lineColor':'#2c5aa0','edgeLabelBackground':'#fff','fontSize':'14px'}}}%%
 graph TD
-    A[Backstage Developer Portal] --> B[API Registry & Governance Core]
-    B --> C[Kong Gateway]
+    A[Developer Portal / Catalog] --> B[API Registry & Governance Core]
+    B --> C[Gateway Layer]
     B --> D[Auditor]
     C --> D
     
@@ -67,14 +73,21 @@ graph TD
 </pre>
 
 **Component Roles:**
-- **Backstage Developer Portal** (Customize/Extend): Off-the-shelf UI foundation for API catalog, documentation, and developer experience
+- **Developer Portal / Catalog** (Customize/Extend): UI foundation for API catalog, documentation, and developer experience
 - **API Registry & Governance Core** (BUILD THIS): Custom service managing subscriptions, approvals, lifecycle states, deprecation workflows, and policy engine
-- **Kong Gateway** (Configure): Off-the-shelf API gateway for auth, rate limiting, routing, and observability
-- **Auditor** (BUILD THIS): Custom analytics layer built on Prometheus/Grafana for compliance reporting, chargeback, and SLA tracking
+- **Gateway Layer** (Configure/Extend): API management or gateway runtime enforcing auth, rate limiting, routing, and observability
+- **Auditor** (BUILD THIS): Custom analytics layer built on your chosen metrics/logging stack for compliance reporting, chargeback, and SLA tracking
+
+**Reference Implementation Note:**
+
+Later sections use Backstage, Kong, Prometheus/Grafana, and OPA as
+concrete examples because they make the integration contracts easy to
+describe. They are examples of the roles above, not hard requirements of
+the model.
 
 #### Data Ownership Boundaries
 
-**Backstage Owns (Native Catalog):**
+**Portal / Catalog Owns (Native Catalog):**
 - API discovery metadata: name, description, owner team
 - Specification file location (OpenAPI, GraphQL schema, or AsyncAPI)
 - Documentation links (TechDocs)
@@ -89,9 +102,12 @@ graph TD
 
 **Integration Principle:**
 
-> **Backstage is the UX layer; Registry is the policy engine.**
+> **The portal is the UX layer; Registry is the policy engine.**
 > 
-> Developers discover APIs in Backstage, but all governance actions (request subscription, approve access, deprecate version) flow through Registry APIs. Backstage plugins make Registry data visible and actionable, but never bypass Registry business logic.
+> Developers discover APIs in the portal, but all governance actions
+> (request subscription, approve access, deprecate version) flow through
+> Registry APIs. Portal plugins and extensions make Registry data
+> visible and actionable, but never bypass Registry business logic.
 
 ---
 
@@ -222,7 +238,9 @@ allow {
 
 **Externalize Policy Decisions (OPA/Cedar):**
 
-To avoid hard-coding business rules in Kong plugins, all policy decisions are delegated to an external policy engine:
+To avoid hard-coding business rules in gateway-specific plugins or
+policies, all policy decisions are delegated to an external policy
+engine:
 
 - **Subscription Authorization**: `allow/deny` decisions based on subscription scope, status, expiration, data classification clearance
 - **Deprecation Routing**: Route traffic to preferred versions, inject deprecation warnings, enforce sunset dates
@@ -230,9 +248,11 @@ To avoid hard-coding business rules in Kong plugins, all policy decisions are de
 
 **Policy Engine Integration:**
 
-**Architecture: Open Source Kong + Custom Policy Service**
+**Architecture: Gateway Layer + Custom Policy Service**
 
-We're using Open Source Kong with a custom policy engine service to maximize flexibility and cost-effectiveness:
+The reference implementation shown here uses an open gateway plus a
+custom policy engine service to maximize flexibility and
+cost-effectiveness:
 
 **Policy Engine Service:**
 - **OPA Runtime**: Run Open Policy Agent as sidecar container alongside Registry service
@@ -242,8 +262,8 @@ We're using Open Source Kong with a custom policy engine service to maximize fle
 - **Decision API**: Registry exposes `POST /subscriptions/check` endpoint that internally calls OPA
 
 **Authorization Check Flow:**
-1. **Request arrives at Kong Gateway** with API key or JWT
-2. **Custom Kong plugin** extracts: `consumer_app_id`, `api_id`, `version`, `environment`, `request.method`, `request.path`
+1. **Request arrives at the gateway layer** with API key or JWT
+2. **Gateway extension/policy** extracts: `consumer_app_id`, `api_id`, `version`, `environment`, `request.method`, `request.path`
 3. **Plugin calls Registry API**: `POST /subscriptions/check` with extracted metadata
 4. **Registry queries database** for subscription using composite key `(consumer_app_id, api_id, version, environment)`
 5. **Registry calls OPA** with subscription metadata + request context:
@@ -265,16 +285,16 @@ We're using Open Source Kong with a custom policy engine service to maximize fle
      "ttl": 30
    }
    ```
-7. **Registry returns decision** to Kong plugin with cache TTL
-8. **Kong allows/denies** request, adds custom headers if specified
+7. **Registry returns decision** to the gateway with cache TTL
+8. **Gateway allows/denies** request, adds custom headers if specified
 
-**Custom Kong Plugin Requirements:**
+**Gateway Extension Requirements:**
 
-Build a Lua plugin (`kong/plugins/registry-auth`) that:
+Build a gateway extension that:
 - **Extracts consumer identity** from API key or JWT claims
-- **Looks up consumer_app_id** mapping (cached in Kong's shared dict)
+- **Looks up consumer_app_id** mapping in the gateway runtime cache
 - **Calls Registry `/subscriptions/check` API** with timeout (100ms)
-- **Caches responses** in Kong's shared memory using provided TTL
+- **Caches responses** in gateway-local memory using provided TTL
 - **Handles failure modes**: fail-closed by default, fail-open if configured per API
 - **Logs policy decision** to stdout for Auditor ingestion
 - **Injects response headers** for rate limit info, deprecation warnings
